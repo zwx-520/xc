@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>全媒体导航中心 | MediaHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --spacing: 20px;
+            --radius: 12px;
+            --font-size-base: 16px;
+        }
+
+        [data-theme="night"] {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --text-color: #e6e6e6;
+            --primary-color: #0ea5e9;
+            --secondary-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --border-color: #1e293b;
+        }
+
+        [data-theme="cold-blue"] {
+            --bg-color: #e3f2fd;
+            --card-bg: #ffffff;
+            --text-color: #1565c0;
+            --primary-color: #1e88e5;
+            --secondary-color: #00acc1;
+            --warning-color: #ffb300;
+            --danger-color: #e53935;
+            --border-color: #bbdefb;
+        }
+
+        [data-theme="warm-yellow"] {
+            --bg-color: #fff8e1;
+            --card-bg: #fffde7;
+            --text-color: #5d4037;
+            --primary-color: #ff9800;
+            --secondary-color: #f57c00;
+            --warning-color: #ff8f00;
+            --danger-color: #d84315;
+            --border-color: #ffcc80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            padding: var(--spacing);
+            min-height: 100vh;
+            font-size: var(--font-size-base);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* ===== 滚动通知栏 ===== */
+        .notice-bar {
+            background: var(--danger-color);
+            color: #fff;
+            padding: 8px 0;
+            overflow: hidden;
+            position: relative;
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing);
+        }
+
+        .notice-bar .scroll-text {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: scroll-left 20s linear infinite;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* ===== 头部 ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--spacing);
+            flex-wrap: wrap;
+            gap: var(--spacing);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .clock {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            background: var(--bg-color);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 10px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .control-btn:hover {
+            opacity: 0.85;
+        }
+
+        /* ===== 分类标签 ===== */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: var(--spacing);
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            color: var(--text-color);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* ===== 平台网格 ===== */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: var(--spacing);
+        }
+
+        .platform-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: var(--spacing);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .platform-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .platform-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .platform-desc {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 12px;
+        }
+
+        .platform-link {
+            display: inline-block;
+            padding: 8px 14px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .controls {
+                justify-content: center;
+            }
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light" data-lang="zh">
+
+<div class="container">
+    <!-- 滚动通知栏 -->
+    <div class="notice-bar">
+        <div class="scroll-text" id="noticeText">
+            ⚠️ 严禁涉政、涉黄、涉暴、涉黑及不良言论，请遵守法律法规与社会良俗。 | ⚠️ No political, pornographic, violent, illegal or harmful content. Please follow laws and social ethics.
+        </div>
+    </div>
+
+    <!-- 头部 -->
+    <header class="header">
+        <div class="logo" id="logoText">全媒体导航中心</div>
+        <div class="clock" id="clock">00:00:00</div>
+        <div class="controls">
+            <button class="control-btn" onclick="toggleLang()">
+                <i class="fas fa-language"></i>
+                <span id="langBtnText">English</span>
+            </button>
+            <button class="control-btn" onclick="toggleTheme()">
+                <i class="fas fa-palette"></i>
+                <span id="themeBtnText">主题</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 分类标签 -->
+    <div class="category-tabs">
+        <button class="tab-btn active" data-type="all" id="tabAll">全部</button>
+        <button class="tab-btn" data-type="video" id="tabVideo">视频平台</button>
+        <button class="tab-btn" data-type="article" id="tabArticle">文章平台</button>
+    </div>
+
+    <!-- 平台列表 -->
+    <div class="platform-grid" id="platformGrid">
+        <!-- JS 动态生成 -->
+    </div>
+</div>
+
+<script>
+    // 平台数据（中英文）
+    const platforms = [
+        // 视频平台
+        { name: { zh: "抖音", en: "Douyin" }, desc: { zh: "记录美好生活", en: "Record wonderful life" }, icon: "fab fa-tiktok", color: "#000000", type: "video", url: "https://www.douyin.com" },
+        { name: { zh: "快手", en: "Kuaishou" }, desc: { zh: "拥抱每一种生活", en: "Embrace every life" }, icon: "fas fa-bolt", color: "#ff4906", type: "video", url: "https://www.kuaishou.com" },
+        { name: { zh: "哔哩哔哩", en: "Bilibili" }, desc: { zh: "年轻人文化社区", en: "Young culture community" }, icon: "fab fa-bilibili", color: "#fb7299", type: "video", url: "https://www.bilibili.com" },
+        { name: { zh: "小红书", en: "Xiaohongshu" }, desc: { zh: "标记我的生活", en: "Mark my life" }, icon: "fas fa-book-open", color: "#ff2442", type: "video", url: "https://www.xiaohongshu.com" },
+        { name: { zh: "视频号", en: "WeChat Video" }, desc: { zh: "微信视频号", en: "WeChat short videos" }, icon: "fab fa-weixin", color: "#07c160", type: "video", url: "https://channels.weixin.qq.com" },
+        { name: { zh: "YouTube", en: "YouTube" }, desc: { zh: "全球最大视频平台", en: "World's largest video platform" }, icon: "fab fa-youtube", color: "#ff0000", type: "video", url: "https://www.youtube.com" },
+        { name: { zh: "TikTok", en: "TikTok" }, desc: { zh: "国际版抖音", en: "International TikTok" }, icon: "fab fa-tiktok", color: "#010101", type: "video", url: "https://www.tiktok.com" },
+        { name: { zh: "Instagram Reels", en: "Instagram Reels" }, desc: { zh: "Instagram短视频", en: "Instagram short videos" }, icon: "fab fa-instagram", color: "#e4405f", type: "video", url: "https://www.instagram.com/reels" },
+        { name: { zh: "知乎", en: "Zhihu" }, desc: { zh: "视频问答社区", en: "Video Q&A community" }, icon: "fab fa-zhihu", color: "#0084ff", type: "video", url: "https://www.zhihu.com" },
+        { name: { zh: "百家号", en: "Baijiahao" }, desc: { zh: "百度自媒体视频", en: "Baidu video platform" }, icon: "fas fa-file-alt", color: "#2932e1", type: "video", url: "https://baijiahao.baidu.com" },
+        { name: { zh: "企鹅号", en: "Penguin" }, desc: { zh: "腾讯自媒体视频", en: "Tencent video platform" }, icon: "fas fa-penguin", color: "#12b7f5", type: "video", url: "https://om.qq.com" },
+
+        // 文章平台
+        { name: { zh: "微信公众号", en: "WeChat Official" }, desc: { zh: "再小的个体也有品牌", en: "Every individual has a brand" }, icon: "fab fa-weixin", color: "#07c160", type: "article", url: "https://mp.weixin.qq.com" },
+        { name: { zh: "知乎", en: "Zhihu" }, desc: { zh: "知识问答社区", en: "Knowledge Q&A community" }, icon: "fab fa-zhihu", color: "#0084ff", type: "article", url: "https://www.zhihu.com" },
+        { name: { zh: "今日头条", en: "Toutiao" }, desc: { zh: "信息创造价值", en: "Information creates value" }, icon: "fas fa-newspaper", color: "#f85959", type: "article", url: "https://mp.toutiao.com" },
+        { name: { zh: "百家号", en: "Baijiahao" }, desc: { zh: "百度自媒体文章", en: "Baidu article platform" }, icon: "fas fa-file-alt", color: "#2932e1", type: "article", url: "https://baijiahao.baidu.com" },
+        { name: { zh: "企鹅号", en: "Penguin" }, desc: { zh: "腾讯自媒体文章", en: "Tencent article platform" }, icon: "fas fa-penguin", color: "#12b7f5", type: "article", url: "https://om.qq.com" },
+        { name: { zh: "简书", en: "Jianshu" }, desc: { zh: "文艺创作社区", en: "Creative writing community" }, icon: "fas fa-feather", color: "#ea6f5a", type: "article", url: "https://www.jianshu.com" },
+        { name: { zh: "豆瓣", en: "Douban" }, desc: { zh: "书影音评论", en: "Book/movie/music reviews" }, icon: "fab fa-drupal", color: "#007722", type: "article", url: "https://www.douban.com" },
+        { name: { zh: "微博", en: "Weibo" }, desc: { zh: "随时随地发现新鲜事", en: "Discover fresh news anytime" }, icon: "fab fa-weibo", color: "#e6162d", type: "article", url: "https://weibo.com" },
+        { name: { zh: "小红书", en: "Xiaohongshu" }, desc: { zh: "生活方式分享", en: "Lifestyle sharing" }, icon: "fas fa-book-open", color: "#ff2442", type: "article", url: "https://www.xiaohongshu.com" },
+        { name: { zh: "雪球", en: "Snowball" }, desc: { zh: "投资交流社区", en: "Investment community" }, icon: "fas fa-snowflake", color: "#1e88e5", type: "article", url: "https://xueqiu.com" },
+        { name: { zh: "36氪", en: "36Kr" }, desc: { zh: "科技创新媒体", en: "Tech innovation media" }, icon: "fas fa-atom", color: "#009688", type: "article", url: "https://36kr.com" },
+        { name: { zh: "虎嗅", en: "Huxiu" }, desc: { zh: "商业科技评论", en: "Business tech commentary" }, icon: "fas fa-paw", color: "#ff5722", type: "article", url: "https://www.huxiu.com" },
+        { name: { zh: "Medium", en: "Medium" }, desc: { zh: "全球优质文章平台", en: "Global quality articles" }, icon: "fab fa-medium", color: "#000000", type: "article", url: "https://medium.com" },
+        { name: { zh: "Substack", en: "Substack" }, desc: { zh: "订阅制内容平台", en: "Subscription content platform" }, icon: "fas fa-envelope", color: "#ff6719", type: "article", url: "https://substack.com" },
+        { name: { zh: "Ghost", en: "Ghost" }, desc: { zh: "独立博客平台", en: "Independent blog platform" }, icon: "fas fa-ghost", color: "#3eb0ef", type: "article", url: "https://ghost.org" },
+        { name: { zh: "Vocal Media", en: "Vocal Media" }, desc: { zh: "故事创作平台", en: "Storytelling platform" }, icon: "fas fa-microphone", color: "#ff9900", type: "article", url: "https://vocal.media" },
+        { name: { zh: "Quora", en: "Quora" }, desc: { zh: "问答社区", en: "Q&A community" }, icon: "fab fa-quora", color: "#b92b27", type: "article", url: "https://www.quora.com" },
+        { name: { zh: "LinkedIn", en: "LinkedIn" }, desc: { zh: "职场社交文章", en: "Professional networking articles" }, icon: "fab fa-linkedin", color: "#0077b5", type: "article", url: "https://www.linkedin.com" },
+        { name: { zh: "Patreon", en: "Patreon" }, desc: { zh: "创作者赞助平台", en: "Creator sponsorship platform" }, icon: "fas fa-hand-holding-usd", color: "#f96854", type: "article", url: "https://www.patreon.com" },
+        { name: { zh: "NewsBreak", en: "NewsBreak" }, desc: { zh: "本地新闻平台", en: "Local news platform" }, icon: "fas fa-newspaper", color: "#f44336", type: "article", url: "https://www.newsbreak.com" },
+        { name: { zh: "Steemit", en: "Steemit" }, desc: { zh: "区块链内容平台", en: "Blockchain content platform" }, icon: "fab fa-steam", color: "#1da1f2", type: "article", url: "https://steemit.com" },
+        { name: { zh: "Wattpad", en: "Wattpad" }, desc: { zh: "故事创作社区", en: "Story creation community" }, icon: "fas fa-book", color: "#ff6600", type: "article", url: "https://www.wattpad.com" }
+    ];
+
+    // 主题列表
+    const themes = ['light', 'night', 'cold-blue', 'warm-yellow'];
+    let themeIndex = 0;
+
+    // 语言列表
+    const langs = ['zh', 'en'];
+    let langIndex = 0;
+
+    // 翻译字典
+    const dict = {
+        zh: {
+            logo: "全媒体导航中心",
+            langBtn: "English",
+            themeBtn: "主题",
+            tabAll: "全部",
+            tabVideo: "视频平台",
+            tabArticle: "文章平台",
+            visit: "访问"
+        },
+        en: {
+            logo: "MediaHub",
+            langBtn: "中文",
+            themeBtn: "Theme",
+            tabAll: "All",
+            tabVideo: "Video Platforms",
+            tabArticle: "Article Platforms",
+            visit: "Visit"
+        }
+    };
+
+    // 时钟
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false });
+        document.getElementById('clock').textContent = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 渲染平台列表
+    function renderPlatforms(type) {
+        const grid = document.getElementById('platformGrid');
+        grid.innerHTML = '';
+        const filtered = type === 'all' ? platforms : platforms.filter(p => p.type === type);
+        filtered.forEach(p => {
+            const lang = langs[langIndex];
+            const card = document.createElement('div');
+            card.className = 'platform-card';
+            card.innerHTML = `
+                <div class="platform-icon" style="background:${p.color}">
+                    <i class="${p.icon}"></i>
+                </div>
+                <div class="platform-name">${p.name[lang]}</div>
+                <div class="platform-desc">${p.desc[lang]}</div>
+                <a href="${p.url}" target="_blank" class="platform-link">${dict[lang].visit}</a>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // 切换语言
+    function toggleLang() {
+        langIndex = (langIndex + 1) % langs.length;
+        const lang = langs[langIndex];
+        document.body.setAttribute('data-lang', lang);
+        applyLang(lang);
+        localStorage.setItem('lang', lang);
+    }
+
+    function applyLang(lang) {
+        const t = dict[lang];
+        document.getElementById('logoText').textContent = t.logo;
+        document.getElementById('langBtnText').textContent = t.langBtn;
+        document.getElementById('themeBtnText').textContent = t.themeBtn;
+        document.getElementById('tabAll').textContent = t.tabAll;
+        document.getElementById('tabVideo').textContent = t.tabVideo;
+        document.getElementById('tabArticle').textContent = t.tabArticle;
+        renderPlatforms(document.querySelector('.tab-btn.active').dataset.type);
+    }
+
+    // 切换主题
+    function toggleTheme() {
+        themeIndex = (themeIndex + 1) % themes.length;
+        document.body.setAttribute('data-theme', themes[themeIndex]);
+        localStorage.setItem('theme', themes[themeIndex]);
+    }
+
+    // 标签切换
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPlatforms(btn.dataset.type);
+        });
+    });
+
+    // 初始化
+    window.onload = function () {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedLang = localStorage.getItem('lang') || 'zh';
+        themeIndex = themes.indexOf(savedTheme);
+        langIndex = langs.indexOf(savedLang);
+        document.body.setAttribute('data-theme', savedTheme);
+        document.body.setAttribute('data-lang', savedLang);
+        applyLang(savedLang);
+    };
+</script>
+
+</body>
+</html>
