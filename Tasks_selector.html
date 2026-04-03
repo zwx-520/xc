@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>随机抽选系统</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: 'Microsoft YaHei', sans-serif;
+
+        }
+
+        
+
+        body {
+
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+
+            color: #333;
+
+            min-height: 100vh;
+
+            padding: 20px;
+
+        }
+
+        
+
+        .container {
+
+            max-width: 800px;
+
+            margin: 0 auto;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            border-radius: 15px;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+            overflow: hidden;
+
+        }
+
+        
+
+        header {
+
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+        
+
+        h1 {
+
+            font-size: 1.8rem;
+
+            margin-bottom: 10px;
+
+        }
+
+        
+
+        .subtitle {
+
+            font-size: 1rem;
+
+            opacity: 0.9;
+
+        }
+
+        
+
+        .main-content {
+
+            padding: 20px;
+
+        }
+
+        
+
+        .section {
+
+            margin-bottom: 25px;
+
+            padding: 15px;
+
+            background: white;
+
+            border-radius: 10px;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+
+        }
+
+        
+
+        h2 {
+
+            font-size: 1.3rem;
+
+            margin-bottom: 15px;
+
+            color: #2575fc;
+
+            border-bottom: 2px solid #f0f0f0;
+
+            padding-bottom: 8px;
+
+        }
+
+        
+
+        .input-group {
+
+            margin-bottom: 15px;
+
+        }
+
+        
+
+        label {
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            font-weight: bold;
+
+        }
+
+        
+
+        input, select, textarea, button {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 5px;
+
+            font-size: 1rem;
+
+        }
+
+        
+
+        textarea {
+
+            min-height: 120px;
+
+            resize: vertical;
+
+        }
+
+        
+
+        button {
+
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+
+            color: white;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            transition: all 0.3s;
+
+            margin-top: 10px;
+
+        }
+
+        
+
+        button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+        }
+
+        
+
+        button:active {
+
+            transform: translateY(0);
+
+        }
+
+        
+
+        .file-upload {
+
+            position: relative;
+
+            overflow: hidden;
+
+            display: inline-block;
+
+            width: 100%;
+
+        }
+
+        
+
+        .file-upload-btn {
+
+            background: #f8f9fa;
+
+            color: #495057;
+
+            text-align: center;
+
+            padding: 12px;
+
+            border: 2px dashed #dee2e6;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            transition: all 0.3s;
+
+        }
+
+        
+
+        .file-upload-btn:hover {
+
+            background: #e9ecef;
+
+            border-color: #4facfe;
+
+        }
+
+        
+
+        .file-upload input[type="file"] {
+
+            position: absolute;
+
+            left: 0;
+
+            top: 0;
+
+            opacity: 0;
+
+            cursor: pointer;
+
+            width: 100%;
+
+            height: 100%;
+
+        }
+
+        
+
+        .result-area {
+
+            text-align: center;
+
+            padding: 20px;
+
+            min-height: 150px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+        
+
+        .result-display {
+
+            font-size: 2rem;
+
+            font-weight: bold;
+
+            color: #2575fc;
+
+            margin: 15px 0;
+
+            min-height: 60px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+        }
+
+        
+
+        .selected-item {
+
+            background: #e3f2fd;
+
+            padding: 8px 15px;
+
+            margin: 5px;
+
+            border-radius: 20px;
+
+            display: inline-block;
+
+            animation: pop 0.5s;
+
+        }
+
+        
+
+        @keyframes pop {
+
+            0% { transform: scale(0.8); opacity: 0; }
+
+            70% { transform: scale(1.1); }
+
+            100% { transform: scale(1); opacity: 1; }
+
+        }
+
+        
+
+        .history {
+
+            max-height: 200px;
+
+            overflow-y: auto;
+
+            border: 1px solid #eee;
+
+            border-radius: 5px;
+
+            padding: 10px;
+
+            background: #f9f9f9;
+
+        }
+
+        
+
+        .history-item {
+
+            padding: 8px;
+
+            border-bottom: 1px solid #eee;
+
+            display: flex;
+
+            justify-content: space-between;
+
+        }
+
+        
+
+        .history-item:last-child {
+
+            border-bottom: none;
+
+        }
+
+        
+
+        .counter {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-top: 10px;
+
+            font-size: 0.9rem;
+
+            color: #666;
+
+        }
+
+        
+
+        footer {
+
+            text-align: center;
+
+            padding: 15px;
+
+            color: #666;
+
+            font-size: 0.9rem;
+
+            border-top: 1px solid #eee;
+
+        }
+
+        
+
+        /* 响应式设计 */
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 10px;
+
+            }
+
+            
+
+            h1 {
+
+                font-size: 1.5rem;
+
+            }
+
+            
+
+            .main-content {
+
+                padding: 15px;
+
+            }
+
+            
+
+            .result-display {
+
+                font-size: 1.5rem;
+
+            }
+
+        }
+
+        
+
+        /* 动画效果 */
+
+        @keyframes spin {
+
+            0% { transform: rotate(0deg); }
+
+            100% { transform: rotate(360deg); }
+
+        }
+
+        
+
+        .spinner {
+
+            display: inline-block;
+
+            width: 30px;
+
+            height: 30px;
+
+            border: 4px solid rgba(0, 0, 0, 0.1);
+
+            border-left-color: #2575fc;
+
+            border-radius: 50%;
+
+            animation: spin 1s linear infinite;
+
+            margin-right: 10px;
+
+        }
+
+        
+
+        .drawing {
+
+            animation: pulse 0.5s infinite alternate;
+
+        }
+
+        
+
+        @keyframes pulse {
+
+            from { transform: scale(1); }
+
+            to { transform: scale(1.05); }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+
+            <h1>随机抽选系统</h1>
+
+            <div class="subtitle">支持PC端和移动端 · 无需后台 · 数据本地存储</div>
+
+        </header>
+
+        
+
+        <div class="main-content">
+
+            <div class="section">
+
+                <h2>数据输入</h2>
+
+                <div class="input-group">
+
+                    <label for="dataInput">输入抽选项目（每行一项）</label>
+
+                    <textarea id="dataInput" placeholder="请输入抽选项目，每行一个&#10;例如：&#10;张三&#10;李四&#10;王五"></textarea>
+
+                </div>
+
+                
+
+                <div class="input-group">
+
+                    <label>或上传数据文件（TXT/CSV）</label>
+
+                    <div class="file-upload">
+
+                        <div class="file-upload-btn">点击选择文件或拖拽文件到此处</div>
+
+                        <input type="file" id="fileUpload" accept=".txt,.csv">
+
+                    </div>
+
+                    <div id="fileName" style="margin-top: 5px; font-size: 0.9rem; color: #666;"></div>
+
+                </div>
+
+                
+
+                <button id="saveData">保存数据</button>
+
+            </div>
+
+            
+
+            <div class="section">
+
+                <h2>抽选设置</h2>
+
+                <div class="input-group">
+
+                    <label for="drawCount">抽选数量</label>
+
+                    <input type="number" id="drawCount" min="1" value="1">
+
+                </div>
+
+                
+
+                <div class="input-group">
+
+                    <label for="drawMode">抽选模式</label>
+
+                    <select id="drawMode">
+
+                        <option value="single">单次抽选（可重复）</option>
+
+                        <option value="multiple">多次抽选（不重复）</option>
+
+                    </select>
+
+                </div>
+
+                
+
+                <button id="startDraw">开始抽选</button>
+
+                <button id="resetDraw" style="background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);">重置抽选</button>
+
+            </div>
+
+            
+
+            <div class="section">
+
+                <h2>抽选结果</h2>
+
+                <div class="result-area">
+
+                    <div id="resultDisplay" class="result-display">准备抽选...</div>
+
+                    <div class="counter">
+
+                        <span>已抽选: <span id="drawnCount">0</span> 次</span>
+
+                        <span>剩余: <span id="remainingCount">0</span> 项</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            
+
+            <div class="section">
+
+                <h2>抽选历史</h2>
+
+                <div id="drawHistory" class="history">
+
+                    <div class="history-item" style="color: #999; text-align: center;">暂无抽选记录</div>
+
+                </div>
+
+                <button id="clearHistory" style="background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%); margin-top: 10px;">清空历史</button>
+
+            </div>
+
+        </div>
+
+        
+
+        <footer>
+
+            <p>随机抽选系统 &copy; 2023 - 无需后台，数据完全本地处理</p>
+
+        </footer>
+
+    </div>
+
+
+
+    <script>
+
+        // 全局变量
+
+        let items = [];
+
+        let drawnItems = [];
+
+        let drawHistory = [];
+
+        
+
+        // DOM元素
+
+        const dataInput = document.getElementById('dataInput');
+
+        const fileUpload = document.getElementById('fileUpload');
+
+        const fileName = document.getElementById('fileName');
+
+        const saveDataBtn = document.getElementById('saveData');
+
+        const drawCount = document.getElementById('drawCount');
+
+        const drawMode = document.getElementById('drawMode');
+
+        const startDrawBtn = document.getElementById('startDraw');
+
+        const resetDrawBtn = document.getElementById('resetDraw');
+
+        const resultDisplay = document.getElementById('resultDisplay');
+
+        const drawnCount = document.getElementById('drawnCount');
+
+        const remainingCount = document.getElementById('remainingCount');
+
+        const drawHistoryEl = document.getElementById('drawHistory');
+
+        const clearHistoryBtn = document.getElementById('clearHistory');
+
+        
+
+        // 初始化
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            loadData();
+
+            updateCounters();
+
+            updateHistoryDisplay();
+
+            
+
+            // 事件监听
+
+            saveDataBtn.addEventListener('click', saveData);
+
+            fileUpload.addEventListener('change', handleFileUpload);
+
+            startDrawBtn.addEventListener('click', startDraw);
+
+            resetDrawBtn.addEventListener('click', resetDraw);
+
+            clearHistoryBtn.addEventListener('click', clearHistory);
+
+            
+
+            // 拖拽文件上传
+
+            const fileUploadBtn = document.querySelector('.file-upload-btn');
+
+            fileUploadBtn.addEventListener('dragover', function(e) {
+
+                e.preventDefault();
+
+                this.style.background = '#e3f2fd';
+
+                this.style.borderColor = '#4facfe';
+
+            });
+
+            
+
+            fileUploadBtn.addEventListener('dragleave', function() {
+
+                this.style.background = '#f8f9fa';
+
+                this.style.borderColor = '#dee2e6';
+
+            });
+
+            
+
+            fileUploadBtn.addEventListener('drop', function(e) {
+
+                e.preventDefault();
+
+                this.style.background = '#f8f9fa';
+
+                this.style.borderColor = '#dee2e6';
+
+                
+
+                if (e.dataTransfer.files.length) {
+
+                    fileUpload.files = e.dataTransfer.files;
+
+                    handleFileUpload();
+
+                }
+
+            });
+
+        });
+
+        
+
+        // 加载数据
+
+        function loadData() {
+
+            const savedData = localStorage.getItem('drawItems');
+
+            if (savedData) {
+
+                items = JSON.parse(savedData);
+
+                dataInput.value = items.join('\n');
+
+            }
+
+            
+
+            const savedHistory = localStorage.getItem('drawHistory');
+
+            if (savedHistory) {
+
+                drawHistory = JSON.parse(savedHistory);
+
+            }
+
+        }
+
+        
+
+        // 保存数据
+
+        function saveData() {
+
+            const inputText = dataInput.value.trim();
+
+            if (inputText) {
+
+                items = inputText.split('\n')
+
+                    .map(item => item.trim())
+
+                    .filter(item => item !== '');
+
+                
+
+                localStorage.setItem('drawItems', JSON.stringify(items));
+
+                drawnItems = [];
+
+                updateCounters();
+
+                alert(`数据保存成功！共 ${items.length} 个项目。`);
+
+            } else {
+
+                alert('请输入抽选数据！');
+
+            }
+
+        }
+
+        
+
+        // 处理文件上传
+
+        function handleFileUpload() {
+
+            const file = fileUpload.files[0];
+
+            if (!file) return;
+
+            
+
+            fileName.textContent = `已选择: ${file.name}`;
+
+            
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+
+                dataInput.value = e.target.result;
+
+            };
+
+            reader.readAsText(file);
+
+        }
+
+        
+
+        // 开始抽选
+
+        function startDraw() {
+
+            if (items.length === 0) {
+
+                alert('请先输入或上传抽选数据！');
+
+                return;
+
+            }
+
+            
+
+            const count = parseInt(drawCount.value);
+
+            if (isNaN(count) || count < 1) {
+
+                alert('请输入有效的抽选数量！');
+
+                return;
+
+            }
+
+            
+
+            if (drawMode.value === 'multiple' && count > items.length) {
+
+                alert(`抽选数量不能超过总项目数（${items.length}）！`);
+
+                return;
+
+            }
+
+            
+
+            if (drawMode.value === 'multiple' && count > (items.length - drawnItems.length)) {
+
+                alert(`剩余项目不足，请重置抽选或减少抽选数量！`);
+
+                return;
+
+            }
+
+            
+
+            // 抽选动画
+
+            resultDisplay.innerHTML = '<div class="spinner"></div>抽选中...';
+
+            resultDisplay.classList.add('drawing');
+
+            
+
+            setTimeout(() => {
+
+                const results = performDraw(count);
+
+                displayResults(results);
+
+                updateCounters();
+
+                updateHistoryDisplay();
+
+                resultDisplay.classList.remove('drawing');
+
+            }, 1500);
+
+        }
+
+        
+
+        // 执行抽选
+
+        function performDraw(count) {
+
+            const results = [];
+
+            const availableItems = drawMode.value === 'multiple' 
+
+                ? items.filter(item => !drawnItems.includes(item))
+
+                : items;
+
+            
+
+            for (let i = 0; i < count; i++) {
+
+                if (availableItems.length === 0) break;
+
+                
+
+                const randomIndex = Math.floor(Math.random() * availableItems.length);
+
+                const selectedItem = availableItems[randomIndex];
+
+                
+
+                results.push(selectedItem);
+
+                
+
+                if (drawMode.value === 'multiple') {
+
+                    drawnItems.push(selectedItem);
+
+                    availableItems.splice(randomIndex, 1);
+
+                }
+
+            }
+
+            
+
+            // 记录历史
+
+            const historyEntry = {
+
+                timestamp: new Date().toLocaleString(),
+
+                results: [...results],
+
+                mode: drawMode.value
+
+            };
+
+            
+
+            drawHistory.unshift(historyEntry);
+
+            if (drawHistory.length > 50) {
+
+                drawHistory = drawHistory.slice(0, 50);
+
+            }
+
+            
+
+            localStorage.setItem('drawHistory', JSON.stringify(drawHistory));
+
+            
+
+            return results;
+
+        }
+
+        
+
+        // 显示结果
+
+        function displayResults(results) {
+
+            if (results.length === 0) {
+
+                resultDisplay.innerHTML = '<span style="color: #ff6b6b;">没有可抽选的项目！</span>';
+
+                return;
+
+            }
+
+            
+
+            if (results.length === 1) {
+
+                resultDisplay.innerHTML = `<span class="selected-item">${results[0]}</span>`;
+
+            } else {
+
+                resultDisplay.innerHTML = results.map(item => 
+
+                    `<span class="selected-item">${item}</span>`
+
+                ).join('');
+
+            }
+
+            
+
+            // 添加结果提示
+
+            const resultInfo = document.createElement('div');
+
+            resultInfo.style.marginTop = '10px';
+
+            resultInfo.style.fontSize = '0.9rem';
+
+            resultInfo.style.color = '#666';
+
+            resultInfo.textContent = `抽选完成，共选出 ${results.length} 个项目`;
+
+            resultDisplay.appendChild(resultInfo);
+
+        }
+
+        
+
+        // 更新计数器
+
+        function updateCounters() {
+
+            drawnCount.textContent = drawnItems.length;
+
+            remainingCount.textContent = items.length - drawnItems.length;
+
+        }
+
+        
+
+        // 重置抽选
+
+        function resetDraw() {
+
+            drawnItems = [];
+
+            updateCounters();
+
+            resultDisplay.textContent = '抽选已重置';
+
+            setTimeout(() => {
+
+                resultDisplay.textContent = '准备抽选...';
+
+            }, 2000);
+
+        }
+
+        
+
+        // 更新历史记录显示
+
+        function updateHistoryDisplay() {
+
+            if (drawHistory.length === 0) {
+
+                drawHistoryEl.innerHTML = '<div class="history-item" style="color: #999; text-align: center;">暂无抽选记录</div>';
+
+                return;
+
+            }
+
+            
+
+            drawHistoryEl.innerHTML = drawHistory.map(entry => `
+
+                <div class="history-item">
+
+                    <span>${entry.timestamp}</span>
+
+                    <span>${entry.results.join(', ')}</span>
+
+                </div>
+
+            `).join('');
+
+        }
+
+        
+
+        // 清空历史
+
+        function clearHistory() {
+
+            if (confirm('确定要清空所有抽选历史记录吗？')) {
+
+                drawHistory = [];
+
+                localStorage.removeItem('drawHistory');
+
+                updateHistoryDisplay();
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
