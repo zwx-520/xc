@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AnimeWeek Scheduler Ultimate - 动漫周程</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: linear-gradient(135deg, #ffecd2, #fcb69f);
+      --header-bg: linear-gradient(90deg, #a18cd1, #fbc2eb);
+      --primary: #a18cd1;
+      --primary-hover: #8b78c6;
+      --danger: #ff6b6b;
+      --success: #51cf66;
+      --card-bg: rgba(255,255,255,0.85);
+      --text-main: #333;
+      --text-light: #666;
+      --shadow: 0 8px 32px rgba(0,0,0,0.1);
+      --border-glow: 0 0 15px rgba(161,140,209,0.5);
+    }
+
+    body.theme-anime {
+      --bg-main: linear-gradient(135deg, #ffecd2, #fcb69f);
+      --header-bg: linear-gradient(90deg, #a18cd1, #fbc2eb);
+      --primary: #a18cd1;
+      --primary-hover: #8b78c6;
+      --border-glow: 0 0 15px rgba(161,140,209,0.5);
+    }
+    body.theme-game {
+      --bg-main: linear-gradient(135deg, #232526, #414345);
+      --header-bg: linear-gradient(90deg, #f7971e, #ffd200);
+      --primary: #ffd200;
+      --primary-hover: #e6bd00;
+      --border-glow: 0 0 15px rgba(255,210,0,0.5);
+      --card-bg: rgba(30,30,30,0.9);
+      --text-main: #eee;
+      --text-light: #aaa;
+    }
+    body.theme-cyber {
+      --bg-main: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      --header-bg: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+      --primary: #12c2e9;
+      --primary-hover: #0fa8c9;
+      --border-glow: 0 0 15px rgba(18,194,233,0.5);
+      --card-bg: rgba(20,20,40,0.9);
+      --text-main: #fff;
+      --text-light: #ccc;
+    }
+    body.theme-cure {
+      --bg-main: linear-gradient(135deg, #c1dfc4, #deecdd);
+      --header-bg: linear-gradient(90deg, #96e6a1, #d4fc79);
+      --primary: #56ab2f;
+      --primary-hover: #489622;
+      --border-glow: 0 0 15px rgba(86,171,47,0.5);
+      --card-bg: rgba(255,255,255,0.9);
+      --text-main: #2d3a2d;
+      --text-light: #4a5a4a;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      transition: all 0.5s;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    header {
+      background: var(--header-bg);
+      color: var(--text-main);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 24px;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-switcher button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.3);
+      color: var(--text-main);
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .theme-switcher button:hover {
+      background: rgba(255,255,255,0.5);
+    }
+    .refresh-btn, .sort-btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: var(--primary);
+      color: #fff;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .refresh-btn:hover, .sort-btn:hover {
+      background: var(--primary-hover);
+      box-shadow: var(--border-glow);
+    }
+    main {
+      padding: 20px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 20px 0 15px;
+      color: var(--primary);
+      border-left: 5px solid var(--primary);
+      padding-left: 12px;
+    }
+    .schedule-form input, .schedule-form select, .schedule-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 2px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      font-size: 15px;
+      background: rgba(255,255,255,0.5);
+      color: var(--text-main);
+    }
+    .schedule-form textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .schedule-form button {
+      padding: 10px 20px;
+      background: var(--header-bg);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+    .schedule-form button:hover {
+      box-shadow: var(--border-glow);
+    }
+    .schedule-list {
+      margin-top: 20px;
+    }
+    .time-slot {
+      margin-bottom: 20px;
+    }
+    .time-slot h4 {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 18px;
+    }
+    .task-card {
+      background: rgba(255,255,255,0.4);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .task-card.editing {
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 10px var(--border-glow);
+    }
+    .task-card .title {
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .task-card .cycle {
+      font-size: 13px;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+    .task-card .desc {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+    .task-card .actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    .task-card .actions button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: 5px;
+      color: var(--danger);
+    }
+    .task-card .actions button.edit {
+      color: var(--primary);
+    }
+    .block-group {
+      margin-bottom: 30px;
+    }
+    .block-group h3 {
+      margin: 0 0 15px;
+      color: var(--primary);
+      font-size: 20px;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 5px;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0,0,0,0.05);
+      font-size: 14px;
+      color: var(--text-light);
+    }
+    .warm-notice {
+      background: rgba(255,255,255,0.3);
+      color: var(--text-main);
+      padding: 12px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .warm-notice span {
+      display: inline-block;
+      animation: gentle-bounce 3s ease-in-out infinite;
+    }
+    @keyframes gentle-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    /* 线性排序样式 */
+    .linear-sort .task-card {
+      border-bottom: 1px dashed rgba(0,0,0,0.1);
+    }
+    .linear-sort .task-card:last-child {
+      border-bottom: none;
+    }
+
+    /* 粒子排序（星球模式） */
+    .particle-sort {
+      position: relative;
+      min-height: 500px;
+      background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0c29 100%);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 10px;
+      word-break: break-word;
+    }
+    .planet:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+    .planet .info {
+      display: none;
+      position: absolute;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      font-size: 12px;
+      box-shadow: var(--shadow);
+    }
+    .planet:hover .info {
+      display: block;
+    }
+    .starfield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    @media (max-width: 600px) {
+      .container { margin: 10px; }
+      .logo { font-size: 18px; }
+      .section-title { font-size: 16px; }
+      .task-card .title { font-size: 14px; }
+    }
+  </style>
+</head>
+<body class="theme-anime">
+  <div class="container">
+    <div class="warm-notice">
+      <span>🌸 今天也要元气满满哦~ 宝子</span>
+    </div>
+    <header>
+      <div class="logo">
+        <span>🎮 AnimeWeek Scheduler Ultimate</span>
+      </div>
+      <div class="header-right">
+        <div class="theme-switcher">
+          <button onclick="setTheme('theme-anime')">🌸 动漫</button>
+          <button onclick="setTheme('theme-game')">🎮 游戏</button>
+          <button onclick="setTheme('theme-cyber')">💻 赛博</button>
+          <button onclick="setTheme('theme-cure')">🌿 治愈</button>
+        </div>
+        <button class="sort-btn" onclick="toggleSortMode()">🔀 切换排序</button>
+        <button class="refresh-btn" onclick="loadSchedule()">🔄 刷新</button>
+      </div>
+    </header>
+    <main>
+      <div class="section-title">➕ 添加/编辑日程</div>
+      <form class="schedule-form" onsubmit="return handleSubmit(event)">
+        <input type="hidden" id="editId" value="" />
+        <input type="text" id="taskTitle" placeholder="任务标题" required />
+        <input type="text" id="taskTime" placeholder="时间段（如 9:00-11:00）" required />
+        <input type="text" id="taskCycle" placeholder="周期（如 周六日 / 周一二）" />
+        <textarea id="taskDesc" placeholder="任务描述（可选）"></textarea>
+        <button type="submit" id="submitBtn">添加任务</button>
+      </form>
+
+      <div class="section-title">📅 本周日程</div>
+      <div class="schedule-list" id="scheduleList"></div>
+    </main>
+    <footer>
+      © 2026 AnimeWeek Scheduler Ultimate · 用爱发电
+    </footer>
+  </div>
+
+  <!-- 弹窗 -->
+  <div class="modal-overlay" id="modalOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:999;">
+    <div class="modal" style="background:var(--card-bg);padding:20px;border-radius:15px;min-width:300px;text-align:center;box-shadow:var(--shadow);">
+      <h3 id="modalTitle" style="margin-top:0;color:var(--primary);">提示</h3>
+      <p id="modalText" style="color:var(--text-main);"></p>
+      <div id="modalButtons" style="margin-top:15px;"></div>
+    </div>
+  </div>
+
+  <script>
+    let sortMode = 'linear'; // linear, block, particle
+
+    function setTheme(theme) {
+      document.body.className = theme;
+    }
+
+    function showModal(title, text, buttons) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalText').textContent = text;
+      const container = document.getElementById('modalButtons');
+      container.innerHTML = '';
+      buttons.forEach(btn => {
+        const b = document.createElement('button');
+        b.textContent = btn.text;
+        b.style.background = 'var(--header-bg)';
+        b.style.color = '#fff';
+        b.style.border = 'none';
+        b.style.borderRadius = '8px';
+        b.style.padding = '8px 16px';
+        b.style.margin = '0 5px';
+        b.style.cursor = 'pointer';
+        b.onclick = () => {
+          document.getElementById('modalOverlay').style.display = 'none';
+          if (btn.onClick) btn.onClick();
+        };
+        container.appendChild(b);
+      });
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    function getSchedule() {
+      return JSON.parse(localStorage.getItem('anime_schedule_pro') || '[]');
+    }
+    function saveSchedule(data) {
+      localStorage.setItem('anime_schedule_pro', JSON.stringify(data));
+    }
+
+    function toggleSortMode() {
+      const modes = ['linear', 'block', 'particle'];
+      const idx = modes.indexOf(sortMode);
+      sortMode = modes[(idx + 1) % modes.length];
+      loadSchedule();
+      showModal('排序切换', `已切换为${sortMode === 'linear' ? '线性排序' : sortMode === 'block' ? '块状排序' : '粒子排序（星球模式）'}`, [{ text: '好的', onClick: () => {} }]);
+    }
+
+    function loadSchedule() {
+      const list = document.getElementById('scheduleList');
+      const data = getSchedule();
+      list.innerHTML = '';
+      list.className = 'schedule-list';
+
+      if (data.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:var(--text-light)">本周还没有安排哦~ 快去添加吧</p>';
+        return;
+      }
+
+      if (sortMode === 'linear') {
+        list.classList.add('linear-sort');
+        data.sort((a, b) => a.time.localeCompare(b.time));
+        data.forEach(task => list.appendChild(createTaskCard(task)));
+      } else if (sortMode === 'block') {
+        const cycleMap = {};
+        data.forEach(task => {
+          const cycle = task.cycle || '未分组';
+          if (!cycleMap[cycle]) cycleMap[cycle] = [];
+          cycleMap[cycle].push(task);
+        });
+        Object.keys(cycleMap).forEach(cycle => {
+          const group = document.createElement('div');
+          group.className = 'block-group';
+          group.innerHTML = `<h3>📌 ${cycle}</h3>`;
+          cycleMap[cycle].sort((a, b) => a.time.localeCompare(b.time)).forEach(task => {
+            group.appendChild(createTaskCard(task));
+          });
+          list.appendChild(group);
+        });
+      } else if (sortMode === 'particle') {
+        list.classList.add('particle-sort');
+        list.innerHTML = '<canvas class="starfield" id="starfield"></canvas>';
+        const canvas = document.getElementById('starfield');
+        canvas.width = list.clientWidth;
+        canvas.height = list.clientHeight;
+        drawStars(canvas);
+
+        const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd'];
+        data.sort((a, b) => a.time.localeCompare(b.time));
+        const planetSizeBase = Math.min(canvas.width, canvas.height) / (data.length * 2.5);
+        data.forEach((task, i) => {
+          const planet = document.createElement('div');
+          planet.className = 'planet';
+          const size = planetSizeBase + task.title.length * 2;
+          planet.style.width = `${size}px`;
+          planet.style.height = `${size}px`;
+          planet.style.background = colors[i % colors.length];
+          planet.style.left = `${Math.random() * (canvas.width - size)}px`;
+          planet.style.top = `${Math.random() * (canvas.height - size)}px`;
+          planet.innerHTML = `${task.time}<br>${task.title.substring(0, 6)}${task.title.length > 6 ? '...' : ''}
+            <div class="info">${task.title}<br>${task.cycle || ''}<br>${task.desc || ''}</div>`;
+          planet.onclick = () => {
+            editTask(task.id);
+          };
+          list.appendChild(planet);
+        });
+      }
+    }
+
+    function drawStars(canvas) {
+      const ctx = canvas.getContext('2d');
+      for (let i = 0; i < 100; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const r = Math.random() * 1.5;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,' + (Math.random() * 0.8 + 0.2) + ')';
+        ctx.fill();
+      }
+    }
+
+    function createTaskCard(task) {
+      const card = document.createElement('div');
+      card.className = 'task-card' + (document.getElementById('editId').value === task.id ? ' editing' : '');
+      card.innerHTML = `
+        <div class="title">${task.title}</div>
+        <div class="cycle">⏰ ${task.time} ${task.cycle ? '| 📅 ' + task.cycle : ''}</div>
+        <div class="desc">${task.desc || '无描述'}</div>
+        <div class="actions">
+          <button class="edit" onclick="editTask('${task.id}')" title="编辑">✏️</button>
+          <button onclick="deleteTask('${task.id}')" title="删除">🗑️</button>
+        </div>
+      `;
+      return card;
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editId').value;
+      const title = document.getElementById('taskTitle').value.trim();
+      const time = document.getElementById('taskTime').value.trim();
+      const cycle = document.getElementById('taskCycle').value.trim();
+      const desc = document.getElementById('taskDesc').value.trim();
+      if (!title || !time) {
+        showModal('提示', '请填写任务标题并输入时间段', [{ text: '好的', onClick: () => {} }]);
+        return false;
+      }
+      let data = getSchedule();
+      if (id) {
+        data = data.map(t => t.id === id ? { id, title, time, cycle, desc } : t);
+        showModal('完成', '任务已修改~', [{ text: '好的', onClick: () => {} }]);
+        document.getElementById('editId').value = '';
+        document.getElementById('submitBtn').textContent = '添加任务';
+      } else {
+        data.push({ id: Date.now().toString(), title, time, cycle, desc });
+        showModal('完成', '新任务已添加~', [{ text: '好的', onClick: () => {} }]);
+      }
+      saveSchedule(data);
+      loadSchedule();
+      e.target.reset();
+      return false;
+    }
+
+    function deleteTask(id) {
+      showModal('确认删除', '确定要删除这条任务吗？', [
+        { text: '确认删除', onClick: () => {
+          let data = getSchedule();
+          const isEditing = document.getElementById('editId').value === id;
+          data = data.filter(t => t.id !== id);
+          saveSchedule(data);
+          if (isEditing) {
+            document.getElementById('editId').value = '';
+            document.getElementById('submitBtn').textContent = '添加任务';
+            document.querySelector('.schedule-form').reset();
+          }
+          loadSchedule();
+          showModal('已删除', '任务已删除~', [{ text: '好的', onClick: () => {} }]);
+        }},
+        { text: '取消', onClick: () => {} }
+      ]);
+    }
+
+    function editTask(id) {
+      const data = getSchedule();
+      const task = data.find(t => t.id === id);
+      if (!task) return;
+      document.getElementById('editId').value = task.id;
+      document.getElementById('taskTitle').value = task.title;
+      document.getElementById('taskTime').value = task.time;
+      document.getElementById('taskCycle').value = task.cycle;
+      document.getElementById('taskDesc').value = task.desc;
+      document.getElementById('submitBtn').textContent = '保存修改';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      loadSchedule(); // 刷新编辑状态高亮
+    }
+
+    loadSchedule();
+  </script>
+</body>
+</html>

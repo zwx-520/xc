@@ -1,0 +1,2541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能办公系统 Pro v2.1 (诊断修复版)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --purple-color: #9b59b6;
+            --cyan-color: #00acc1;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 25px rgba(0,0,0,0.15);
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="night"] {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --text-color: #e6e6e6;
+            --primary-color: #0ea5e9;
+            --secondary-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --purple-color: #a855f7;
+            --cyan-color: #06b6d4;
+            --border-color: #1e293b;
+        }
+
+        [data-theme="cold-blue"] {
+            --bg-color: #e3f2fd;
+            --card-bg: #ffffff;
+            --text-color: #1565c0;
+            --primary-color: #1e88e5;
+            --secondary-color: #00acc1;
+            --warning-color: #ffb300;
+            --danger-color: #e53935;
+            --purple-color: #7b1fa2;
+            --cyan-color: #00838f;
+            --border-color: #bbdefb;
+        }
+
+        [data-theme="warm-yellow"] {
+            --bg-color: #fff8e1;
+            --card-bg: #fffde7;
+            --text-color: #5d4037;
+            --primary-color: #ff9800;
+            --secondary-color: #f57c00;
+            --warning-color: #ff8f00;
+            --danger-color: #d84315;
+            --purple-color: #7b1fa2;
+            --cyan-color: #0097a7;
+            --border-color: #ffcc80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+            transition: background var(--transition-speed), color var(--transition-speed);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* 头部样式 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--cyan-color));
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .logo h1 {
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .logo p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-top: 3px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .time-display {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .user-info:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .theme-dropdown {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 150px;
+            z-index: 1000;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .theme-dropdown.show {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .theme-option {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+
+        .theme-option:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .theme-option.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 2x3 面板布局 */
+        .panels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px;
+            height: calc(100vh - 220px);
+            min-height: 700px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .panel:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(90deg, var(--primary-color), var(--cyan-color));
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .panel-title i {
+            font-size: 18px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .panel-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .panel-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .panel-content {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) transparent;
+        }
+
+        .panel-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .panel-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .panel-content::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        /* 通用列表项动画 */
+        .list-item {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: itemAppear 0.3s ease forwards;
+        }
+
+        @keyframes itemAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 倒计时面板 */
+        .timer-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .time-slot {
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            transition: all 0.3s;
+        }
+
+        .time-slot.active {
+            background: rgba(46, 204, 113, 0.2);
+            border-left-color: var(--secondary-color);
+        }
+
+        .time-slot.upcoming {
+            background: rgba(149, 165, 166, 0.1);
+            border-left-color: #95a5a6;
+        }
+
+        .time-slot.ended {
+            background: rgba(243, 156, 18, 0.1);
+            border-left-color: var(--warning-color);
+        }
+
+        .time-slot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .period-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .time-status {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .status-active { background: var(--secondary-color); }
+        .status-upcoming { background: #95a5a6; }
+        .status-ended { background: var(--warning-color); }
+
+        .period-time {
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 12px;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: var(--primary-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .current-status {
+            text-align: center;
+            padding: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .current-status span {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* 任务/备忘录/目标 通用样式 */
+        .item-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .item-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .item-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 8px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .item-row:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .item-checkbox {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--secondary-color);
+            flex-shrink: 0;
+        }
+
+        .item-text {
+            flex: 1;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .item-completed .item-text {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .item-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 14px;
+            transition: color 0.2s;
+            color: var(--primary-color);
+        }
+
+        .item-action-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        .item-action-btn.delete:hover {
+            color: var(--danger-color);
+        }
+
+        .item-action-btn.edit:hover {
+            color: var(--warning-color);
+        }
+
+        /* 目标计划 - 完成度模式 */
+        .goal-progress-display {
+            margin-bottom: 15px;
+        }
+
+        .goal-item {
+            margin-bottom: 15px;
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .goal-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .goal-percentage {
+            font-size: 12px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .goal-input-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .goal-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 12px;
+            outline: none;
+        }
+
+        .goal-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .add-goal-btn {
+            padding: 8px 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .add-goal-btn:hover {
+            background: var(--cyan-color);
+        }
+
+        /* 项目管理 */
+        .project-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .project-tab {
+            padding: 8px 15px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-color);
+            opacity: 0.7;
+            transition: all 0.2s;
+        }
+
+        .project-tab.active {
+            background: var(--primary-color);
+            color: white;
+            opacity: 1;
+        }
+
+        .project-tab:hover:not(.active) {
+            opacity: 1;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .project-item {
+            padding: 15px;
+            background: rgba(0, 172, 193, 0.05);
+            border-radius: 10px;
+            border-left: 3px solid var(--cyan-color);
+            transition: all 0.2s;
+        }
+
+        .project-item:hover {
+            background: rgba(0, 172, 193, 0.1);
+            transform: translateX(5px);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .project-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--cyan-color);
+        }
+
+        .project-status {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-planning { background: #e0e0e0; color: #666; }
+        .status-progress { background: rgba(52, 152, 219, 0.2); color: var(--primary-color); }
+        .status-review { background: rgba(243, 156, 18, 0.2); color: var(--warning-color); }
+        .status-completed { background: rgba(46, 204, 113, 0.2); color: var(--secondary-color); }
+
+        .project-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            font-size: 12px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .project-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .project-detail-item i {
+            width: 16px;
+            color: var(--primary-color);
+        }
+
+        .project-progress {
+            margin-bottom: 10px;
+        }
+
+        .project-progress-bar {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .project-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan-color), var(--primary-color));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .project-log {
+            font-size: 11px;
+            opacity: 0.7;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        .project-log-entry {
+            margin-bottom: 3px;
+        }
+
+        .project-log-entry i {
+            margin-right: 5px;
+            color: var(--warning-color);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .project-action-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary-color);
+        }
+
+        .project-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .project-action-btn.delete {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .project-action-btn.delete:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* 签到日志 */
+        .attendance-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .attendance-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .attendance-btn.signin {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .attendance-btn.signout {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .attendance-btn.export {
+            background: var(--purple-color);
+            color: white;
+        }
+
+        .attendance-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .log-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.4;
+            border-left: 3px solid;
+        }
+
+        .log-signin {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--secondary-color);
+            border-left-color: var(--secondary-color);
+        }
+
+        .log-signout {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+            border-left-color: var(--warning-color);
+        }
+
+        .log-export {
+            background: rgba(155, 89, 182, 0.1);
+            color: var(--purple-color);
+            border-left-color: var(--purple-color);
+        }
+
+        .log-other {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--text-color);
+            opacity: 0.8;
+            border-left-color: var(--primary-color);
+        }
+
+        .log-time {
+            font-weight: 600;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--text-color);
+            opacity: 0.6;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state span {
+            font-size: 14px;
+        }
+
+        /* 提示信息 */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--secondary-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-hover);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* 模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-hover);
+            animation: slideUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.cancel {
+            background: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .modal-btn.confirm {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1400px) {
+            .panels-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .panels-grid {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .panel {
+                min-height: 400px;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            .header-controls {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 500px) {
+            body {
+                padding: 10px;
+            }
+            .header {
+                padding: 15px;
+            }
+            .logo h1 {
+                font-size: 20px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="captureArea">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div>
+                    <h1>智能办公系统 Pro</h1>
+                    <p>高效办公 · 目标驱动 · 项目协同 (v2.1 诊断版)</p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="time-display" id="currentTime">00:00:00</div>
+                <div class="user-info">
+                    <div class="user-avatar">用</div>
+                    <span>管理员</span>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" id="shareBtn" disabled title="截图功能维护中">
+                        <i class="fas fa-camera-slash"></i> 截图维护中
+                    </button>
+                </div>
+                <div class="theme-selector">
+                    <button class="theme-btn" id="themeToggle">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-option active" data-theme="light">
+                            <i class="fas fa-sun"></i> 白天模式
+                        </div>
+                        <div class="theme-option" data-theme="night">
+                            <i class="fas fa-moon"></i> 夜间模式
+                        </div>
+                        <div class="theme-option" data-theme="cold-blue">
+                            <i class="fas fa-snowflake"></i> 冷蓝模式
+                        </div>
+                        <div class="theme-option" data-theme="warm-yellow">
+                            <i class="fas fa-eye"></i> 护眼模式
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2x3 面板网格 -->
+        <div class="panels-grid">
+            <!-- 面板1: 倒计时 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-clock"></i>
+                        工作时间倒计时
+                    </div>
+                    <div class="panel-actions">
+                        <button class="panel-btn" id="refreshTimer" title="刷新">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="timer-container" id="timerContainer"></div>
+                    <div class="current-status">
+                        当前状态: <span id="currentStatus">工作中</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 面板2: 任务管理 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-tasks"></i>
+                        任务管理
+                    </div>
+                    <div class="panel-actions">
+                        <button class="panel-btn" id="addTaskQuick" title="快速添加">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="item-input-group">
+                        <input type="text" class="item-input" id="taskInput" placeholder="输入任务名称...">
+                        <button class="panel-btn" id="addTaskBtn" title="添加任务">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="item-list" id="taskList"></div>
+                </div>
+            </div>
+
+            <!-- 面板3: 备忘录 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-sticky-note"></i>
+                        办公备忘录
+                    </div>
+                    <div class="panel-actions">
+                        <button class="panel-btn" id="clearCompletedMemo" title="清除已完成">
+                            <i class="fas fa-broom"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="item-input-group">
+                        <input type="text" class="item-input" id="memoInput" placeholder="输入待办事项...">
+                        <button class="panel-btn" id="addMemoBtn" title="添加">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="item-list" id="memoList"></div>
+                </div>
+            </div>
+
+            <!-- 面板4: 签到日志 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        签到与日志
+                    </div>
+                    <div class="panel-actions">
+                        <button class="panel-btn" id="refreshLogs" title="刷新">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="attendance-controls">
+                        <button class="attendance-btn signin" id="signInBtn">
+                            <i class="fas fa-sign-in-alt"></i> 签到
+                        </button>
+                        <button class="attendance-btn signout" id="signOutBtn">
+                            <i class="fas fa-sign-out-alt"></i> 签退
+                        </button>
+                        <button class="attendance-btn export" id="exportLogsBtn">
+                            <i class="fas fa-download"></i> 导出
+                        </button>
+                    </div>
+                    <div class="log-list" id="logList"></div>
+                </div>
+            </div>
+
+            <!-- 面板5: 目标计划 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-bullseye"></i>
+                        目标计划
+                    </div>
+                    <div class="panel-actions">
+                        <button class="panel-btn" id="addGoalQuick" title="添加目标">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="goal-progress-display" id="goalProgress"></div>
+                    <div class="goal-input-group">
+                        <input type="text" class="goal-input" id="goalName" placeholder="目标名称">
+                        <input type="number" class="goal-input" id="goalTarget" placeholder="目标值(0-100)" min="0" max="100" value="100">
+                        <button class="add-goal-btn" id="addGoalBtn">
+                            <i class="fas fa-plus"></i> 添加
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 面板6: 项目管理 -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-project-diagram"></i>
+                        项目管理
+                    </div>
+                    <div class="panel-actions">
+                        <button class="panel-btn" id="addProjectQuick" title="新建项目">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="project-tabs">
+                        <button class="project-tab active" data-filter="all">全部</button>
+                        <button class="project-tab" data-filter="planning">规划中</button>
+                        <button class="project-tab" data-filter="progress">进行中</button>
+                        <button class="project-tab" data-filter="review">审核中</button>
+                        <button class="project-tab" data-filter="completed">已完成</button>
+                    </div>
+                    <div class="project-list" id="projectList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示信息 -->
+    <div class="toast" id="toast" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">消息</span>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">标题</div>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button class="modal-btn cancel" id="modalCancel">取消</button>
+                <button class="modal-btn confirm" id="modalConfirm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 智能办公系统 Pro v2.1 (诊断修复版)
+        class SmartOfficeProV2 {
+            constructor() {
+                console.log('===========================================');
+                console.log('系统初始化 v2.1 (诊断修复版)...');
+                console.log('请在浏览器开发者工具(F12)中查看此控制台输出。');
+                console.log('===========================================');
+                this.currentFilter = 'all';
+                this.init();
+            }
+
+            init() {
+                this.initStorage();
+                this.initTimeSystem();
+                this.loadTasks();
+                this.loadMemos();
+                this.loadAttendanceSystem();
+                this.loadGoals();
+                this.loadProjects();
+                this.initTheme();
+                this.initEventListeners();
+                this.initModals();
+                
+                setTimeout(() => this.autoSignIn(), 1000);
+                
+                console.log('系统初始化完成！请测试各项功能。');
+                this.showToast('🚀 系统已就绪，请测试签到或任务功能');
+            }
+
+            // 存储系统
+            initStorage() {
+                console.log('[Storage] 初始化本地存储...');
+                const keys = ['tasks', 'memos', 'logs', 'settings', 'goals', 'projects'];
+                const prefix = 'office_';
+                const version = 'v2';
+
+                keys.forEach(key => {
+                    const fullKey = `${prefix}${key}_${version}`;
+                    if (!localStorage.getItem(fullKey)) {
+                        console.log(`[Storage] 创建新的存储项: ${fullKey}`);
+                        if (key === 'logs' || key === 'settings') {
+                             localStorage.setItem(fullKey, JSON.stringify([]));
+                        } else {
+                             localStorage.setItem(fullKey, JSON.stringify([]));
+                        }
+                    }
+                });
+
+                this.tasks = JSON.parse(localStorage.getItem('office_tasks_v2') || '[]');
+                this.memos = JSON.parse(localStorage.getItem('office_memos_v2') || '[]');
+                this.logs = JSON.parse(localStorage.getItem('office_logs_v2') || '[]');
+                this.settings = JSON.parse(localStorage.getItem('office_settings_v2') || '{}');
+                this.goals = JSON.parse(localStorage.getItem('office_goals_v2') || '[]');
+                this.projects = JSON.parse(localStorage.getItem('office_projects_v2') || '[]');
+                
+                console.log(`[Storage] 数据加载完毕 - 任务: ${this.tasks.length}, 备忘录: ${this.memos.length}, 日志: ${this.logs.length}`);
+            }
+
+            saveAllData() {
+                console.log('[Storage] 保存所有数据...');
+                localStorage.setItem('office_tasks_v2', JSON.stringify(this.tasks));
+                localStorage.setItem('office_memos_v2', JSON.stringify(this.memos));
+                localStorage.setItem('office_logs_v2', JSON.stringify(this.logs));
+                localStorage.setItem('office_settings_v2', JSON.stringify(this.settings));
+                localStorage.setItem('office_goals_v2', JSON.stringify(this.goals));
+                localStorage.setItem('office_projects_v2', JSON.stringify(this.projects));
+                console.log('[Storage] 所有数据已保存。');
+            }
+
+            // 时间系统
+            initTimeSystem() {
+                console.log('[Timer] 初始化时间系统...');
+                this.workPeriods = [
+                    { start: "08:30", end: "13:00", isWork: true, name: "上午工作" },
+                    { start: "13:00", end: "14:00", isWork: false, name: "午休时间" },
+                    { start: "14:00", end: "19:00", isWork: true, name: "下午工作" },
+                    { start: "19:00", end: "20:00", isWork: false, name: "晚餐休息" },
+                    { start: "20:10", end: "22:20", isWork: true, name: "晚间工作" }
+                ];
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000);
+                this.updateAllTimers();
+                setInterval(() => this.updateAllTimers(), 1000);
+            }
+
+            updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+                document.getElementById('currentTime').textContent = timeString;
+            }
+
+            updateAllTimers() {
+                const container = document.getElementById('timerContainer');
+                container.innerHTML = '';
+                const now = new Date();
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+                let activeFound = false;
+
+                this.workPeriods.forEach(period => {
+                    const startMinutes = this.timeToMinutes(period.start);
+                    const endMinutes = this.timeToMinutes(period.end);
+                    
+                    let status = 'upcoming';
+                    let statusClass = 'upcoming';
+                    let statusText = '未开始';
+                    let statusColor = 'status-upcoming';
+                    
+                    if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+                        status = 'active';
+                        statusClass = 'active';
+                        statusText = '进行中';
+                        statusColor = 'status-active';
+                        activeFound = true;
+                        document.getElementById('currentStatus').textContent = period.isWork ? '工作中' : '休息中';
+                        document.getElementById('currentStatus').style.color = period.isWork ? 'var(--secondary-color)' : 'var(--warning-color)';
+                    } else if (currentMinutes >= endMinutes) {
+                        status = 'ended';
+                        statusClass = 'ended';
+                        statusText = '已结束';
+                        statusColor = 'status-ended';
+                    }
+                    
+                    let timeDisplay = "00:00:00";
+                    if (status === 'active') {
+                        const remainingMinutes = endMinutes - currentMinutes;
+                        const seconds = 59 - now.getSeconds();
+                        timeDisplay = this.formatTime(remainingMinutes, seconds);
+                    } else if (status === 'upcoming') {
+                        const minutesLeft = startMinutes - currentMinutes;
+                        const seconds = 59 - now.getSeconds();
+                        timeDisplay = this.formatTime(minutesLeft, seconds);
+                    }
+                    
+                    const timeSlot = document.createElement('div');
+                    timeSlot.className = `time-slot ${statusClass}`;
+                    timeSlot.innerHTML = `
+                        <div class="time-slot-header">
+                            <div>
+                                <span class="period-name">${period.name}</span>
+                                <span class="time-status ${statusColor}">${statusText}</span>
+                            </div>
+                            <span class="period-time">${period.start} - ${period.end}</span>
+                        </div>
+                        <div class="timer">${timeDisplay}</div>
+                    `;
+                    container.appendChild(timeSlot);
+                });
+                
+                if (!activeFound) {
+                    document.getElementById('currentStatus').textContent = '非工作时间';
+                    document.getElementById('currentStatus').style.color = '#95a5a6';
+                }
+            }
+
+            timeToMinutes(timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                return hours * 60 + minutes;
+            }
+
+            formatTime(minutes, seconds) {
+                const hours = Math.floor(minutes / 60);
+                const mins = minutes % 60;
+                return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            // 任务系统
+            loadTasks() {
+                console.log('[Task] 加载任务列表...');
+                this.tasks = JSON.parse(localStorage.getItem('office_tasks_v2') || '[]');
+                this.renderTasks();
+            }
+
+            saveTasks() {
+                console.log('[Task] 保存任务列表...');
+                localStorage.setItem('office_tasks_v2', JSON.stringify(this.tasks));
+            }
+
+            renderTasks() {
+                const taskList = document.getElementById('taskList');
+                taskList.innerHTML = '';
+                
+                if (this.tasks.length === 0) {
+                    taskList.innerHTML = '<div class="empty-state"><i class="fas fa-tasks"></i><span>暂无任务</span></div>';
+                    return;
+                }
+                
+                const sortedTasks = [...this.tasks].sort((a, b) => {
+                    if (a.completed === b.completed) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    }
+                    return a.completed - b.completed;
+                });
+                
+                sortedTasks.forEach((task, index) => {
+                    const taskItem = document.createElement('div');
+                    taskItem.className = `item-row list-item ${task.completed ? 'item-completed' : ''}`;
+                    taskItem.style.animationDelay = `${index * 0.05}s`;
+                    taskItem.innerHTML = `
+                        <input type="checkbox" class="item-checkbox" ${task.completed ? 'checked' : ''} data-id="${task.id}">
+                        <div class="item-text">${task.name}</div>
+                        <div class="item-actions">
+                            <button class="item-action-btn edit" data-id="${task.id}" title="编辑"><i class="fas fa-edit"></i></button>
+                            <button class="item-action-btn delete" data-id="${task.id}" title="删除"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    taskList.appendChild(taskItem);
+                });
+            }
+
+            addTask(name) {
+                console.log(`[Task] 尝试添加任务: "${name}"`);
+                if (!name.trim()) {
+                    console.warn('[Task] 添加失败: 任务名称为空');
+                    this.showToast('❌ 请输入任务名称');
+                    return;
+                }
+                
+                const newTask = {
+                    id: Date.now(),
+                    name: name.trim(),
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                this.tasks.push(newTask);
+                this.saveTasks();
+                this.renderTasks();
+                console.log('[Task] 任务添加成功:', newTask);
+                this.showToast(`✅ 任务 "${name}" 已添加`);
+                document.getElementById('taskInput').value = '';
+            }
+
+            toggleTask(taskId) {
+                console.log(`[Task] 尝试切换任务状态, ID: ${taskId}`);
+                const task = this.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    task.completedAt = task.completed ? new Date().toISOString() : null;
+                    this.saveTasks();
+                    this.renderTasks();
+                    console.log(`[Task] 任务状态已切换: ${task.name} -> ${task.completed ? '已完成' : '未完成'}`);
+                    
+                    if (task.completed) {
+                        this.showToast(`🎉 任务 "${task.name}" 已完成！`);
+                        this.addLog(`完成任务: "${task.name}"`);
+                    } else {
+                        this.showToast(`↩️ 任务 "${task.name}" 已恢复`);
+                    }
+                } else {
+                    console.error(`[Task] 切换失败: 未找到ID为 ${taskId} 的任务`);
+                }
+            }
+
+            editTask(taskId) {
+                console.log(`[Task] 尝试编辑任务, ID: ${taskId}`);
+                const task = this.tasks.find(t => t.id === taskId);
+                if (!task) return;
+                
+                const newName = prompt('修改任务名称:', task.name);
+                if (newName === null) {
+                    console.log('[Task] 编辑取消');
+                    return;
+                }
+                
+                if (!newName.trim()) {
+                    this.showToast('❌ 任务名称不能为空');
+                    return;
+                }
+                
+                task.name = newName.trim();
+                this.saveTasks();
+                this.renderTasks();
+                console.log(`[Task] 任务已更新: ${task.name}`);
+                this.showToast('✅ 任务已更新');
+            }
+
+            deleteTask(taskId) {
+                console.log(`[Task] 尝试删除任务, ID: ${taskId}`);
+                const task = this.tasks.find(t => t.id === taskId);
+                if (!task) return;
+                
+                if (confirm(`确定删除任务 "${task.name}" 吗？`)) {
+                    this.tasks = this.tasks.filter(t => t.id !== taskId);
+                    this.saveTasks();
+                    this.renderTasks();
+                    console.log(`[Task] 任务已删除: ${task.name}`);
+                    this.showToast('🗑️ 任务已删除');
+                } else {
+                    console.log('[Task] 删除取消');
+                }
+            }
+
+            clearCompletedTasks() {
+                const completedTasks = this.tasks.filter(t => t.completed);
+                if (completedTasks.length === 0) {
+                    this.showToast('📭 没有已完成的任务');
+                    return;
+                }
+                
+                if (confirm(`确定清除 ${completedTasks.length} 条已完成的任务吗？`)) {
+                    this.tasks = this.tasks.filter(t => !t.completed);
+                    this.saveTasks();
+                    this.renderTasks();
+                    this.showToast(`🧹 已清除 ${completedTasks.length} 条任务`);
+                }
+            }
+
+            // 备忘录系统
+            loadMemos() {
+                console.log('[Memo] 加载备忘录...');
+                this.memos = JSON.parse(localStorage.getItem('office_memos_v2') || '[]');
+                this.renderMemos();
+            }
+
+            saveMemos() {
+                console.log('[Memo] 保存备忘录...');
+                localStorage.setItem('office_memos_v2', JSON.stringify(this.memos));
+            }
+
+            renderMemos() {
+                const memoList = document.getElementById('memoList');
+                memoList.innerHTML = '';
+                
+                if (this.memos.length === 0) {
+                    memoList.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><span>暂无备忘录</span></div>';
+                    return;
+                }
+                
+                const sortedMemos = [...this.memos].sort((a, b) => {
+                    if (a.completed === b.completed) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    }
+                    return a.completed - b.completed;
+                });
+                
+                sortedMemos.forEach((memo, index) => {
+                    const memoItem = document.createElement('div');
+                    memoItem.className = `item-row list-item ${memo.completed ? 'item-completed' : ''}`;
+                    memoItem.style.animationDelay = `${index * 0.05}s`;
+                    memoItem.innerHTML = `
+                        <input type="checkbox" class="item-checkbox" ${memo.completed ? 'checked' : ''} data-id="${memo.id}">
+                        <div class="item-text">${memo.text}</div>
+                        <div class="item-actions">
+                            <button class="item-action-btn edit" data-id="${memo.id}" title="编辑"><i class="fas fa-edit"></i></button>
+                            <button class="item-action-btn delete" data-id="${memo.id}" title="删除"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    memoList.appendChild(memoItem);
+                });
+            }
+
+            addMemo(text) {
+                console.log(`[Memo] 尝试添加备忘录: "${text}"`);
+                if (!text.trim()) {
+                    console.warn('[Memo] 添加失败: 内容为空');
+                    this.showToast('❌ 请输入备忘录内容');
+                    return;
+                }
+                
+                const newMemo = {
+                    id: Date.now(),
+                    text: text.trim(),
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                this.memos.push(newMemo);
+                this.saveMemos();
+                this.renderMemos();
+                console.log('[Memo] 备忘录添加成功:', newMemo);
+                this.showToast('✅ 备忘录已添加');
+                document.getElementById('memoInput').value = '';
+            }
+
+            toggleMemo(memoId) {
+                console.log(`[Memo] 尝试切换备忘录状态, ID: ${memoId}`);
+                const memo = this.memos.find(m => m.id === memoId);
+                if (memo) {
+                    memo.completed = !memo.completed;
+                    memo.completedAt = memo.completed ? new Date().toISOString() : null;
+                    this.saveMemos();
+                    this.renderMemos();
+                    console.log(`[Memo] 备忘录状态已切换: ${memo.text.substring(0,10)}...`);
+                    
+                    if (memo.completed) {
+                        this.showToast('🎉 备忘录已完成！');
+                    }
+                }
+            }
+
+            editMemo(memoId) {
+                console.log(`[Memo] 尝试编辑备忘录, ID: ${memoId}`);
+                const memo = this.memos.find(m => m.id === memoId);
+                if (!memo) return;
+                
+                const newText = prompt('修改备忘录内容:', memo.text);
+                if (newText === null) return;
+                
+                if (!newText.trim()) {
+                    this.showToast('❌ 备忘录内容不能为空');
+                    return;
+                }
+                
+                memo.text = newText.trim();
+                this.saveMemos();
+                this.renderMemos();
+                console.log('[Memo] 备忘录已更新');
+                this.showToast('✅ 备忘录已更新');
+            }
+
+            deleteMemo(memoId) {
+                console.log(`[Memo] 尝试删除备忘录, ID: ${memoId}`);
+                const memo = this.memos.find(m => m.id === memoId);
+                if (!memo) return;
+                
+                if (confirm(`确定删除备忘录吗？`)) {
+                    this.memos = this.memos.filter(m => m.id !== memoId);
+                    this.saveMemos();
+                    this.renderMemos();
+                    console.log('[Memo] 备忘录已删除');
+                    this.showToast('🗑️ 备忘录已删除');
+                }
+            }
+
+            clearCompletedMemos() {
+                const completedMemos = this.memos.filter(m => m.completed);
+                if (completedMemos.length === 0) {
+                    this.showToast('📭 没有已完成的备忘录');
+                    return;
+                }
+                
+                if (confirm(`确定清除 ${completedMemos.length} 条已完成的备忘录吗？`)) {
+                    this.memos = this.memos.filter(m => !m.completed);
+                    this.saveMemos();
+                    this.renderMemos();
+                    this.showToast(`🧹 已清除 ${completedMemos.length} 条备忘录`);
+                }
+            }
+
+            // 签到系统
+            loadAttendanceSystem() {
+                console.log('[Attendance] 加载签到系统...');
+                this.loadLogs();
+            }
+
+            loadLogs() {
+                console.log('[Attendance] 加载日志...');
+                this.logs = JSON.parse(localStorage.getItem('office_logs_v2') || '[]');
+                this.renderLogs();
+            }
+
+            saveLogs() {
+                console.log('[Attendance] 保存日志...');
+                localStorage.setItem('office_logs_v2', JSON.stringify(this.logs));
+            }
+
+            renderLogs() {
+                const logList = document.getElementById('logList');
+                logList.innerHTML = '';
+                
+                if (this.logs.length === 0) {
+                    logList.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><span>暂无日志记录</span></div>';
+                    return;
+                }
+                
+                this.logs.slice(0, 30).forEach((log, index) => {
+                    let logClass = 'log-other';
+                    if (log.includes('签到')) logClass = 'log-signin';
+                    else if (log.includes('签退')) logClass = 'log-signout';
+                    else if (log.includes('导出')) logClass = 'log-export';
+                    
+                    const logItem = document.createElement('div');
+                    logItem.className = `log-item list-item ${logClass}`;
+                    logItem.style.animationDelay = `${index * 0.05}s`;
+                    logItem.innerHTML = `<span class="log-time">${log}</span>`;
+                    logList.appendChild(logItem);
+                });
+            }
+
+            autoSignIn() {
+                const today = new Date().toLocaleDateString();
+                if (this.settings.lastSignIn !== today) {
+                    console.log('[Attendance] 检测到新的一天，尝试自动签到...');
+                    this.signIn(true);
+                }
+            }
+
+            signIn(isAuto = false) {
+                console.log(`[Attendance] 执行签到, 类型: ${isAuto ? '自动' : '手动'}`);
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+                const dateString = now.toLocaleDateString();
+                const type = isAuto ? '自动' : '手动';
+                const logMessage = `[${dateString} ${timeString}] ${type}签到`;
+                
+                this.logs.unshift(logMessage);
+                this.saveLogs();
+                this.renderLogs();
+                
+                this.settings.lastSignIn = dateString;
+                this.saveAllData();
+                
+                if (!isAuto) {
+                    this.showToast('✅ 签到成功！');
+                }
+                console.log('[Attendance] 签到成功:', logMessage);
+            }
+
+            signOut() {
+                console.log('[Attendance] 执行签退...');
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+                const dateString = now.toLocaleDateString();
+                const logMessage = `[${dateString} ${timeString}] 手动签退`;
+                
+                this.logs.unshift(logMessage);
+                this.saveLogs();
+                this.renderLogs();
+                this.showToast('✅ 签退成功！');
+                console.log('[Attendance] 签退成功:', logMessage);
+            }
+
+            exportLogs() {
+                console.log('[Attendance] 尝试导出日志...');
+                if (this.logs.length === 0) {
+                    this.showToast('❌ 没有日志可导出');
+                    return;
+                }
+                
+                const now = new Date();
+                const exportTime = now.toLocaleString('zh-CN');
+                const header = `=== 智能办公系统日志导出 ===\n`;
+                const info = `导出时间: ${exportTime}\n`;
+                const total = `日志总数: ${this.logs.length} 条\n`;
+                const separator = "=".repeat(50) + "\n\n";
+                const logContent = this.logs.join('\n');
+                
+                const fullContent = header + info + total + separator + logContent;
+                
+                const blob = new Blob([fullContent], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `办公日志_${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}.txt`;
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.addLog('导出了日志文件');
+                this.showToast('✅ 日志导出成功！');
+                console.log('[Attendance] 日志导出成功');
+            }
+
+            addLog(message) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+                const dateString = now.toLocaleDateString();
+                const logMessage = `[${dateString} ${timeString}] ${message}`;
+                
+                this.logs.unshift(logMessage);
+                this.saveLogs();
+                this.renderLogs();
+            }
+
+            // 目标系统 - 完成度模式
+            loadGoals() {
+                console.log('[Goal] 加载目标...');
+                this.goals = JSON.parse(localStorage.getItem('office_goals_v2') || '[]');
+                this.renderGoals();
+            }
+
+            saveGoals() {
+                console.log('[Goal] 保存目标...');
+                localStorage.setItem('office_goals_v2', JSON.stringify(this.goals));
+            }
+
+            renderGoals() {
+                const goalProgress = document.getElementById('goalProgress');
+                goalProgress.innerHTML = '';
+                
+                if (this.goals.length === 0) {
+                    goalProgress.innerHTML = '<div class="empty-state"><i class="fas fa-bullseye"></i><span>暂无目标</span></div>';
+                    return;
+                }
+                
+                this.goals.forEach((goal, index) => {
+                    const percentage = Math.min(100, Math.round((goal.current / goal.target) * 100));
+                    const goalItem = document.createElement('div');
+                    goalItem.className = 'goal-item list-item';
+                    goalItem.style.animationDelay = `${index * 0.05}s`;
+                    goalItem.innerHTML = `
+                        <div class="goal-header">
+                            <span class="goal-name">${goal.name}</span>
+                            <span class="goal-percentage">${percentage}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 11px; opacity: 0.7;">
+                            <span>当前: ${goal.current} / 目标: ${goal.target}</span>
+                        </div>
+                        <div style="display: flex; gap: 5px; margin-top: 8px;">
+                            <button class="panel-btn" onclick="window.officeSystem.updateGoal(${goal.id}, 5)" title="增加5%">+5%</button>
+                            <button class="panel-btn" onclick="window.officeSystem.updateGoal(${goal.id}, 10)" title="增加10%">+10%</button>
+                            <button class="panel-btn" onclick="window.officeSystem.editGoal(${goal.id})" title="编辑"><i class="fas fa-edit"></i></button>
+                            <button class="panel-btn" onclick="window.officeSystem.deleteGoal(${goal.id})" title="删除" style="background: var(--danger-color);"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    goalProgress.appendChild(goalItem);
+                });
+            }
+
+            addGoal(name, target) {
+                console.log(`[Goal] 尝试添加目标: "${name}", 目标值: ${target}`);
+                if (!name.trim()) {
+                    console.warn('[Goal] 添加失败: 名称为空');
+                    this.showToast('❌ 请输入目标名称');
+                    return;
+                }
+                
+                const newGoal = {
+                    id: Date.now(),
+                    name: name.trim(),
+                    target: Math.min(100, Math.max(0, parseInt(target) || 100)),
+                    current: 0,
+                    createdAt: new Date().toISOString()
+                };
+                this.goals.push(newGoal);
+                this.saveGoals();
+                this.renderGoals();
+                console.log('[Goal] 目标添加成功:', newGoal);
+                this.showToast(`✅ 目标 "${name}" 已添加`);
+                
+                document.getElementById('goalName').value = '';
+                document.getElementById('goalTarget').value = '100';
+            }
+
+            updateGoal(goalId, increment) {
+                const goal = this.goals.find(g => g.id === goalId);
+                if (goal) {
+                    goal.current = Math.min(goal.target, goal.current + increment);
+                    this.saveGoals();
+                    this.renderGoals();
+                    
+                    const percentage = Math.round((goal.current / goal.target) * 100);
+                    if (percentage >= 100) {
+                        this.showToast(`🎉 恭喜！目标 "${goal.name}" 已完成！`);
+                        this.addLog(`达成目标: "${goal.name}"`);
+                    } else {
+                        this.showToast(`📊 目标进度: ${percentage}%`);
+                    }
+                    console.log(`[Goal] 目标进度更新: ${goal.name} -> ${percentage}%`);
+                }
+            }
+
+            editGoal(goalId) {
+                const goal = this.goals.find(g => g.id === goalId);
+                if (!goal) return;
+                
+                const newName = prompt('修改目标名称:', goal.name);
+                if (newName === null) return;
+                
+                if (!newName.trim()) {
+                    this.showToast('❌ 目标名称不能为空');
+                    return;
+                }
+                
+                const newTarget = prompt('修改目标值 (0-100):', goal.target);
+                if (newTarget === null) return;
+                
+                const newCurrent = prompt('修改当前值 (0-100):', goal.current);
+                if (newCurrent === null) return;
+                
+                goal.name = newName.trim();
+                goal.target = Math.min(100, Math.max(0, parseInt(newTarget) || 100));
+                goal.current = Math.min(goal.target, Math.max(0, parseInt(newCurrent) || 0));
+                
+                this.saveGoals();
+                this.renderGoals();
+                this.showToast('✅ 目标已更新');
+            }
+
+            deleteGoal(goalId) {
+                const goal = this.goals.find(g => g.id === goalId);
+                if (!goal) return;
+                
+                if (confirm(`确定删除目标 "${goal.name}" 吗？`)) {
+                    this.goals = this.goals.filter(g => g.id !== goalId);
+                    this.saveGoals();
+                    this.renderGoals();
+                    this.showToast('🗑️ 目标已删除');
+                }
+            }
+
+            // 项目管理系统
+            loadProjects() {
+                console.log('[Project] 加载项目...');
+                this.projects = JSON.parse(localStorage.getItem('office_projects_v2') || '[]');
+                this.renderProjects();
+            }
+
+            saveProjects() {
+                console.log('[Project] 保存项目...');
+                localStorage.setItem('office_projects_v2', JSON.stringify(this.projects));
+            }
+
+            renderProjects() {
+                const projectList = document.getElementById('projectList');
+                projectList.innerHTML = '';
+                
+                let filteredProjects = this.projects;
+                if (this.currentFilter !== 'all') {
+                    filteredProjects = this.projects.filter(p => p.status === this.currentFilter);
+                }
+                
+                if (filteredProjects.length === 0) {
+                    projectList.innerHTML = '<div class="empty-state"><i class="fas fa-project-diagram"></i><span>暂无项目</span></div>';
+                    return;
+                }
+                
+                filteredProjects.forEach((project, index) => {
+                    const statusClass = `status-${project.status}`;
+                    const statusText = {
+                        planning: '规划中',
+                        progress: '进行中',
+                        review: '审核中',
+                        completed: '已完成'
+                    }[project.status];
+                    
+                    const projectItem = document.createElement('div');
+                    projectItem.className = 'project-item list-item';
+                    projectItem.style.animationDelay = `${index * 0.05}s`;
+                    projectItem.innerHTML = `
+                        <div class="project-header">
+                            <span class="project-name">${project.name}</span>
+                            <span class="project-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="project-details">
+                            <div class="project-detail-item">
+                                <i class="fas fa-user-tie"></i> 负责人: ${project.manager}
+                            </div>
+                            <div class="project-detail-item">
+                                <i class="fas fa-mobile-alt"></i> 适配: ${project.device}
+                            </div>
+                            <div class="project-detail-item">
+                                <i class="fas fa-calendar-alt"></i> 截止: ${project.deadline}
+                            </div>
+                            <div class="project-detail-item">
+                                <i class="fas fa-chart-line"></i> 进度: ${project.progress}%
+                            </div>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-bar">
+                                <div class="project-progress-fill" style="width: ${project.progress}%"></div>
+                            </div>
+                        </div>
+                        <div class="project-log">
+                            ${project.logs.slice(-3).map(log => `
+                                <div class="project-log-entry">
+                                    <i class="fas fa-history"></i>
+                                    <span>[${log.time}] ${log.action}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="project-actions">
+                            <button class="project-action-btn" onclick="window.officeSystem.updateProjectProgress(${project.id}, 5)">+5%</button>
+                            <button class="project-action-btn" onclick="window.officeSystem.updateProjectStatus(${project.id}, 'planning')" ${project.status === 'planning' ? 'disabled' : ''}>规划</button>
+                            <button class="project-action-btn" onclick="window.officeSystem.updateProjectStatus(${project.id}, 'progress')" ${project.status === 'progress' ? 'disabled' : ''}>进行</button>
+                            <button class="project-action-btn" onclick="window.officeSystem.updateProjectStatus(${project.id}, 'review')" ${project.status === 'review' ? 'disabled' : ''}>审核</button>
+                            <button class="project-action-btn" onclick="window.officeSystem.updateProjectStatus(${project.id}, 'completed')" ${project.status === 'completed' ? 'disabled' : ''}>完成</button>
+                            <button class="project-action-btn" onclick="window.officeSystem.addProjectLog(${project.id})" title="添加记录"><i class="fas fa-plus-circle"></i> 记录</button>
+                            <button class="project-action-btn delete" onclick="window.officeSystem.deleteProject(${project.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    projectList.appendChild(projectItem);
+                });
+            }
+
+            addProject(name, desc, manager, device, progress, deadline) {
+                console.log(`[Project] 尝试添加项目: "${name}"`);
+                if (!name.trim()) {
+                    console.warn('[Project] 添加失败: 名称为空');
+                    this.showToast('❌ 请输入项目名称');
+                    return;
+                }
+                
+                const newProject = {
+                    id: Date.now(),
+                    name: name.trim(),
+                    desc: desc.trim() || "暂无描述",
+                    manager: manager.trim() || "未分配",
+                    device: device.trim() || "未指定",
+                    status: 'planning',
+                    progress: parseInt(progress) || 0,
+                    deadline: deadline || this.getDefaultDeadline(),
+                    logs: [{ time: new Date().toLocaleString('zh-CN'), action: "项目创建" }],
+                    createdAt: new Date().toISOString()
+                };
+                this.projects.push(newProject);
+                this.saveProjects();
+                this.renderProjects();
+                console.log('[Project] 项目添加成功:', newProject);
+                this.showToast(`✅ 项目 "${name}" 已创建`);
+            }
+
+            getDefaultDeadline() {
+                const date = new Date();
+                date.setMonth(date.getMonth() + 1);
+                return date.toISOString().split('T')[0];
+            }
+
+            updateProjectProgress(projectId, increment) {
+                const project = this.projects.find(p => p.id === projectId);
+                if (project) {
+                    project.progress = Math.min(100, Math.max(0, project.progress + increment));
+                    this.saveProjects();
+                    this.renderProjects();
+                    this.showToast(`📊 项目进度: ${project.progress}%`);
+                    console.log(`[Project] 项目进度更新: ${project.name} -> ${project.progress}%`);
+                }
+            }
+
+            updateProjectStatus(projectId, status) {
+                const project = this.projects.find(p => p.id === projectId);
+                if (project) {
+                    const oldStatus = project.status;
+                    project.status = status;
+                    if (status === 'completed') {
+                        project.progress = 100;
+                    }
+                    this.addProjectLogEntry(projectId, `状态变更: ${oldStatus} → ${status}`);
+                    this.saveProjects();
+                    this.renderProjects();
+                    this.showToast(`✅ 项目状态已更新为: ${status}`);
+                    console.log(`[Project] 项目状态更新: ${project.name} ${oldStatus} -> ${status}`);
+                }
+            }
+
+            addProjectLog(projectId) {
+                const project = this.projects.find(p => p.id === projectId);
+                if (!project) return;
+                
+                const action = prompt('请输入操作记录:');
+                if (action && action.trim()) {
+                    this.addProjectLogEntry(projectId, action.trim());
+                    this.saveProjects();
+                    this.renderProjects();
+                    this.showToast('✅ 操作记录已添加');
+                }
+            }
+
+            addProjectLogEntry(projectId, action) {
+                const project = this.projects.find(p => p.id === projectId);
+                if (project) {
+                    project.logs.unshift({
+                        time: new Date().toLocaleString('zh-CN'),
+                        action: action
+                    });
+                    if (project.logs.length > 20) {
+                        project.logs = project.logs.slice(0, 20);
+                    }
+                }
+            }
+
+            deleteProject(projectId) {
+                const project = this.projects.find(p => p.id === projectId);
+                if (!project) return;
+                
+                if (confirm(`确定删除项目 "${project.name}" 吗？`)) {
+                    this.projects = this.projects.filter(p => p.id !== projectId);
+                    this.saveProjects();
+                    this.renderProjects();
+                    this.showToast('🗑️ 项目已删除');
+                    console.log(`[Project] 项目已删除: ${project.name}`);
+                }
+            }
+
+            filterProjects(filter) {
+                this.currentFilter = filter;
+                this.renderProjects();
+            }
+
+            // 主题系统
+            initTheme() {
+                console.log('[Theme] 初始化主题...');
+                this.setTheme(this.settings.theme || 'light');
+            }
+
+            setTheme(theme) {
+                document.documentElement.removeAttribute('data-theme');
+                
+                if (theme !== 'light') {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+                
+                const themeToggle = document.getElementById('themeToggle');
+                if (theme === 'night') {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                } else if (theme === 'cold-blue') {
+                    themeToggle.innerHTML = '<i class="fas fa-snowflake"></i>';
+                } else if (theme === 'warm-yellow') {
+                    themeToggle.innerHTML = '<i class="fas fa-eye"></i>';
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+                
+                document.querySelectorAll('.theme-option').forEach(option => {
+                    option.classList.remove('active');
+                    if (option.dataset.theme === theme) {
+                        option.classList.add('active');
+                    }
+                });
+                
+                this.settings.theme = theme;
+                this.saveAllData();
+                 console.log(`[Theme] 主题已切换为: ${theme}`);
+            }
+
+            toggleThemeSelector() {
+                document.getElementById('themeDropdown').classList.toggle('show');
+            }
+
+            // 事件监听
+            initEventListeners() {
+                // 主题切换
+                document.getElementById('themeToggle').addEventListener('click', () => {
+                    this.toggleThemeSelector();
+                });
+                
+                document.querySelectorAll('.theme-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.setTheme(option.dataset.theme);
+                        this.toggleThemeSelector();
+                    });
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.theme-selector')) {
+                        document.getElementById('themeDropdown').classList.remove('show');
+                    }
+                });
+                
+                // 倒计时刷新
+                document.getElementById('refreshTimer').addEventListener('click', () => {
+                    this.updateAllTimers();
+                    this.showToast('🔄 倒计时已刷新');
+                });
+                
+                // 任务相关
+                document.getElementById('addTaskBtn').addEventListener('click', () => {
+                    const name = document.getElementById('taskInput').value;
+                    this.addTask(name);
+                });
+                
+                document.getElementById('taskInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const name = document.getElementById('taskInput').value;
+                        this.addTask(name);
+                    }
+                });
+                
+                document.getElementById('taskList').addEventListener('click', (e) => {
+                    const checkbox = e.target.closest('.item-checkbox');
+                    const editBtn = e.target.closest('.item-action-btn.edit');
+                    const deleteBtn = e.target.closest('.item-action-btn.delete');
+                    
+                    if (checkbox) {
+                        this.toggleTask(parseInt(checkbox.dataset.id));
+                    } else if (editBtn) {
+                        this.editTask(parseInt(editBtn.dataset.id));
+                    } else if (deleteBtn) {
+                        this.deleteTask(parseInt(deleteBtn.dataset.id));
+                    }
+                });
+                
+                document.getElementById('addTaskQuick').addEventListener('click', () => {
+                    document.getElementById('taskInput').focus();
+                });
+                
+                // 备忘录相关
+                document.getElementById('addMemoBtn').addEventListener('click', () => {
+                    const text = document.getElementById('memoInput').value;
+                    this.addMemo(text);
+                });
+                
+                document.getElementById('memoInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const text = document.getElementById('memoInput').value;
+                        this.addMemo(text);
+                    }
+                });
+                
+                document.getElementById('memoList').addEventListener('click', (e) => {
+                    const checkbox = e.target.closest('.item-checkbox');
+                    const editBtn = e.target.closest('.item-action-btn.edit');
+                    const deleteBtn = e.target.closest('.item-action-btn.delete');
+                    
+                    if (checkbox) {
+                        this.toggleMemo(parseInt(checkbox.dataset.id));
+                    } else if (editBtn) {
+                        this.editMemo(parseInt(editBtn.dataset.id));
+                    } else if (deleteBtn) {
+                        this.deleteMemo(parseInt(deleteBtn.dataset.id));
+                    }
+                });
+                
+                document.getElementById('clearCompletedMemo').addEventListener('click', () => {
+                    this.clearCompletedMemos();
+                });
+                
+                // 签到相关
+                document.getElementById('signInBtn').addEventListener('click', () => {
+                    this.signIn(false);
+                });
+                
+                document.getElementById('signOutBtn').addEventListener('click', () => {
+                    this.signOut();
+                });
+                
+                document.getElementById('exportLogsBtn').addEventListener('click', () => {
+                    this.exportLogs();
+                });
+                
+                document.getElementById('refreshLogs').addEventListener('click', () => {
+                    this.loadLogs();
+                    this.showToast('🔄 日志已刷新');
+                });
+                
+                // 目标相关
+                document.getElementById('addGoalBtn').addEventListener('click', () => {
+                    const name = document.getElementById('goalName').value;
+                    const target = document.getElementById('goalTarget').value;
+                    this.addGoal(name, target);
+                });
+                
+                document.getElementById('goalName').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const name = document.getElementById('goalName').value;
+                        const target = document.getElementById('goalTarget').value;
+                        this.addGoal(name, target);
+                    }
+                });
+                
+                document.getElementById('addGoalQuick').addEventListener('click', () => {
+                    document.getElementById('goalName').focus();
+                });
+                
+                // 项目相关
+                document.querySelectorAll('.project-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.project-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        this.filterProjects(tab.dataset.filter);
+                    });
+                });
+                
+                document.getElementById('addProjectQuick').addEventListener('click', () => {
+                    this.showProjectModal();
+                });
+            }
+
+            // 模态框系统
+            initModals() {
+                this.modal = {
+                    overlay: document.getElementById('modalOverlay'),
+                    title: document.getElementById('modalTitle'),
+                    body: document.getElementById('modalBody'),
+                    footer: document.getElementById('modalFooter'),
+                    close: document.getElementById('modalClose'),
+                    cancel: document.getElementById('modalCancel'),
+                    confirm: document.getElementById('modalConfirm')
+                };
+                
+                this.modal.close.addEventListener('click', () => this.hideModal());
+                this.modal.cancel.addEventListener('click', () => this.hideModal());
+                this.modal.overlay.addEventListener('click', (e) => {
+                    if (e.target === this.modal.overlay) {
+                        this.hideModal();
+                    }
+                });
+            }
+
+            showModal(title, content, onConfirm) {
+                this.modal.title.textContent = title;
+                this.modal.body.innerHTML = content;
+                this.modal.footer.style.display = onConfirm ? 'flex' : 'none';
+                this.modal.overlay.classList.add('show');
+                
+                if (onConfirm) {
+                    const handleConfirm = () => {
+                        onConfirm();
+                        this.hideModal();
+                        this.modal.confirm.removeEventListener('click', handleConfirm);
+                    };
+                    this.modal.confirm.addEventListener('click', handleConfirm);
+                }
+            }
+
+            hideModal() {
+                this.modal.overlay.classList.remove('show');
+            }
+
+            showTaskModal() {
+                const content = `
+                    <div class="form-group">
+                        <label class="form-label">任务名称 *</label>
+                        <input type="text" class="form-input" id="modalTaskName" placeholder="输入任务名称">
+                    </div>
+                `;
+                
+                this.showModal('新建任务', content, () => {
+                    const name = document.getElementById('modalTaskName').value;
+                    this.addTask(name);
+                });
+                
+                setTimeout(() => document.getElementById('modalTaskName').focus(), 100);
+            }
+
+            showGoalModal() {
+                const content = `
+                    <div class="form-group">
+                        <label class="form-label">目标名称 *</label>
+                        <input type="text" class="form-input" id="modalGoalName" placeholder="输入目标名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">目标值 (0-100)</label>
+                        <input type="number" class="form-input" id="modalGoalTarget" placeholder="100" min="0" max="100" value="100">
+                    </div>
+                `;
+                
+                this.showModal('新建目标', content, () => {
+                    const name = document.getElementById('modalGoalName').value;
+                    const target = document.getElementById('modalGoalTarget').value;
+                    this.addGoal(name, target);
+                });
+                
+                setTimeout(() => document.getElementById('modalGoalName').focus(), 100);
+            }
+
+            showProjectModal() {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const defaultDeadline = tomorrow.toISOString().split('T')[0];
+                
+                const content = `
+                    <div class="form-group">
+                        <label class="form-label">项目名称 *</label>
+                        <input type="text" class="form-input" id="modalProjectName" placeholder="输入项目名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">项目描述</label>
+                        <textarea class="form-textarea" id="modalProjectDesc" rows="2" placeholder="输入项目描述"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">负责人</label>
+                            <input type="text" class="form-input" id="modalProjectManager" placeholder="项目负责人">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">适配机型</label>
+                            <input type="text" class="form-input" id="modalProjectDevice" placeholder="如: PC/iOS/Android">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">初始进度 (%)</label>
+                            <input type="number" class="form-input" id="modalProjectProgress" placeholder="0-100" min="0" max="100" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">截止日期</label>
+                            <input type="date" class="form-input" id="modalProjectDeadline" value="${defaultDeadline}">
+                        </div>
+                    </div>
+                `;
+                
+                this.showModal('新建项目', content, () => {
+                    const name = document.getElementById('modalProjectName').value;
+                    const desc = document.getElementById('modalProjectDesc').value;
+                    const manager = document.getElementById('modalProjectManager').value;
+                    const device = document.getElementById('modalProjectDevice').value;
+                    const progress = document.getElementById('modalProjectProgress').value;
+                    const deadline = document.getElementById('modalProjectDeadline').value;
+                    this.addProject(name, desc, manager, device, progress, deadline);
+                });
+                
+                setTimeout(() => document.getElementById('modalProjectName').focus(), 100);
+            }
+
+            // 分享/截图功能 - 已暂时移除
+            initShareFunction() {
+                // 截图功能因外部依赖问题暂时禁用
+                // 待核心功能稳定后，将使用更可靠的方式重新引入
+                console.log('[Share] 截图功能已暂时禁用，以避免外部依赖导致系统不稳定。');
+            }
+
+            // 工具函数
+            showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.querySelector('#toastMessage').textContent = message;
+                toast.style.display = 'flex';
+                toast.style.animation = 'slideIn 0.3s ease';
+                
+                setTimeout(() => {
+                    toast.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => toast.style.display = 'none', 300);
+                }, 3000);
+            }
+        }
+
+        // 初始化系统
+        document.addEventListener('DOMContentLoaded', () => {
+            window.officeSystem = new SmartOfficeProV2();
+        });
+    </script>
+</body>
+</html>
