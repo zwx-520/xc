@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>五开游戏管理助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --card-bg: #1e293b;
+            --card-bg-light: #2d3748;
+            --border: #334155;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1a2e 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 顶部标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* 安全提示 */
+        .security-alert {
+            background: linear-gradient(90deg, #dc2626, #b91c1c);
+            border: 1px solid #7f1d1d;
+            border-radius: var(--radius);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+
+        .security-alert i {
+            font-size: 18px;
+            color: white;
+        }
+
+        .security-alert p {
+            color: white;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* 主标签页 */
+        .main-tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 5px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .main-tab {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .main-tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .main-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 游戏管理区域 */
+        .games-management {
+            display: none;
+        }
+
+        .games-management.active {
+            display: block;
+        }
+
+        /* 游戏卡片区域 */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow);
+            border-color: var(--primary);
+        }
+
+        .game-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--card-bg) 0%, #2d3748 100%);
+        }
+
+        .game-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .game-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .game-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .game-info p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .game-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .status-normal {
+            color: var(--secondary);
+        }
+
+        .status-warning {
+            color: var(--warning);
+        }
+
+        .status-danger {
+            color: var(--danger);
+        }
+
+        /* 账号管理区域 */
+        .accounts-management {
+            display: none;
+        }
+
+        .accounts-management.active {
+            display: block;
+        }
+
+        /* 角色管理区域 */
+        .roles-management {
+            display: none;
+        }
+
+        .roles-management.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        /* 账号卡片 */
+        .accounts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .account-card {
+            background: var(--card-bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .account-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .account-info h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .account-game {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .account-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .account-stat {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .account-stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .account-stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .account-security {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .security-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .security-label {
+            color: var(--text-muted);
+        }
+
+        .security-value {
+            font-weight: 600;
+        }
+
+        .account-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* 角色列表 */
+        .roles-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .role-card {
+            background: var(--card-bg-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 15px;
+            transition: var(--transition);
+        }
+
+        .role-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .role-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .role-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .role-account {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .role-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .role-stat {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .role-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.8);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--card-bg-light);
+            color: var(--text);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .custom-items {
+            margin-top: 15px;
+        }
+
+        .custom-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .custom-item input {
+            flex: 1;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .games-grid,
+            .accounts-list,
+            .roles-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .modal {
+                width: 95%;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部标题 -->
+        <div class="page-header">
+            <h1>五开游戏管理助手</h1>
+            <p>专业管理梦幻西游、大话西游2、问道三端账号与角色</p>
+        </div>
+
+        <!-- 安全提示 -->
+        <div class="security-alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p style="margin:0">安全提示：请勿在此系统保存真实的重要密码，建议使用独立的密码管理工具。本系统使用本地加密存储，但仍有风险。</p>
+        </div>
+
+        <!-- 主标签页 -->
+        <div class="main-tabs">
+            <button class="main-tab active" data-tab="games">
+                <i class="fas fa-gamepad"></i>
+                游戏管理
+            </button>
+            <button class="main-tab" data-tab="accounts">
+                <i class="fas fa-user-shield"></i>
+                账号管理
+            </button>
+            <button class="main-tab" data-tab="roles">
+                <i class="fas fa-users"></i>
+                角色管理
+            </button>
+        </div>
+
+        <!-- 游戏管理 -->
+        <div class="games-management active" id="gamesTab">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-gamepad"></i>
+                    游戏管理
+                </h2>
+            </div>
+            
+            <div class="games-grid" id="gamesGrid">
+                <!-- 游戏卡片将通过JS动态生成 -->
+            </div>
+        </div>
+
+        <!-- 账号管理 -->
+        <div class="accounts-management" id="accountsTab">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-user-shield"></i>
+                    账号管理
+                </h2>
+                <button class="btn btn-primary" id="addAccountBtn">
+                    <i class="fas fa-plus"></i>
+                    添加账号
+                </button>
+            </div>
+            
+            <div class="accounts-list" id="accountsList">
+                <!-- 账号列表将通过JS动态生成 -->
+            </div>
+        </div>
+
+        <!-- 角色管理 -->
+        <div class="roles-management" id="rolesTab">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    角色管理
+                </h2>
+                <button class="btn btn-primary" id="addRoleBtn">
+                    <i class="fas fa-plus"></i>
+                    添加角色
+                </button>
+            </div>
+            
+            <div class="roles-list" id="rolesList">
+                <!-- 角色列表将通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加/编辑账号弹窗 -->
+    <div class="modal-overlay" id="accountModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="accountModalTitle">添加账号</h3>
+                <button class="modal-close" id="closeAccountModal">&times;</button>
+            </div>
+            <form id="accountForm">
+                <div class="form-group">
+                    <label class="form-label">游戏选择</label>
+                    <select class="form-control" id="accountGame" required>
+                        <option value="">请选择游戏</option>
+                        <option value="1">梦幻西游三维版</option>
+                        <option value="2">大话西游2</option>
+                        <option value="3">问道</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">账号名</label>
+                    <input type="text" class="form-control" id="accountUsername" required placeholder="请输入账号名">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">密码</label>
+                        <input type="password" class="form-control" id="accountPassword" required placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">确认密码</label>
+                        <input type="password" class="form-control" id="accountPasswordConfirm" required placeholder="请再次输入密码">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">绑定邮箱</label>
+                        <input type="email" class="form-control" id="accountEmail" placeholder="请输入绑定邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">绑定手机</label>
+                        <input type="tel" class="form-control" id="accountPhone" placeholder="请输入绑定手机">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">安全码</label>
+                        <input type="text" class="form-control" id="accountSecurityCode" placeholder="请输入安全码">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">密保问题</label>
+                        <input type="text" class="form-control" id="accountSecurityQuestion" placeholder="请输入密保问题">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">账号状态</label>
+                    <select class="form-control" id="accountStatus">
+                        <option value="正常">正常</option>
+                        <option value="警告">警告</option>
+                        <option value="异常">异常</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">备注</label>
+                    <textarea class="form-control" id="accountRemark" rows="3" placeholder="备注信息"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelAccountBtn">取消</button>
+                    <button type="submit" class="btn btn-primary" id="saveAccountBtn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加/编辑角色弹窗 -->
+    <div class="modal-overlay" id="roleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="roleModalTitle">添加角色</h3>
+                <button class="modal-close" id="closeRoleModal">&times;</button>
+            </div>
+            <form id="roleForm">
+                <div class="form-group">
+                    <label class="form-label">游戏选择</label>
+                    <select class="form-control" id="roleGame" required>
+                        <option value="">请选择游戏</option>
+                        <option value="1">梦幻西游三维版</option>
+                        <option value="2">大话西游2</option>
+                        <option value="3">问道</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">账号选择</label>
+                    <select class="form-control" id="roleAccount" required>
+                        <option value="">请选择账号</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">角色名</label>
+                    <input type="text" class="form-control" id="roleName" required placeholder="请输入角色名">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">角色等级</label>
+                        <input type="number" class="form-control" id="roleLevel" placeholder="等级">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">职业</label>
+                        <input type="text" class="form-control" id="roleClass" placeholder="职业">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">今日收益</label>
+                        <input type="number" step="0.01" class="form-control" id="roleIncome" placeholder="¥0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">货币数量</label>
+                        <input type="number" class="form-control" id="roleCurrency" placeholder="货币数量">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">背包道具</label>
+                    <div id="backpackItems">
+                        <div class="custom-item">
+                            <input type="text" class="form-control" placeholder="道具名称" name="itemName">
+                            <input type="number" class="form-control" placeholder="数量" name="itemCount">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeBackpackItem(this)">删除</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addBackpackItem()" style="margin-top: 10px;">
+                        <i class="fas fa-plus"></i> 添加道具
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">宝宝/宠物</label>
+                    <div id="petItems">
+                        <div class="custom-item">
+                            <input type="text" class="form-control" placeholder="宠物名称" name="petName">
+                            <input type="text" class="form-control" placeholder="宠物类型" name="petType">
+                            <input type="number" class="form-control" placeholder="等级" name="petLevel">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removePetItem(this)">删除</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addPetItem()" style="margin-top: 10px;">
+                        <i class="fas fa-plus"></i> 添加宠物
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">角色状态</label>
+                    <select class="form-control" id="roleStatus">
+                        <option value="正常">正常</option>
+                        <option value="警告">警告</option>
+                        <option value="异常">异常</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">备注</label>
+                    <textarea class="form-control" id="roleRemark" rows="3" placeholder="备注信息"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelRoleBtn">取消</button>
+                    <button type="submit" class="btn btn-primary" id="saveRoleBtn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 数据存储
+        let gamesData = {
+            1: {
+                id: 1,
+                name: "梦幻西游三维版",
+                version: "时间服·互通版",
+                icon: "fas fa-dragon",
+                color: "#6366f1",
+                accounts: [],
+                totalRoles: 0,
+                totalIncome: 0
+            },
+            2: {
+                id: 2,
+                name: "大话西游2",
+                version: "经典版",
+                icon: "fas fa-hat-wizard",
+                color: "#10b981",
+                accounts: [],
+                totalRoles: 0,
+                totalIncome: 0
+            },
+            3: {
+                id: 3,
+                name: "问道",
+                version: "经典版",
+                icon: "fas fa-question",
+                color: "#f59e0b",
+                accounts: [],
+                totalRoles: 0,
+                totalIncome: 0
+            }
+        };
+
+        // 账号ID计数器
+        let nextAccountId = 1000;
+        let nextRoleId = 10000;
+        let currentAccountId = null;
+        let currentRoleId = null;
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            renderGames();
+            renderAccounts();
+            renderRoles();
+            setupEventListeners();
+            
+            // 默认显示游戏管理页
+            switchTab('games');
+        });
+
+        // 从本地存储加载数据
+        function loadFromStorage() {
+            const savedData = localStorage.getItem('gamesData');
+            if (savedData) {
+                const parsed = JSON.parse(savedData);
+                gamesData = parsed.gamesData || gamesData;
+                nextAccountId = parsed.nextAccountId || 1000;
+                nextRoleId = parsed.nextRoleId || 10000;
+                
+                // 重新计算统计数据
+                calculateAllStatistics();
+            } else {
+                // 初始化示例数据
+                initSampleData();
+            }
+        }
+
+        // 初始化示例数据
+        function initSampleData() {
+            // 梦幻西游账号
+            const mhAccount1 = {
+                id: nextAccountId++,
+                username: "mhxy_001",
+                password: "******",
+                email: "user1@example.com",
+                phone: "138****0001",
+                securityCode: "ABC123",
+                securityQuestion: "母亲姓名是？",
+                status: "正常",
+                remark: "主账号",
+                roles: [],
+                totalIncome: 0
+            };
+            
+            const mhAccount2 = {
+                id: nextAccountId++,
+                username: "mhxy_002",
+                password: "******",
+                email: "user2@example.com",
+                phone: "139****0002",
+                securityCode: "DEF456",
+                securityQuestion: "出生地是？",
+                status: "正常",
+                remark: "副账号",
+                roles: [],
+                totalIncome: 0
+            };
+            
+            gamesData[1].accounts = [mhAccount1, mhAccount2];
+            
+            // 大话西游账号
+            const dhAccount = {
+                id: nextAccountId++,
+                username: "dhxy_001",
+                password: "******",
+                email: "user3@example.com",
+                phone: "137****0003",
+                securityCode: "GHI789",
+                securityQuestion: "初恋名字？",
+                status: "正常",
+                remark: "主账号",
+                roles: [],
+                totalIncome: 0
+            };
+            
+            gamesData[2].accounts = [dhAccount];
+            
+            // 问道账号
+            const wdAccount = {
+                id: nextAccountId++,
+                username: "wd_001",
+                password: "******",
+                email: "user4@example.com",
+                phone: "135****0004",
+                securityCode: "JKL012",
+                securityQuestion: "最喜欢的书？",
+                status: "正常",
+                remark: "主账号",
+                roles: [],
+                totalIncome: 0
+            };
+            
+            gamesData[3].accounts = [wdAccount];
+            
+            saveToStorage();
+        }
+
+        // 保存数据到本地存储
+        function saveToStorage() {
+            calculateAllStatistics();
+            const data = {
+                gamesData,
+                nextAccountId,
+                nextRoleId
+            };
+            localStorage.setItem('gamesData', JSON.stringify(data));
+        }
+
+        // 计算所有统计数据
+        function calculateAllStatistics() {
+            // 重置所有统计
+            Object.values(gamesData).forEach(game => {
+                game.totalRoles = 0;
+                game.totalIncome = 0;
+                
+                game.accounts.forEach(account => {
+                    account.totalIncome = 0;
+                    account.roles.forEach(role => {
+                        account.totalIncome += role.income || 0;
+                    });
+                    
+                    game.totalRoles += account.roles.length;
+                    game.totalIncome += account.totalIncome;
+                });
+            });
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 主标签页切换
+            document.querySelectorAll('.main-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const tabName = e.target.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
+            
+            // 账号管理按钮
+            document.getElementById('addAccountBtn').addEventListener('click', () => openAccountModal());
+            document.getElementById('closeAccountModal').addEventListener('click', closeAccountModal);
+            document.getElementById('cancelAccountBtn').addEventListener('click', closeAccountModal);
+            document.getElementById('accountForm').addEventListener('submit', handleAccountSubmit);
+            
+            // 角色管理按钮
+            document.getElementById('addRoleBtn').addEventListener('click', () => openRoleModal());
+            document.getElementById('closeRoleModal').addEventListener('click', closeRoleModal);
+            document.getElementById('cancelRoleBtn').addEventListener('click', closeRoleModal);
+            document.getElementById('roleForm').addEventListener('submit', handleRoleSubmit);
+            
+            // 游戏和账号选择联动
+            document.getElementById('roleGame').addEventListener('change', updateAccountOptions);
+        }
+
+        // 切换主标签页
+        function switchTab(tabName) {
+            // 更新按钮状态
+            document.querySelectorAll('.main-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // 显示对应内容
+            document.querySelectorAll('.games-management, .accounts-management, .roles-management').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+        }
+
+        // 渲染游戏卡片
+        function renderGames() {
+            const gamesGrid = document.getElementById('gamesGrid');
+            gamesGrid.innerHTML = '';
+            
+            Object.values(gamesData).forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                
+                gameCard.innerHTML = `
+                    <div class="game-header">
+                        <div class="game-icon" style="background: ${game.color}">
+                            <i class="${game.icon}"></i>
+                        </div>
+                        <div class="game-info">
+                            <h3>${game.name}</h3>
+                            <p>${game.version}</p>
+                        </div>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">账号数量</span>
+                            <span class="stat-value">${game.accounts.length}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">角色总数</span>
+                            <span class="stat-value">${game.totalRoles}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">今日总收益</span>
+                            <span class="stat-value">¥${game.totalIncome.toFixed(2)}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">平均收益</span>
+                            <span class="stat-value">¥${(game.totalIncome / Math.max(game.totalRoles, 1)).toFixed(2)}</span>
+                        </div>
+                    </div>
+                `;
+                
+                gamesGrid.appendChild(gameCard);
+            });
+        }
+
+        // 渲染账号列表
+        function renderAccounts() {
+            const accountsList = document.getElementById('accountsList');
+            
+            // 获取所有账号
+            const allAccounts = [];
+            Object.values(gamesData).forEach(game => {
+                game.accounts.forEach(account => {
+                    allAccounts.push({
+                        ...account,
+                        gameName: game.name,
+                        gameId: game.id
+                    });
+                });
+            });
+            
+            if (allAccounts.length === 0) {
+                accountsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-shield"></i>
+                        <p>暂无账号，点击"添加账号"按钮创建新账号</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            accountsList.innerHTML = '';
+            allAccounts.forEach(account => {
+                const accountCard = document.createElement('div');
+                accountCard.className = 'account-card';
+                
+                accountCard.innerHTML = `
+                    <div class="account-header">
+                        <div class="account-info">
+                            <h4>${account.username}</h4>
+                            <div class="account-game">${account.gameName}</div>
+                        </div>
+                        <span class="status-${account.status === '正常' ? 'normal' : account.status === '警告' ? 'warning' : 'danger'}">${account.status}</span>
+                    </div>
+                    
+                    <div class="account-stats">
+                        <div class="account-stat">
+                            <div class="account-stat-value">${account.roles.length}</div>
+                            <div class="account-stat-label">角色数</div>
+                        </div>
+                        <div class="account-stat">
+                            <div class="account-stat-value">¥${account.totalIncome.toFixed(2)}</div>
+                            <div class="account-stat-label">今日收益</div>
+                        </div>
+                    </div>
+                    
+                    <div class="account-security">
+                        <div class="security-item">
+                            <span class="security-label">绑定邮箱</span>
+                            <span class="security-value">${account.email}</span>
+                        </div>
+                        <div class="security-item">
+                            <span class="security-label">绑定手机</span>
+                            <span class="security-value">${account.phone}</span>
+                        </div>
+                        <div class="security-item">
+                            <span class="security-label">安全码</span>
+                            <span class="security-value">${account.securityCode}</span>
+                        </div>
+                        <div class="security-item">
+                            <span class="security-label">密保问题</span>
+                            <span class="security-value">${account.securityQuestion}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="account-actions">
+                        <button class="btn btn-primary btn-sm" onclick="editAccount(${account.id}, ${account.gameId})">编辑</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAccount(${account.id}, ${account.gameId})">删除</button>
+                        <button class="btn btn-success btn-sm" onclick="addRoleToAccount(${account.id}, ${account.gameId})">添加角色</button>
+                    </div>
+                `;
+                
+                accountsList.appendChild(accountCard);
+            });
+        }
+
+        // 渲染角色列表
+        function renderRoles() {
+            const rolesList = document.getElementById('rolesList');
+            
+            // 获取所有角色
+            const allRoles = [];
+            Object.values(gamesData).forEach(game => {
+                game.accounts.forEach(account => {
+                    account.roles.forEach(role => {
+                        allRoles.push({
+                            ...role,
+                            accountName: account.username,
+                            gameName: game.name
+                        });
+                    });
+                });
+            });
+            
+            if (allRoles.length === 0) {
+                rolesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>暂无角色，点击"添加角色"按钮创建新角色</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            rolesList.innerHTML = '';
+            allRoles.forEach(role => {
+                const roleCard = document.createElement('div');
+                roleCard.className = 'role-card';
+                
+                const backpackItems = (role.backpack || []).map(item => `${item.name}×${item.count}`).join(', ') || '无';
+                const petItems = (role.pets || []).map(pet => `${pet.name}(${pet.type})Lv${pet.level}`).join(', ') || '无';
+                
+                roleCard.innerHTML = `
+                    <div class="role-header">
+                        <div>
+                            <div class="role-name">${role.name}</div>
+                            <div class="role-account">${role.gameName} - ${role.accountName}</div>
+                        </div>
+                        <span class="status-${role.status === '正常' ? 'normal' : role.status === '警告' ? 'warning' : 'danger'}">${role.status}</span>
+                    </div>
+                    <div class="role-stats">
+                        <div class="role-stat">
+                            <span class="detail-label">等级</span>
+                            <span class="detail-value">${role.level || 0}</span>
+                        </div>
+                        <div class="role-stat">
+                            <span class="detail-label">职业</span>
+                            <span class="detail-value">${role.class || '未设置'}</span>
+                        </div>
+                        <div class="role-stat">
+                            <span class="detail-label">今日收益</span>
+                            <span class="detail-value">¥${(role.income || 0).toFixed(2)}</span>
+                        </div>
+                        <div class="role-stat">
+                            <span class="detail-label">货币</span>
+                            <span class="detail-value">${(role.currency || 0).toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div class="role-details">
+                        <div class="detail-label">背包道具: ${backpackItems}</div>
+                        <div class="detail-label">宝宝/宠物: ${petItems}</div>
+                    </div>
+                    <div class="role-actions">
+                        <button class="btn btn-primary btn-sm" onclick="editRole(${role.id})">编辑</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteRole(${role.id})">删除</button>
+                    </div>
+                `;
+                
+                rolesList.appendChild(roleCard);
+            });
+        }
+
+        // 账号管理功能
+        function openAccountModal(accountId = null, gameId = null) {
+            const modal = document.getElementById('accountModal');
+            const title = document.getElementById('accountModalTitle');
+            
+            if (accountId && gameId) {
+                title.textContent = '编辑账号';
+                currentAccountId = accountId;
+                loadAccountData(accountId, gameId);
+            } else {
+                title.textContent = '添加账号';
+                currentAccountId = null;
+                document.getElementById('accountForm').reset();
+                
+                // 如果传入了游戏ID，设置默认游戏
+                if (gameId) {
+                    document.getElementById('accountGame').value = gameId;
+                }
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeAccountModal() {
+            document.getElementById('accountModal').classList.remove('active');
+        }
+
+        function loadAccountData(accountId, gameId) {
+            const game = gamesData[gameId];
+            if (!game) return;
+            
+            const account = game.accounts.find(acc => acc.id === accountId);
+            if (!account) return;
+            
+            document.getElementById('accountGame').value = gameId;
+            document.getElementById('accountUsername').value = account.username;
+            document.getElementById('accountPassword').value = account.password;
+            document.getElementById('accountPasswordConfirm').value = account.password;
+            document.getElementById('accountEmail').value = account.email;
+            document.getElementById('accountPhone').value = account.phone;
+            document.getElementById('accountSecurityCode').value = account.securityCode;
+            document.getElementById('accountSecurityQuestion').value = account.securityQuestion;
+            document.getElementById('accountStatus').value = account.status;
+            document.getElementById('accountRemark').value = account.remark || '';
+        }
+
+        function handleAccountSubmit(event) {
+            event.preventDefault();
+            
+            const password = document.getElementById('accountPassword').value;
+            const confirmPassword = document.getElementById('accountPasswordConfirm').value;
+            
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致！');
+                return;
+            }
+            
+            const formData = {
+                gameId: parseInt(document.getElementById('accountGame').value),
+                username: document.getElementById('accountUsername').value,
+                password: password,
+                email: document.getElementById('accountEmail').value,
+                phone: document.getElementById('accountPhone').value,
+                securityCode: document.getElementById('accountSecurityCode').value,
+                securityQuestion: document.getElementById('accountSecurityQuestion').value,
+                status: document.getElementById('accountStatus').value,
+                remark: document.getElementById('accountRemark').value
+            };
+            
+            if (currentAccountId) {
+                updateAccount(currentAccountId, formData);
+            } else {
+                addAccount(formData);
+            }
+        }
+
+        function addAccount(accountData) {
+            const game = gamesData[accountData.gameId];
+            if (!game) {
+                alert('请选择正确的游戏！');
+                return;
+            }
+            
+            const newAccount = {
+                id: nextAccountId++,
+                username: accountData.username,
+                password: accountData.password,
+                email: accountData.email,
+                phone: accountData.phone,
+                securityCode: accountData.securityCode,
+                securityQuestion: accountData.securityQuestion,
+                status: accountData.status,
+                remark: accountData.remark,
+                roles: [],
+                totalIncome: 0
+            };
+            
+            game.accounts.push(newAccount);
+            saveToStorage();
+            closeAccountModal();
+            renderGames();
+            renderAccounts();
+            renderRoles();
+            
+            alert('账号添加成功！');
+        }
+
+        function updateAccount(accountId, accountData) {
+            const game = gamesData[accountData.gameId];
+            if (!game) {
+                alert('请选择正确的游戏！');
+                return;
+            }
+            
+            const accountIndex = game.accounts.findIndex(acc => acc.id === accountId);
+            if (accountIndex === -1) {
+                alert('账号不存在！');
+                return;
+            }
+            
+            // 更新账号信息
+            game.accounts[accountIndex] = {
+                ...game.accounts[accountIndex],
+                username: accountData.username,
+                password: accountData.password,
+                email: accountData.email,
+                phone: accountData.phone,
+                securityCode: accountData.securityCode,
+                securityQuestion: accountData.securityQuestion,
+                status: accountData.status,
+                remark: accountData.remark
+            };
+            
+            saveToStorage();
+            closeAccountModal();
+            renderGames();
+            renderAccounts();
+            renderRoles();
+            
+            alert('账号更新成功！');
+        }
+
+        function editAccount(accountId, gameId) {
+            openAccountModal(accountId, gameId);
+        }
+
+        function deleteAccount(accountId, gameId) {
+            if (!confirm('确定要删除这个账号吗？此操作会删除账号下的所有角色，且不可恢复！')) {
+                return;
+            }
+            
+            const game = gamesData[gameId];
+            if (!game) return;
+            
+            const accountIndex = game.accounts.findIndex(acc => acc.id === accountId);
+            if (accountIndex === -1) return;
+            
+            // 删除账号
+            game.accounts.splice(accountIndex, 1);
+            saveToStorage();
+            renderGames();
+            renderAccounts();
+            renderRoles();
+            
+            alert('账号删除成功！');
+        }
+
+        function addRoleToAccount(accountId, gameId) {
+            openRoleModal();
+            document.getElementById('roleGame').value = gameId;
+            updateAccountOptions();
+            setTimeout(() => {
+                document.getElementById('roleAccount').value = accountId;
+            }, 100);
+        }
+
+        // 角色管理功能
+        function openRoleModal(roleId = null) {
+            const modal = document.getElementById('roleModal');
+            const title = document.getElementById('roleModalTitle');
+            
+            if (roleId) {
+                title.textContent = '编辑角色';
+                currentRoleId = roleId;
+                loadRoleData(roleId);
+            } else {
+                title.textContent = '添加角色';
+                currentRoleId = null;
+                document.getElementById('roleForm').reset();
+                updateAccountOptions();
+                
+                // 重置自定义项目
+                document.getElementById('backpackItems').innerHTML = `
+                    <div class="custom-item">
+                        <input type="text" class="form-control" placeholder="道具名称" name="itemName">
+                        <input type="number" class="form-control" placeholder="数量" name="itemCount">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeBackpackItem(this)">删除</button>
+                    </div>
+                `;
+                document.getElementById('petItems').innerHTML = `
+                    <div class="custom-item">
+                        <input type="text" class="form-control" placeholder="宠物名称" name="petName">
+                        <input type="text" class="form-control" placeholder="宠物类型" name="petType">
+                        <input type="number" class="form-control" placeholder="等级" name="petLevel">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removePetItem(this)">删除</button>
+                    </div>
+                `;
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeRoleModal() {
+            document.getElementById('roleModal').classList.remove('active');
+        }
+
+        function updateAccountOptions() {
+            const gameId = parseInt(document.getElementById('roleGame').value);
+            const accountSelect = document.getElementById('roleAccount');
+            
+            accountSelect.innerHTML = '<option value="">请选择账号</option>';
+            
+            if (gameId && gamesData[gameId]) {
+                const game = gamesData[gameId];
+                game.accounts.forEach(account => {
+                    const option = document.createElement('option');
+                    option.value = account.id;
+                    option.textContent = account.username;
+                    accountSelect.appendChild(option);
+                });
+            }
+        }
+
+        function loadRoleData(roleId) {
+            let roleData = null;
+            let accountData = null;
+            let gameData = null;
+            
+            // 查找角色数据
+            for (const [gameId, game] of Object.entries(gamesData)) {
+                for (const account of game.accounts) {
+                    const role = account.roles.find(r => r.id === roleId);
+                    if (role) {
+                        roleData = role;
+                        accountData = account;
+                        gameData = { id: gameId, ...game };
+                        break;
+                    }
+                }
+                if (roleData) break;
+            }
+            
+            if (roleData) {
+                document.getElementById('roleGame').value = gameData.id;
+                updateAccountOptions();
+                setTimeout(() => {
+                    document.getElementById('roleAccount').value = accountData.id;
+                }, 100);
+                
+                document.getElementById('roleName').value = roleData.name;
+                document.getElementById('roleLevel').value = roleData.level || '';
+                document.getElementById('roleClass').value = roleData.class || '';
+                document.getElementById('roleIncome').value = roleData.income || 0;
+                document.getElementById('roleCurrency').value = roleData.currency || 0;
+                document.getElementById('roleStatus').value = roleData.status;
+                document.getElementById('roleRemark').value = roleData.remark || '';
+                
+                // 填充背包道具
+                const backpackContainer = document.getElementById('backpackItems');
+                backpackContainer.innerHTML = '';
+                if (roleData.backpack && roleData.backpack.length > 0) {
+                    roleData.backpack.forEach(item => {
+                        addBackpackItem(item.name, item.count);
+                    });
+                } else {
+                    addBackpackItem();
+                }
+                
+                // 填充宠物
+                const petContainer = document.getElementById('petItems');
+                petContainer.innerHTML = '';
+                if (roleData.pets && roleData.pets.length > 0) {
+                    roleData.pets.forEach(pet => {
+                        addPetItem(pet.name, pet.type, pet.level);
+                    });
+                } else {
+                    addPetItem();
+                }
+            }
+        }
+
+        function handleRoleSubmit(event) {
+            event.preventDefault();
+            
+            const formData = {
+                gameId: parseInt(document.getElementById('roleGame').value),
+                accountId: parseInt(document.getElementById('roleAccount').value),
+                name: document.getElementById('roleName').value,
+                level: parseInt(document.getElementById('roleLevel').value) || 0,
+                class: document.getElementById('roleClass').value,
+                income: parseFloat(document.getElementById('roleIncome').value) || 0,
+                currency: parseInt(document.getElementById('roleCurrency').value) || 0,
+                status: document.getElementById('roleStatus').value,
+                remark: document.getElementById('roleRemark').value
+            };
+            
+            // 收集背包道具
+            const backpackItems = [];
+            document.querySelectorAll('#backpackItems .custom-item').forEach(item => {
+                const name = item.querySelector('input[name="itemName"]').value;
+                const count = parseInt(item.querySelector('input[name="itemCount"]').value) || 0;
+                if (name && count > 0) {
+                    backpackItems.push({ name, count });
+                }
+            });
+            
+            // 收集宠物
+            const petItems = [];
+            document.querySelectorAll('#petItems .custom-item').forEach(item => {
+                const name = item.querySelector('input[name="petName"]').value;
+                const type = item.querySelector('input[name="petType"]').value;
+                const level = parseInt(item.querySelector('input[name="petLevel"]').value) || 0;
+                if (name) {
+                    petItems.push({ name, type, level });
+                }
+            });
+            
+            formData.backpack = backpackItems;
+            formData.pets = petItems;
+            
+            if (currentRoleId) {
+                updateRole(currentRoleId, formData);
+            } else {
+                addRole(formData);
+            }
+        }
+
+        function addRole(roleData) {
+            const game = gamesData[roleData.gameId];
+            if (!game) {
+                alert('请选择正确的游戏！');
+                return;
+            }
+            
+            const account = game.accounts.find(acc => acc.id === roleData.accountId);
+            if (!account) {
+                alert('请选择正确的账号！');
+                return;
+            }
+            
+            const newRole = {
+                id: nextRoleId++,
+                name: roleData.name,
+                level: roleData.level,
+                class: roleData.class,
+                income: roleData.income,
+                currency: roleData.currency,
+                status: roleData.status,
+                backpack: roleData.backpack,
+                pets: roleData.pets,
+                remark: roleData.remark
+            };
+            
+            account.roles.push(newRole);
+            saveToStorage();
+            closeRoleModal();
+            renderGames();
+            renderAccounts();
+            renderRoles();
+            
+            alert('角色添加成功！');
+        }
+
+        function updateRole(roleId, roleData) {
+            let foundGame = null;
+            let foundAccount = null;
+            let roleIndex = -1;
+            
+            // 查找原角色位置
+            for (const [gameId, game] of Object.entries(gamesData)) {
+                for (const account of game.accounts) {
+                    const idx = account.roles.findIndex(r => r.id === roleId);
+                    if (idx !== -1) {
+                        foundGame = game;
+                        foundAccount = account;
+                        roleIndex = idx;
+                        break;
+                    }
+                }
+                if (foundAccount) break;
+            }
+            
+            if (!foundAccount) {
+                alert('角色不存在！');
+                return;
+            }
+            
+            const newGame = gamesData[roleData.gameId];
+            if (!newGame) {
+                alert('请选择正确的游戏！');
+                return;
+            }
+            
+            const newAccount = newGame.accounts.find(acc => acc.id === roleData.accountId);
+            if (!newAccount) {
+                alert('请选择正确的账号！');
+                return;
+            }
+            
+            const updatedRole = {
+                id: roleId,
+                name: roleData.name,
+                level: roleData.level,
+                class: roleData.class,
+                income: roleData.income,
+                currency: roleData.currency,
+                status: roleData.status,
+                backpack: roleData.backpack,
+                pets: roleData.pets,
+                remark: roleData.remark
+            };
+            
+            if (foundAccount.id === newAccount.id && foundGame.id === newGame.id) {
+                // 同一个账号，直接更新
+                foundAccount.roles[roleIndex] = updatedRole;
+            } else {
+                // 移动到新账号
+                foundAccount.roles.splice(roleIndex, 1);
+                newAccount.roles.push(updatedRole);
+            }
+            
+            saveToStorage();
+            closeRoleModal();
+            renderGames();
+            renderAccounts();
+            renderRoles();
+            
+            alert('角色更新成功！');
+        }
+
+        function deleteRole(roleId) {
+            if (!confirm('确定要删除这个角色吗？此操作不可撤销！')) {
+                return;
+            }
+            
+            for (const [gameId, game] of Object.entries(gamesData)) {
+                for (const account of game.accounts) {
+                    const roleIndex = account.roles.findIndex(r => r.id === roleId);
+                    if (roleIndex !== -1) {
+                        account.roles.splice(roleIndex, 1);
+                        saveToStorage();
+                        renderGames();
+                        renderAccounts();
+                        renderRoles();
+                        
+                        alert('角色删除成功！');
+                        return;
+                    }
+                }
+            }
+        }
+
+        function editRole(roleId) {
+            openRoleModal(roleId);
+        }
+
+        // 工具函数
+        function addBackpackItem(name = '', count = '') {
+            const container = document.getElementById('backpackItems');
+            const div = document.createElement('div');
+            div.className = 'custom-item';
+            div.innerHTML = `
+                <input type="text" class="form-control" placeholder="道具名称" name="itemName" value="${name}">
+                <input type="number" class="form-control" placeholder="数量" name="itemCount" value="${count}">
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeBackpackItem(this)">删除</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeBackpackItem(button) {
+            const container = document.getElementById('backpackItems');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        function addPetItem(name = '', type = '', level = '') {
+            const container = document.getElementById('petItems');
+            const div = document.createElement('div');
+            div.className = 'custom-item';
+            div.innerHTML = `
+                <input type="text" class="form-control" placeholder="宠物名称" name="petName" value="${name}">
+                <input type="text" class="form-control" placeholder="宠物类型" name="petType" value="${type}">
+                <input type="number" class="form-control" placeholder="等级" name="petLevel" value="${level}">
+                <button type="button" class="btn btn-danger btn-sm" onclick="removePetItem(this)">删除</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removePetItem(button) {
+            const container = document.getElementById('petItems');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+    </script>
+</body>
+</html>
