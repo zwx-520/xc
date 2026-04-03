@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SurveyMaster Ultra - 问卷大师至尊版</title>
+  <style>
+    :root {
+      --bg-main: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+      --header-bg: linear-gradient(90deg, #243b55, #141e30);
+      --primary: #243b55;
+      --primary-hover: #1a2a3a;
+      --danger: #e53e3e;
+      --card-bg: rgba(255,255,255,0.97);
+      --text-main: #333;
+      --text-light: #666;
+      --shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    body.light {
+      --bg-main: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --header-bg: linear-gradient(90deg, #4a69bd, #6a89cc);
+      --primary: #4a69bd;
+      --primary-hover: #3c5aa6;
+      --card-bg: white;
+      --text-main: #222;
+      --text-light: #444;
+      --shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    body.business-blue {
+      --bg-main: linear-gradient(135deg, #0052D4 0%, #4364F7 50%, #6FB1FC 100%);
+      --header-bg: linear-gradient(90deg, #003366, #0052D4);
+      --primary: #0052D4;
+      --primary-hover: #003366;
+      --card-bg: white;
+      --text-main: #222;
+      --text-light: #444;
+      --shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: var(--bg-main);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: var(--text-main);
+      transition: background 0.4s, color 0.4s;
+    }
+    .login-container, .app-container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      color: var(--text-main);
+      transition: background 0.4s, color 0.4s;
+    }
+    .login-container {
+      padding: 40px;
+      text-align: center;
+    }
+    .login-container h2 {
+      margin-bottom: 30px;
+      color: var(--primary);
+    }
+    .login-container input {
+      width: 80%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    .login-container button {
+      padding: 12px 40px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+    header {
+      background: var(--header-bg);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+    .logo svg {
+      width: 32px;
+      height: 32px;
+      fill: white;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-switcher button {
+      padding: 8px 14px;
+      margin-left: 8px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 14px;
+    }
+    .theme-switcher button:hover {
+      background: rgba(255,255,255,0.35);
+    }
+    .pay-btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .paypal-btn {
+      background: #0070ba;
+    }
+    .alipay-btn {
+      background: #1677ff;
+    }
+    main {
+      padding: 20px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 25px 0 15px;
+      color: var(--primary);
+      border-left: 5px solid var(--primary);
+      padding-left: 12px;
+    }
+    .record-form input, .record-form select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    .record-form button {
+      padding: 10px 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .record-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .record-table th, .record-table td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    .record-table th {
+      background: #f4f6f8;
+      color: var(--primary);
+    }
+    .record-table tr:hover {
+      background: #f9fafb;
+    }
+    .btn-access {
+      padding: 6px 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    .btn-delete {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #ccc;
+      border-radius: 26px;
+      transition: 0.4s;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.4s;
+    }
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      color: var(--text-main);
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal h3 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+    .modal-content pre {
+      background: #f4f6f8;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    .modal-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .modal-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .btn-confirm {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-cancel {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+    .analysis-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .analysis-table th, .analysis-table td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    .analysis-table th {
+      background: #f4f6f8;
+      color: var(--primary);
+    }
+    .reset-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #f8f9fa;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* 滚动条提醒 */
+    .scroll-notice {
+      background: #ffe066;
+      color: #333;
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .scroll-notice span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll-left 15s linear infinite;
+    }
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @media (max-width: 600px) {
+      .record-table th, .record-table td, .analysis-table th, .analysis-table td {
+        font-size: 13px;
+        padding: 8px;
+      }
+      .login-container, .app-container {
+        margin: 15px;
+        padding: 15px;
+      }
+      .logo {
+        font-size: 16px;
+      }
+      .logo svg {
+        width: 24px;
+        height: 24px;
+      }
+      .header-right {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .scroll-notice {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body class="business-blue">
+  <!-- 登录页 -->
+  <div class="login-container" id="loginPage">
+    <h2>🔐 SurveyMaster Ultra 登录</h2>
+    <input type="text" id="username" placeholder="用户名" /><br/>
+    <input type="password" id="password" placeholder="密码" /><br/>
+    <button onclick="login()">登录</button>
+    <p id="loginMsg" style="color:var(--danger);margin-top:15px;"></p>
+  </div>
+
+  <!-- 主应用 -->
+  <div class="app-container" id="appPage" style="display:none;">
+    <!-- 滚动条提醒 -->
+    <div class="scroll-notice" id="scrollNotice"><span id="noticeText"></span></div>
+
+    <header>
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        SurveyMaster Ultra
+      </div>
+      <div class="header-right">
+        <a href="https://www.paypal.com/" target="_blank" class="pay-btn paypal-btn">
+          <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg" alt="PayPal" style="height:18px;"> PayPal
+        </a>
+        <a href="https://www.alipay.com/" target="_blank" class="pay-btn alipay-btn">
+          <img src="https://gw.alipayobjects.com/mdn/rms_ce4c6f/afts/img/A*XMCgSYx3f50AAAAAAAAAAABkARQnAQ" alt="支付宝" style="height:18px;"> 支付宝
+        </a>
+        <div class="theme-switcher">
+          <button onclick="setTheme('dark')">深色</button>
+          <button onclick="setTheme('light')">浅色</button>
+          <button onclick="setTheme('business-blue')">商务蓝</button>
+        </div>
+      </div>
+    </header>
+    <main>
+      <!-- 添加记录 -->
+      <div class="section-title">➕ 添加问卷站点记录</div>
+      <div class="record-form">
+        <input type="text" id="siteName" placeholder="网站名称" />
+        <input type="text" id="incomeMethod" placeholder="收益方式（文本）" />
+        <input type="number" id="balance" placeholder="账号余额" step="0.01" />
+        <input type="url" id="siteUrl" placeholder="网址（https://...）" />
+        <button onclick="addRecord()">添加记录</button>
+      </div>
+
+      <!-- 记录列表 -->
+      <div class="section-title">📋 站点记录列表</div>
+      <table class="record-table">
+        <thead>
+          <tr><th>#</th><th>网站名称</th><th>收益方式</th><th>账号余额</th><th>网址</th><th>操作</th></tr>
+        </thead>
+        <tbody id="recordBody"></tbody>
+      </table>
+
+      <!-- 记录分析 -->
+      <div class="section-title">📈 记录收益分析（按天统计）</div>
+      <table class="analysis-table" id="analysisTable">
+        <thead>
+          <tr><th>日期</th><th>总收益</th><th>操作</th></tr>
+        </thead>
+        <tbody id="analysisBody"></tbody>
+      </table>
+      <button class="reset-btn" onclick="resetAnalysis()">重置分析数据</button>
+    </main>
+    <footer>
+      © 2026 SurveyMaster Ultra · All Rights Reserved
+    </footer>
+  </div>
+
+  <!-- 弹窗 -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3 id="modalTitle">提示</h3>
+      <div class="modal-content">
+        <pre id="modalText"></pre>
+      </div>
+      <div class="modal-buttons" id="modalButtons"></div>
+    </div>
+  </div>
+
+  <script>
+    // 主题切换
+    function setTheme(theme) {
+      document.body.className = theme;
+    }
+
+    // 登录
+    function login() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if (u === 'admin' && p === 'admin') {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('appPage').style.display = 'block';
+        loadRecords();
+        loadAnalysis();
+        fetchEnvironmentAndTranslate(); // 后台获取数据用于滚动提醒
+      } else {
+        document.getElementById('loginMsg').textContent = '用户名或密码错误';
+      }
+    }
+
+    // 记录增删
+    function addRecord() {
+      const name = document.getElementById('siteName').value.trim();
+      const method = document.getElementById('incomeMethod').value.trim();
+      const balance = parseFloat(document.getElementById('balance').value) || 0;
+      const url = document.getElementById('siteUrl').value.trim();
+      if (!name || !url) { alert('请填写完整信息'); return; }
+      const records = JSON.parse(localStorage.getItem('sm_records') || '[]');
+      records.push({ id: records.length + 1, name, method, balance, url });
+      localStorage.setItem('sm_records', JSON.stringify(records));
+      loadRecords();
+      document.getElementById('siteName').value = '';
+      document.getElementById('incomeMethod').value = '';
+      document.getElementById('balance').value = '';
+      document.getElementById('siteUrl').value = '';
+    }
+    function deleteRecord(idx) {
+      showModal('确认删除', '确定要删除这条记录吗？此操作不可恢复。', [
+        { text: '确认删除', onClick: () => {
+          const records = JSON.parse(localStorage.getItem('sm_records') || '[]');
+          records.splice(idx, 1);
+          localStorage.setItem('sm_records', JSON.stringify(records));
+          loadRecords();
+        }},
+        { text: '取消', onClick: () => {} }
+      ]);
+    }
+    function loadRecords() {
+      const records = JSON.parse(localStorage.getItem('sm_records') || '[]');
+      const tbody = document.getElementById('recordBody');
+      tbody.innerHTML = '';
+      records.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.id}</td><td>${r.name}</td><td>${r.method}</td><td>${r.balance.toFixed(2)}</td><td><a href="${r.url}" target="_blank">${r.url}</a></td><td><button class="btn-access" onclick="window.open('${r.url}','_blank')">访问</button> <button class="btn-delete" onclick="deleteRecord(${i})">&times;</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 记录分析
+    function loadAnalysis() {
+      const analysis = JSON.parse(localStorage.getItem('sm_analysis') || '{}');
+      const tbody = document.getElementById('analysisBody');
+      tbody.innerHTML = '';
+      Object.keys(analysis).forEach(date => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${date}</td><td>${analysis[date].toFixed(2)}</td><td><button class="btn-delete" onclick="deleteAnalysisDay('${date}')">&times;</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    function resetAnalysis() {
+      if (confirm('确定要重置所有分析数据吗？')) {
+        localStorage.removeItem('sm_analysis');
+        loadAnalysis();
+      }
+    }
+    function deleteAnalysisDay(date) {
+      const analysis = JSON.parse(localStorage.getItem('sm_analysis') || '{}');
+      delete analysis[date];
+      localStorage.setItem('sm_analysis', JSON.stringify(analysis));
+      loadAnalysis();
+    }
+
+    // 弹窗
+    function showModal(title, text, buttons) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalText').textContent = text;
+      const container = document.getElementById('modalButtons');
+      container.innerHTML = '';
+      buttons.forEach(btn => {
+        const b = document.createElement('button');
+        b.textContent = btn.text;
+        b.className = btn.text === '确认删除' ? 'btn-confirm' : btn.text === '关闭' ? 'btn-cancel' : 'btn-cancel';
+        b.onclick = () => {
+          document.getElementById('modalOverlay').classList.remove('active');
+          if (btn.onClick) btn.onClick();
+        };
+        container.appendChild(b);
+      });
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    // 后台获取环境检测和翻译数据（仅用于滚动提醒）
+    async function fetchEnvironmentAndTranslate() {
+      let noticeParts = [];
+
+      // 设备环境
+      noticeParts.push(`系统: ${navigator.platform}`);
+      noticeParts.push(`浏览器: ${navigator.userAgent.split(' ')[0]}`);
+      noticeParts.push(`分辨率: ${screen.width}x${screen.height}`);
+
+      // 网络环境
+      noticeParts.push(`在线状态: ${navigator.onLine ? '在线' : '离线'}`);
+      if (navigator.connection) {
+        const c = navigator.connection;
+        noticeParts.push(`连接类型: ${c.effectiveType || '未知'}`);
+      }
+
+      // 翻译示例（取一条固定文本翻译）
+      try {
+        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent('你好，世界')}`);
+        const data = await res.json();
+        const translated = data[0][0][0];
+        noticeParts.push(`翻译示例: 你好，世界 → ${translated}`);
+      } catch (e) {
+        noticeParts.push('翻译服务暂不可用');
+      }
+
+      // 显示在滚动条
+      document.getElementById('noticeText').textContent = noticeParts.join(' | ') + ' | ' + noticeParts.join(' | ');
+    }
+  </script>
+</body>
+</html>
