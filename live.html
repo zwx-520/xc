@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技直播导航 - 全网直播平台一键直达</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* 页面背景 - 科技感网格 */
+        body {
+            background-color: #0a0a0f;
+            background-image: 
+                linear-gradient(rgba(18, 18, 40, 0.8) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(18, 18, 40, 0.8) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 顶部标题区域 */
+        .header {
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .title {
+            font-size: 42px;
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: titleGlow 3s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #8888bb;
+            opacity: 0.8;
+        }
+
+        /* 动画：标题发光 */
+        @keyframes titleGlow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* 卡片容器 - 网格布局 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        /* 平台卡片 - 科技玻璃拟态效果 */
+        .card {
+            background: rgba(25, 25, 45, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        /* 卡片流动霓虹边框 */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        /* 悬停效果 */
+        .card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        /* 平台图标 */
+        .card img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+
+        .card:hover img {
+            transform: rotate(5deg) scale(1.1);
+        }
+
+        /* 平台名称 */
+        .card-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        /* 平台描述 */
+        .card-desc {
+            font-size: 13px;
+            color: #a0a0c0;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 28px;
+            }
+            .container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 20px;
+            }
+            .card img {
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题 -->
+    <div class="header">
+        <h1 class="title">科技直播导航</h1>
+        <p class="subtitle">全网热门直播平台 · 一键直达 · 实时观看</p>
+    </div>
+
+    <!-- 直播平台卡片 -->
+    <div class="container">
+        <!-- 抖音 -->
+        <a href="https://live.douyin.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://p3-pc.byteimg.com/tos-maliva-i-60d8es0frd/us/9158d411264347309286.png" alt="抖音直播">
+                <div class="card-name">抖音直播</div>
+                <div class="card-desc">全民热门直播平台</div>
+            </div>
+        </a>
+
+        <!-- B站 -->
+        <a href="https://live.bilibili.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://static.hdslb.com/mobile/img/bilibili.png" alt="B站直播">
+                <div class="card-name">B站直播</div>
+                <div class="card-desc">二次元&游戏直播</div>
+            </div>
+        </a>
+
+        <!-- 虎牙 -->
+        <a href="https://www.huya.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://a.msstatic.com/huya/portal/img/huya_logo.2e678.png" alt="虎牙直播">
+                <div class="card-name">虎牙直播</div>
+                <div class="card-desc">专业游戏电竞平台</div>
+            </div>
+        </a>
+
+        <!-- 斗鱼 -->
+        <a href="https://www.douyu.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://static.douyu.com/assets/images/douyu/logo.png" alt="斗鱼直播">
+                <div class="card-name">斗鱼直播</div>
+                <div class="card-desc">游戏娱乐综合直播</div>
+            </div>
+        </a>
+
+        <!-- 快手 -->
+        <a href="https://live.kuaishou.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://p1-webcast-va.kgimg.com/tos-maliva-i-60d8es0frd/1024190687.png" alt="快手直播">
+                <div class="card-name">快手直播</div>
+                <div class="card-desc">生活娱乐直播平台</div>
+            </div>
+        </a>
+
+        <!-- 腾讯视频 -->
+        <a href="https://v.qq.com/live" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://mat1.gtimg.com/www/tencentvideo/20190926/favicon.ico" alt="腾讯视频直播">
+                <div class="card-name">腾讯视频</div>
+                <div class="card-desc">影视综艺直播</div>
+            </div>
+        </a>
+
+        <!-- 网易CC -->
+        <a href="https://cc.163.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://ys-game.computerres.163.com/ccweb/cc/img/cc_logo.png" alt="网易CC直播">
+                <div class="card-name">网易CC</div>
+                <div class="card-desc">网易游戏直播</div>
+            </div>
+        </a>
+
+        <!-- YY直播 -->
+        <a href="https://www.yy.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://a1.gdtimg.com/www/img/logo.png" alt="YY直播">
+                <div class="card-name">YY直播</div>
+                <div class="card-desc">老牌综合直播平台</div>
+            </div>
+        </a>
+
+        <!-- 小红书 -->
+        <a href="https://live.xiaohongshu.com" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://fe-static.xiaohongshu.com/pc-fe-static/xhs-icon.png" alt="小红书直播">
+                <div class="card-name">小红书</div>
+                <div class="card-desc">生活美妆直播</div>
+            </div>
+        </a>
+
+        <!-- Twitch -->
+        <a href="https://www.twitch.tv" target="_blank" style="text-decoration: none;">
+            <div class="card">
+                <img src="https://static.twitchcdn.net/assets/favicon-32-e29e246c18cca1f2b61d.png" alt="Twitch直播">
+                <div class="card-name">Twitch</div>
+                <div class="card-desc">国际游戏直播平台</div>
+            </div>
+        </a>
+    </div>
+
+    <script>
+        // 页面加载完成动画
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
