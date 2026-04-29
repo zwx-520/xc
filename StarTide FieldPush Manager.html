@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarTide FieldPush Manager | 星潮地推管家</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f1f5f9;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header-title {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .header-title h1 {
+            color: #38bdf8;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+        .header-title p {
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-item label {
+            display: block;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+        .form-item input,
+        .form-item select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .form-item input:focus,
+        .form-item select:focus {
+            border-color: #38bdf8;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .btn-add {
+            background: #38bdf8;
+            color: #000;
+        }
+        .btn-export {
+            background: #10b981;
+            color: #fff;
+        }
+        .btn-clear {
+            background: #ef4444;
+            color: #fff;
+        }
+        .btn-edit {
+            background: #f59e0b;
+            color: #fff;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+        .btn-del {
+            background: #ef4444;
+            color: #fff;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+        .stat-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(56, 189, 248, 0.1);
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(56,189,248,0.2);
+        }
+        .stat-card h3 {
+            font-size: 24px;
+            color: #38bdf8;
+            margin-bottom: 5px;
+        }
+        .stat-card p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+            font-size: 13px;
+        }
+        th {
+            background: rgba(56,189,248,0.15);
+            color: #38bdf8;
+        }
+        tr:hover {
+            background: rgba(255,255,255,0.03);
+        }
+        .settle-yes {
+            color: #10b981;
+        }
+        .settle-no {
+            color: #f59e0b;
+        }
+        .search-bar {
+            margin-bottom: 15px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #fff;
+            font-size: 14px;
+        }
+        .note-tip{
+            margin-top:20px;
+            padding:15px;
+            background:rgba(56,189,248,0.08);
+            border-radius:8px;
+            font-size:14px;
+            color:#94a3b8;
+        }
+        .platform-table {
+            margin-top: 30px;
+        }
+        .platform-table th {
+            font-size: 14px;
+            padding: 15px 10px;
+        }
+        .platform-table td a {
+            color: #38bdf8;
+            text-decoration: underline;
+            transition: 0.3s;
+        }
+        .platform-table td a:hover {
+            color: #0ea5e9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-title">
+            <h1>StarTide FieldPush Manager</h1>
+            <p>星潮地推管家 - 软件推广·地点记录·提成结算管理系统</p>
+        </div>
+
+        <!-- 数据统计 -->
+        <div class="stat-box">
+            <div class="stat-card">
+                <h3 id="totalCount">0</h3>
+                <p>总推广条数</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalMoney">¥0</h3>
+                <p>累计总提成</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="yesMoney">¥0</h3>
+                <p>已结算提成</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="noMoney">¥0</h3>
+                <p>未结算提成</p>
+            </div>
+        </div>
+
+        <!-- 搜索筛选 -->
+        <div class="card search-bar">
+            <input type="text" id="searchKey" placeholder="搜索：软件名称 / 平台 / 负责人 / 推广地点">
+        </div>
+
+        <!-- 新增表单 -->
+        <div class="card">
+            <div class="form-row">
+                <div class="form-item">
+                    <label>推广软件名称</label>
+                    <input type="text" id="softName" placeholder="例如：抖音极速版、京东拉新、美团优选">
+                </div>
+                <div class="form-item">
+                    <label>供应商合作平台</label>
+                    <input type="text" id="supplyPlatform" placeholder="例如：U客直谈、必集客、地推帮">
+                </div>
+                <div class="form-item">
+                    <label>外部视频推广链接</label>
+                    <input type="text" id="videoLink" placeholder="填写短视频/宣传视频的完整链接">
+                </div>
+                <div class="form-item">
+                    <label>地推负责人</label>
+                    <input type="text" id="pushUser" placeholder="姓名/团队成员">
+                </div>
+                <div class="form-item">
+                    <label>推广具体地点</label>
+                    <input type="text" id="pushAddr" placeholder="例如：XX市XX小区/商圈/高校门口">
+                </div>
+                <div class="form-item">
+                    <label>结算状态</label>
+                    <select id="settleStatus">
+                        <option value="未结算">未结算</option>
+                        <option value="已结算">已结算</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-item" style="grid-column: 1 / -1;">
+                    <label>备注（渠道/对接人/特殊说明）</label>
+                    <input type="text" id="pushRemark" placeholder="记录渠道、对接人、推广注意事项等">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-add" onclick="addData()">添加推广记录</button>
+                <button class="btn-export" onclick="exportExcel()">导出Excel台账</button>
+                <button class="btn-clear" onclick="clearAllData()">清空全部数据</button>
+            </div>
+        </div>
+
+        <!-- 记录列表 -->
+        <div class="card table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>推广软件</th>
+                        <th>供应商平台</th>
+                        <th>视频推广链接</th>
+                        <th>地推负责人</th>
+                        <th>推广地点</th>
+                        <th>结算状态</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- 热门软件地推平台（底部拓展，表格带链接） -->
+        <div class="card platform-table">
+            <h2 style="color: #38bdf8; margin-bottom: 15px; font-size: 20px; text-align: center;">热门软件地推平台汇总（可直接点击访问）</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>平台名称</th>
+                            <th>平台官网/访问链接</th>
+                            <th>核心特点</th>
+                            <th>适配场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>U客直谈</td>
+                            <td><a href="https://www.ukezhitan.com/" target="_blank">https://www.ukezhitan.com/</a></td>
+                            <td>零押金、无中间商，项目方直连，分佣透明，支持个人/团队接单，新手友好</td>
+                            <td>个人兼职、小团队地推、多类型软件推广</td>
+                        </tr>
+                        <tr>
+                            <td>必集客</td>
+                            <td><a href="https://www.bijike.com/" target="_blank">https://www.bijike.com/</a></td>
+                            <td>直连项目方，任务种类齐全，支持一单一结、日结，风控严格，口碑稳定</td>
+                            <td>APP拉新、品牌推广、新手入门</td>
+                        </tr>
+                        <tr>
+                            <td>51地推网</td>
+                            <td><a href="http://tui.juhe8.net/" target="_blank">http://tui.juhe8.net/</a></td>
+                            <td>专注市场推广，覆盖全国各大商圈、社区，支持扫码、下载、注册等多种推广形式</td>
+                            <td>线下地推、全场景推广、品牌调研</td>
+                        </tr>
+                        <tr>
+                            <td>地推帮</td>
+                            <td><a href="https://www.dituibang.com/" target="_blank">https://www.dituibang.com/</a></td>
+                            <td>行业老牌平台，项目审核严格，资质正规，客服完善，适合长期稳定合作</td>
+                            <td>长期项目、团队地推、品牌推广</td>
+                        </tr>
+                        <tr>
+                            <td>洽立方</td>
+                            <td><a href="https://www.qialifang.com/" target="_blank">https://www.qialifang.com/</a></td>
+                            <td>AI智能匹配任务，零注册费，支持日结，覆盖大厂任务，新手可领推广素材包</td>
+                            <td>个人兼职、团队推广、多场景适配</td>
+                        </tr>
+                        <tr>
+                            <td>牛赚联盟</td>
+                            <td><a href="https://www.niuzhuanlm.com/" target="_blank">https://www.niuzhuanlm.com/</a></td>
+                            <td>主打网盘拉新，任务简单，佣金稳定，新手友好，可与其他平台互补接单</td>
+                            <td>新手入门、兼职推广、网盘/APP拉新</td>
+                        </tr>
+                        <tr>
+                            <td>爆推联盟</td>
+                            <td><a href="https://www.baotuilianmeng.com/" target="_blank">https://www.baotuilianmeng.com/</a></td>
+                            <td>高佣爆款项目多，大厂短期冲量任务多，合规审核严格，结算快速可靠</td>
+                            <td>高佣需求、团队冲量、短期推广</td>
+                        </tr>
+                        <tr>
+                            <td>青团社</td>
+                            <td><a href="https://www.qingtuan.cn/" target="_blank">https://www.qingtuan.cn/</a></td>
+                            <td>绑定2000所高校社团，适合校园推广，学生可获学分+现金奖励，教育类APP适配度高</td>
+                            <td>校园地推、教育类软件、年轻群体推广</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="note-tip">
+                备注：1. 所有平台链接均为官方正规链接，点击可直接跳转至平台官网，建议注册前核实平台资质；2. 部分平台支持APP下载，可在官网或手机应用商店搜索对应平台名称下载；3. 推广前请确认平台结算规则，避开要求提前缴纳押金、保证金的非正规平台，保护自身权益。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dataList = JSON.parse(localStorage.getItem('fieldPushData')) || [];
+        let editId = null;
+
+        // 初始化
+        window.onload = function(){
+            renderTable();
+            countStat();
+        }
+
+        // 添加/编辑记录
+        function addData(){
+            let softName = document.getElementById('softName').value.trim();
+            let supplyPlatform = document.getElementById('supplyPlatform').value.trim();
+            let videoLink = document.getElementById('videoLink').value.trim();
+            let pushUser = document.getElementById('pushUser').value.trim();
+            let pushAddr = document.getElementById('pushAddr').value.trim();
+            let settleStatus = document.getElementById('settleStatus').value;
+            let pushRemark = document.getElementById('pushRemark').value.trim();
+
+            if(!softName || !supplyPlatform || !pushUser || !pushAddr){
+                alert('请填写：推广软件、供应商平台、地推负责人、推广地点');
+                return;
+            }
+
+            let time = new Date().toLocaleString();
+
+            if(editId !== null){
+                // 编辑
+                let idx = dataList.findIndex(item=>item.id===editId);
+                dataList[idx] = {
+                    ...dataList[idx],
+                    softName,supplyPlatform,videoLink,pushUser,pushAddr,settleStatus,pushRemark,time
+                };
+                editId = null;
+                alert('修改成功');
+            }else{
+                // 新增
+                dataList.push({
+                    id:Date.now(),
+                    softName,supplyPlatform,videoLink,pushUser,pushAddr,settleStatus,pushRemark,time
+                });
+                alert('添加成功');
+            }
+
+            saveData();
+            resetForm();
+            renderTable();
+            countStat();
+        }
+
+        // 重置表单
+        function resetForm(){
+            document.getElementById('softName').value = '';
+            document.getElementById('supplyPlatform').value = '';
+            document.getElementById('videoLink').value = '';
+            document.getElementById('pushUser').value = '';
+            document.getElementById('pushAddr').value = '';
+            document.getElementById('settleStatus').value = '未结算';
+            document.getElementById('pushRemark').value = '';
+            editId = null;
+        }
+
+        // 保存到本地
+        function saveData(){
+            localStorage.setItem('fieldPushData',JSON.stringify(dataList));
+        }
+
+        // 渲染表格+搜索
+        function renderTable(){
+            let key = document.getElementById('searchKey').value.toLowerCase();
+            let list = dataList.filter(item=>
+                item.softName.toLowerCase().includes(key) ||
+                item.supplyPlatform.toLowerCase().includes(key) ||
+                item.pushUser.toLowerCase().includes(key) ||
+                item.pushAddr.toLowerCase().includes(key)
+            );
+
+            let html = '';
+            list.forEach((item,index)=>{
+                html += `
+                <tr>
+                    <td>${index+1}</td>
+                    <td>${item.softName}</td>
+                    <td>${item.supplyPlatform}</td>
+                    <td>${item.videoLink ? `<a href="${item.videoLink}" target="_blank">点击查看</a>` : '无'}</td>
+                    <td>${item.pushUser}</td>
+                    <td>${item.pushAddr}</td>
+                    <td class="${item.settleStatus==='已结算'?'settle-yes':'settle-no'}">${item.settleStatus}</td>
+                    <td>${item.pushRemark}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editData(${item.id})">编辑</button>
+                        <button class="btn-del" onclick="delData(${item.id})">删除</button>
+                    </td>
+                </tr>
+                `;
+            });
+            document.getElementById('tableBody').innerHTML = html;
+        }
+
+        // 编辑
+        function editData(id){
+            let item = dataList.find(x=>x.id===id);
+            if(!item) return;
+            editId = id;
+            document.getElementById('softName').value = item.softName;
+            document.getElementById('supplyPlatform').value = item.supplyPlatform;
+            document.getElementById('videoLink').value = item.videoLink;
+            document.getElementById('pushUser').value = item.pushUser;
+            document.getElementById('pushAddr').value = item.pushAddr;
+            document.getElementById('settleStatus').value = item.settleStatus;
+            document.getElementById('pushRemark').value = item.pushRemark;
+            window.scrollTo(0,0);
+        }
+
+        // 删除
+        function delData(id){
+            if(!confirm('确定删除这条推广记录？')) return;
+            dataList = dataList.filter(item=>item.id!==id);
+            saveData();
+            renderTable();
+            countStat();
+        }
+
+        // 统计数据
+        function countStat(){
+            let totalCount = dataList.length;
+            // 因删除提成相关字段，仅统计条数，提成统计隐藏
+            document.getElementById('totalCount').innerText = totalCount;
+            document.getElementById('totalMoney').innerText = '¥0';
+            document.getElementById('yesMoney').innerText = '¥0';
+            document.getElementById('noMoney').innerText = '¥0';
+        }
+
+        // 导出Excel
+        function exportExcel(){
+            if(dataList.length===0){
+                alert('暂无记录可导出');
+                return;
+            }
+            let csv = '序号,推广软件,供应商平台,外部视频推广链接,地推负责人,推广地点,结算状态,备注,记录时间\n';
+            dataList.forEach((item,idx)=>{
+                csv += `${idx+1},${item.softName},${item.supplyPlatform},${item.videoLink},${item.pushUser},${item.pushAddr},${item.settleStatus},${item.pushRemark},${item.time}\n`;
+            });
+            let blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = 'StarTide地推提成台账.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 清空全部
+        function clearAllData(){
+            if(!confirm('确定清空所有地推记录？不可恢复！')) return;
+            dataList = [];
+            saveData();
+            renderTable();
+            countStat();
+        }
+
+        // 搜索监听
+        document.getElementById('searchKey').addEventListener('input',renderTable);
+    </script>
+</body>
+</html>
