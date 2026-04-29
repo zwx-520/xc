@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaNav Hub - 国内外自媒体全资源导航</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background: #f0f2f5;
+            padding-top: 80px;
+        }
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 72px;
+            background: #ffffff;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 9999;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .nav-menu a:hover,.nav-menu a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+        /* 搜索框样式 */
+        .search-box {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        #searchInput:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+        }
+        .no-tip {
+            text-align: center;
+            font-size: 18px;
+            color: #999;
+            padding: 50px 0;
+            display: none;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        .title-line {
+            font-size: 26px;
+            margin: 40px 0 20px;
+            border-left: 6px solid #2563eb;
+            padding-left: 15px;
+            color: #222;
+        }
+        .grid-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+        .item-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 22px 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #333;
+        }
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(37,99,235,0.15);
+        }
+        .item-card i {
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+        /* 模块配色 */
+        .anime i {color:#f43f5e;}
+        .drama i {color:#f97316;}
+        .article i {color:#10b981;}
+        .music i {color:#8b5cf6;}
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="navbar">
+    <div class="logo">MediaNav Hub</div>
+    <ul class="nav-menu">
+        <li><a href="#anime" class="active">动漫</a></li>
+        <li><a href="#drama">短剧</a></li>
+        <li><a href="#article">文章自媒体</a></li>
+        <li><a href="#music">音乐</a></li>
+    </ul>
+</div>
+
+<!-- 搜索区域 -->
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 搜索自媒体平台、动漫、短剧、音乐站点...">
+</div>
+
+<div class="no-tip" id="noTip">未找到匹配的平台资源</div>
+
+<div class="container">
+    <!-- 动漫模块 -->
+    <h2 class="title-line" id="anime">🎌 动漫自媒体平台</h2>
+    <div class="grid-box" id="animeList">
+        <a class="item-card anime" data-name="bilibili b站 动漫" href="https://www.bilibili.com" target="_blank">
+            <i class="fa-brands fa-bilibili"></i>
+            <h4>B站</h4>
+            <p>国内动漫主站</p>
+        </a>
+        <a class="item-card anime" data-name="acfun a站 二次元" href="https://www.acfun.cn" target="_blank">
+            <i class="fa-solid fa-fire"></i>
+            <h4>AcFun</h4>
+            <p>二次元社区</p>
+        </a>
+        <a class="item-card anime" data-name="myanimelist mal 海外动漫" href="https://myanimelist.net" target="_blank">
+            <i class="fa-solid fa-star"></i>
+            <h4>MAL</h4>
+            <p>海外动漫榜单</p>
+        </a>
+        <a class="item-card anime" data-name="9anime 海外动漫站" href="https://9anime.to" target="_blank">
+            <i class="fa-solid fa-play"></i>
+            <h4>9Anime</h4>
+            <p>海外动漫站</p>
+        </a>
+        <a class="item-card anime" data-name="anilist 动漫资料库" href="https://anilist.co" target="_blank">
+            <i class="fa-solid fa-chart-line"></i>
+            <h4>AniList</h4>
+            <p>海外动漫资料库</p>
+        </a>
+    </div>
+
+    <!-- 短剧模块 -->
+    <h2 class="title-line" id="drama">🎬 短剧自媒体平台</h2>
+    <div class="grid-box" id="dramaList">
+        <a class="item-card drama" data-name="抖音 短剧 douyin" href="https://www.douyin.com" target="_blank">
+            <i class="fa-brands fa-tiktok"></i>
+            <h4>抖音短剧</h4>
+            <p>国内热门短剧</p>
+        </a>
+        <a class="item-card drama" data-name="快手 短剧 kuaishou" href="https://www.kuaishou.com" target="_blank">
+            <i class="fa-solid fa-video"></i>
+            <h4>快手短剧</h4>
+            <p>下沉流量短剧</p>
+        </a>
+        <a class="item-card drama" data-name="tiktok 海外短剧" href="https://www.tiktok.com" target="_blank">
+            <i class="fa-brands fa-tiktok"></i>
+            <h4>TikTok</h4>
+            <p>海外短剧流量</p>
+        </a>
+        <a class="item-card drama" data-name="youtube 油管 长短剧" href="https://www.youtube.com" target="_blank">
+            <i class="fa-brands fa-youtube"></i>
+            <h4>YouTube</h4>
+            <p>海外长短剧</p>
+        </a>
+        <a class="item-card drama" data-name="instagram ins 短剧分发" href="https://www.instagram.com" target="_blank">
+            <i class="fa-brands fa-instagram"></i>
+            <h4>Ins</h4>
+            <p>海外短剧分发</p>
+        </a>
+    </div>
+
+    <!-- 文章自媒体模块 -->
+    <h2 class="title-line" id="article">📝 文章自媒体平台</h2>
+    <div class="grid-box" id="articleList">
+        <a class="item-card article" data-name="今日头条 头条 图文" href="https://www.toutiao.com" target="_blank">
+            <i class="fa-solid fa-newspaper"></i>
+            <h4>今日头条</h4>
+            <p>图文自媒体</p>
+        </a>
+        <a class="item-card article" data-name="知乎 知识 图文" href="https://www.zhihu.com" target="_blank">
+            <i class="fa-brands fa-zhihu"></i>
+            <h4>知乎</h4>
+            <p>知识图文创作</p>
+        </a>
+        <a class="item-card article" data-name="微信公众号 公众号 图文" href="https://mp.weixin.qq.com" target="_blank">
+            <i class="fa-brands fa-weixin"></i>
+            <h4>公众号</h4>
+            <p>微信图文</p>
+        </a>
+        <a class="item-card article" data-name="medium 海外文章" href="https://medium.com" target="_blank">
+            <i class="fa-solid fa-pen"></i>
+            <h4>Medium</h4>
+            <p>海外原创文章</p>
+        </a>
+        <a class="item-card article" data-name="reddit 海外社区 图文" href="https://www.reddit.com" target="_blank">
+            <i class="fa-brands fa-reddit"></i>
+            <h4>Reddit</h4>
+            <p>海外社区图文</p>
+        </a>
+        <a class="item-card article" data-name="quora 问答 海外创作" href="https://quora.com" target="_blank">
+            <i class="fa-solid fa-question-circle"></i>
+            <h4>Quora</h4>
+            <p>海外问答创作</p>
+        </a>
+    </div>
+
+    <!-- 音乐模块 -->
+    <h2 class="title-line" id="music">🎵 音乐自媒体平台</h2>
+    <div class="grid-box" id="musicList">
+        <a class="item-card music" data-name="网易云音乐 云音乐" href="https://music.163.com" target="_blank">
+            <i class="fa-solid fa-music"></i>
+            <h4>网易云音乐</h4>
+            <p>国内音乐创作</p>
+        </a>
+        <a class="item-card music" data-name="qq音乐 音乐入驻" href="https://y.qq.com" target="_blank">
+            <i class="fa-solid fa-headphones"></i>
+            <h4>QQ音乐</h4>
+            <p>音乐入驻发布</p>
+        </a>
+        <a class="item-card music" data-name="酷狗音乐 音乐人" href="https://kugou.com" target="_blank">
+            <i class="fa-solid fa-volume-high"></i>
+            <h4>酷狗音乐</h4>
+            <p>音乐人平台</p>
+        </a>
+        <a class="item-card music" data-name="spotify 声破天 海外音乐" href="https://open.spotify.com" target="_blank">
+            <i class="fa-brands fa-spotify"></i>
+            <h4>Spotify</h4>
+            <p>海外音乐分发</p>
+        </a>
+        <a class="item-card music" data-name="apple music 苹果音乐" href="https://music.apple.com" target="_blank">
+            <i class="fa-brands fa-apple"></i>
+            <h4>Apple Music</h4>
+            <p>海外正版音乐</p>
+        </a>
+    </div>
+</div>
+
+<script>
+// 导航切换高亮
+const navLinks = document.querySelectorAll('.nav-menu a');
+navLinks.forEach(link=>{
+    link.onclick=function(){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        this.classList.add('active');
+    }
+})
+
+// 搜索功能
+const searchInput = document.getElementById('searchInput');
+const noTip = document.getElementById('noTip');
+const cards = document.querySelectorAll('.item-card');
+
+searchInput.addEventListener('input', function(){
+    let key = this.value.toLowerCase().trim();
+    let hasMatch = false;
+
+    cards.forEach(card=>{
+        let name = card.dataset.name.toLowerCase();
+        if(name.includes(key)){
+            card.style.display = 'block';
+            hasMatch = true;
+        }else{
+            card.style.display = 'none';
+        }
+    })
+
+    noTip.style.display = hasMatch ? 'none' : 'block';
+})
+</script>
+</body>
+</html>
