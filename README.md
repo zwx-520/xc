@@ -20,15 +20,11 @@
 - 网址："https://zwx-520.github.io/xc/StarTide_AdNet.html" (https://zwx-520.github.io/xc/StarTide_AdNet.html)
 - 简介：星潮工作室广告代理商招募
 
-6. 问卷集成系统
-- 网址："https://zwx-520.github.io/xc/SurveyMaster_Ultra.html" (https://zwx-520.github.io/xc/SurveyMaster_Ultra.html)
-- 简介：问卷站点管理与收益分析平台
-
-7. 梦幻西游大话西游问道账号管理系统
+6. 梦幻西游大话西游问道账号管理系统
 - 网址："https://zwx-520.github.io/xc/five-games-manager.html" (https://zwx-520.github.io/xc/five-games-manager.html)
 - 简介：多开游戏账号管理助手
 
-8. 直播矩阵导航系统
+7. 直播矩阵导航系统
 - 网址："https://zwx-520.github.io/xc/live.html" (https://zwx-520.github.io/xc/live.html)
 - 简介：全网热门直播平台导航页
 
