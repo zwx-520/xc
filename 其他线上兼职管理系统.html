@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兼职台账数据管理系统 | 增删改查完整版</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
+        :root{--main:#1677ff;--success:#00b42a;--warn:#ff7d00;--danger:#f53f3f;--gray:#86909c;}
+        body{background:#f5f7fa;padding:15px;}
+        .container{max-width:1400px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px #00000010;}
+        .top-nav{display:flex;background:var(--main);color:#fff;padding:15px 20px;align-items:center;justify-content:space-between;}
+        .nav-title{font-size:20px;font-weight:bold;}
+        .nav-time{font-size:14px;opacity:0.9;}
+        .tab-box{display:flex;border-bottom:1px solid #eee;}
+        .tab-item{padding:12px 25px;cursor:pointer;font-size:15px;color:#666;transition:0.3s;}
+        .tab-item.active{color:var(--main);border-bottom:2px solid var(--main);font-weight:bold;}
+        .content-box{padding:20px;display:none;}
+        .content-box.show{display:block;}
+        .card-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px;margin-bottom:20px;}
+        .stat-card{padding:18px;border-radius:8px;background:#f8f9fa;border-left:4px solid var(--main);}
+        .stat-card h4{color:var(--gray);font-size:14px;margin-bottom:8px;}
+        .stat-card p{font-size:24px;font-weight:bold;color:#333;}
+        .form-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:15px;align-items:center;}
+        .form-item{display:flex;flex-direction:column;gap:5px;}
+        .form-item label{font-size:14px;color:#555;}
+        input,select,textarea{padding:8px 10px;border:1px solid #ddd;border-radius:4px;outline:none;width:180px;}
+        button{padding:7px 14px;border:none;border-radius:4px;cursor:pointer;background:var(--main);color:#fff;font-size:13px;}
+        button.edit{background:var(--warn);}
+        button.del{background:var(--danger);}
+        button.reset{background:#999;}
+        table{width:100%;border-collapse:collapse;margin-top:15px;}
+        th,td{border:1px solid #eee;padding:10px;text-align:center;font-size:14px;}
+        th{background:#f5f7fa;}
+        .note-text{width:100%;height:150px;resize:none;}
+        .btn-group{margin:15px 0;gap:10px;display:flex;}
+        .edit-pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:25px;border-radius:8px;box-shadow:0 0 20px #0003;z-index:999;display:none;}
+        .mask{position:fixed;inset:0;background:#00000040;display:none;z-index:998;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <div class="nav-title">兼职台账数据管理系统（增删改查完整版）</div>
+            <div class="nav-time" id="nowTime"></div>
+        </div>
+
+        <div class="tab-box">
+            <div class="tab-item active" data-tab="home">数据总览</div>
+            <div class="tab-item" data-tab="platform">平台台账【增删改】</div>
+            <div class="tab-item" data-tab="income">收入记账【增删改】</div>
+            <div class="tab-item" data-tab="schedule">工时排班【增删改】</div>
+            <div class="tab-item" data-tab="safe">防骗笔记</div>
+        </div>
+
+        <!-- 总览 -->
+        <div class="content-box show" id="home">
+            <div class="card-wrap">
+                <div class="stat-card"><h4>入驻平台总数</h4><p id="totalPlatform">0</p></div>
+                <div class="stat-card"><h4>今日预估收入(元)</h4><p id="todayIncome">0.00</p></div>
+                <div class="stat-card"><h4>本月累计收入(元)</h4><p id="monthIncome">0.00</p></div>
+                <div class="stat-card"><h4>平均每日工时</h4><p id="avgWorkTime">0 h</p></div>
+            </div>
+            <h3>每日3-4小时兼职收益参考</h3>
+            <table>
+                <tr><th>兼职类型</th><th>时薪</th><th>3小时收入</th><th>4小时收入</th><th>难度</th></tr>
+                <tr><td>蚂蚁云客服</td><td>18-35</td><td>54-105</td><td>72-140</td><td>中等</td></tr>
+                <tr><td>阿里众包</td><td>5-20</td><td>15-60</td><td>20-80</td><td>简单</td></tr>
+                <tr><td>美团文字客服</td><td>8-18</td><td>24-54</td><td>32-72</td><td>极易</td></tr>
+                <tr><td>抖音内容审核</td><td>15-25</td><td>45-75</td><td>60-100</td><td>中等</td></tr>
+            </table>
+        </div>
+
+        <!-- 平台台账 增删改 -->
+        <div class="content-box" id="platform">
+            <div class="form-row">
+                <div class="form-item"><label>平台名称</label><input type="text" id="platName" placeholder="蚂蚁云客服"></div>
+                <div class="form-item">
+                    <label>兼职类型</label>
+                    <select id="platType">
+                        <option value="云客服">云客服</option>
+                        <option value="众包标注">众包标注</option>
+                        <option value="内容审核">内容审核</option>
+                        <option value="问卷任务">问卷任务</option>
+                    </select>
+                </div>
+                <div class="form-item"><label>平均时薪</label><input type="number" id="platSalary" min="0" step="0.1"></div>
+                <div class="form-item">
+                    <label>入驻状态</label>
+                    <select id="platStatus">
+                        <option value="已入驻">已入驻</option>
+                        <option value="待报名">待报名</option>
+                        <option value="放弃不做">放弃不做</option>
+                    </select>
+                </div>
+                <button onclick="addPlatform()">新增录入</button>
+                <button class="reset" onclick="clearPlatInput()">清空输入</button>
+            </div>
+            <table id="platTable">
+                <tr><th>平台名称</th><th>类型</th><th>时薪</th><th>状态</th><th>操作</th></tr>
+            </table>
+        </div>
+
+        <!-- 收入记账 增删改 -->
+        <div class="content-box" id="income">
+            <div class="form-row">
+                <div class="form-item"><label>兼职平台</label><input type="text" id="inPlat"></div>
+                <div class="form-item"><label>工作工时</label><input type="number" id="inTime" min="0" step="0.5"></div>
+                <div class="form-item"><label>实际收入</label><input type="number" id="inMoney" min="0" step="0.01"></div>
+                <div class="form-item"><label>记录日期</label><input type="date" id="inDate"></div>
+                <button onclick="addIncome()">新增记账</button>
+                <button class="reset" onclick="clearIncomeInput()">清空输入</button>
+            </div>
+            <table id="incomeTable">
+                <tr><th>日期</th><th>平台</th><th>工时</th><th>收入</th><th>操作</th></tr>
+            </table>
+        </div>
+
+        <!-- 排班规划 增删改 -->
+        <div class="content-box" id="schedule">
+            <div class="form-row">
+                <div class="form-item"><label>规划日期</label><input type="date" id="scheDate"></div>
+                <div class="form-item"><label>目标平台</label><input type="text" id="schePlat"></div>
+                <div class="form-item"><label>计划工时</label><input type="number" id="scheHour" min="1" max="4" value="3"></div>
+                <div class="form-item"><label>工作时段</label><input type="text" id="scheTime" placeholder="10:00-13:00"></div>
+                <button onclick="addSchedule()">新增排班</button>
+                <button class="reset" onclick="clearScheInput()">清空输入</button>
+            </div>
+            <table id="scheTable">
+                <tr><th>日期</th><th>平台</th><th>计划工时</th><th>时段</th><th>状态</th><th>操作</th></tr>
+            </table>
+        </div>
+
+        <!-- 防骗笔记 -->
+        <div class="content-box" id="safe">
+            <h4>兼职防骗/入口/时间笔记</h4>
+            <textarea class="note-text" id="safeNote" placeholder="记录官方入口、抢单时间、报名须知、避坑要点"></textarea>
+            <div class="btn-group">
+                <button onclick="saveNote()">保存笔记</button>
+                <button class="del" onclick="clearNote()">清空笔记</button>
+            </div>
+            <div style="margin-top:20px;padding:15px;background:#fff2f2;border-radius:6px;">
+                <h4 style="color:#f53f3f;margin-bottom:10px;">强制避坑规则</h4>
+                <p>1.任何押金、培训费、会员费一律诈骗</p>
+                <p>2.刷单、跑分、拉人头属于违法项目禁止参与</p>
+                <p>3.只走官方入口，拒绝私发链接、私下招募</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通用修改弹窗 -->
+    <div class="mask" id="editMask"></div>
+    <div class="edit-pop" id="editPop">
+        <h4 style="margin-bottom:15px;">编辑修改数据</h4>
+        <div id="editFormBox"></div>
+        <div style="margin-top:15px;display:flex;gap:10px;">
+            <button onclick="submitEdit()">确认修改</button>
+            <button class="reset" onclick="closeEditPop()">取消</button>
+        </div>
+    </div>
+
+<script>
+// 全局时间
+function getTime(){document.getElementById("nowTime").innerText=new Date().toLocaleString();}
+setInterval(getTime,1000);getTime();
+
+// 标签切换
+document.querySelectorAll(".tab-item").forEach(t=>{
+    t.onclick=()=>{
+        document.querySelectorAll(".tab-item").forEach(i=>i.classList.remove("active"));
+        t.classList.add("active");
+        document.querySelectorAll(".content-box").forEach(c=>c.classList.remove("show"));
+        document.getElementById(t.dataset.tab).classList.add("show");
+    }
+})
+
+// 本地存储初始化
+let platList = JSON.parse(localStorage.getItem("platList")) || [];
+let incomeList = JSON.parse(localStorage.getItem("incomeList")) || [];
+let scheList = JSON.parse(localStorage.getItem("scheList")) || [];
+let safeNote = localStorage.getItem("safeNote") || "";
+document.getElementById("safeNote").value = safeNote;
+
+// 统计汇总
+function refreshTotalData(){
+    document.getElementById("totalPlatform").innerText = platList.length;
+    let todayStr = new Date().toLocaleDateString();
+    let nowMonth = new Date().getMonth();
+    let todayMoney = 0, monthMoney = 0, allHour = 0;
+    incomeList.forEach(v=>{
+        let d = new Date(v.date);
+        if(d.toLocaleDateString() === todayStr) todayMoney += Number(v.money);
+        if(d.getMonth() === nowMonth) monthMoney += Number(v.money);
+        allHour += Number(v.time);
+    })
+    document.getElementById("todayIncome").innerText = todayMoney.toFixed(2);
+    document.getElementById("monthIncome").innerText = monthMoney.toFixed(2);
+    let avgH = incomeList.length ? (allHour/incomeList.length).toFixed(1) : 0;
+    document.getElementById("avgWorkTime").innerText = avgH + " h";
+}
+
+// ========== 1.平台台账 增删改 ==========
+let nowEditType = "", nowEditIndex = -1;
+
+function addPlatform(){
+    let name = document.getElementById("platName").value.trim();
+    let type = document.getElementById("platType").value;
+    let sal = document.getElementById("platSalary").value.trim();
+    let status = document.getElementById("platStatus").value;
+    if(!name || !sal){alert("平台名称与时薪不能为空");return;}
+    platList.push({name,type,sal,status});
+    localStorage.setItem("platList",JSON.stringify(platList));
+    renderPlatTable();refreshTotalData();clearPlatInput();
+}
+function clearPlatInput(){
+    document.getElementById("platName").value="";
+    document.getElementById("platSalary").value="";
+}
+function renderPlatTable(){
+    let tb = document.getElementById("platTable");
+    tb.innerHTML = `<tr><th>平台名称</th><th>类型</th><th>时薪</th><th>状态</th><th>操作</th></tr>`;
+    platList.forEach((item,idx)=>{
+        tb.innerHTML += `
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.type}</td>
+            <td>${item.sal} 元/时</td>
+            <td>${item.status}</td>
+            <td>
+                <button class="edit" onclick="openPlatEdit(${idx})">修改</button>
+                <button class="del" onclick="delPlat(${idx})">删除</button>
+            </td>
+        </tr>`
+    })
+}
+function delPlat(idx){
+    if(!confirm("确定删除该平台数据？"))return;
+    platList.splice(idx,1);
+    localStorage.setItem("platList",JSON.stringify(platList));
+    renderPlatTable();refreshTotalData();
+}
+function openPlatEdit(idx){
+    nowEditType = "plat";nowEditIndex = idx;
+    let item = platList[idx];
+    let html = `
+    <div class="form-item"><label>平台名称</label><input id="e_platName" value="${item.name}"></div>
+    <div class="form-item">
+        <label>类型</label>
+        <select id="e_platType">
+            <option ${item.type=="云客服"?"selected":""}>云客服</option>
+            <option ${item.type=="众包标注"?"selected":""}>众包标注</option>
+            <option ${item.type=="内容审核"?"selected":""}>内容审核</option>
+            <option ${item.type=="问卷任务"?"selected":""}>问卷任务</option>
+        </select>
+    </div>
+    <div class="form-item"><label>时薪</label><input id="e_platSal" value="${item.sal}"></div>
+    <div class="form-item">
+        <label>状态</label>
+        <select id="e_platStatus">
+            <option ${item.status=="已入驻"?"selected":""}>已入驻</option>
+            <option ${item.status=="待报名"?"selected":""}>待报名</option>
+            <option ${item.status=="放弃不做"?"selected":""}>放弃不做</option>
+        </select>
+    </div>`;
+    document.getElementById("editFormBox").innerHTML = html;
+    showEditPop();
+}
+
+// ========== 2.收入记账 增删改 ==========
+function addIncome(){
+    let plat = document.getElementById("inPlat").value.trim();
+    let time = document.getElementById("inTime").value;
+    let money = document.getElementById("inMoney").value;
+    let date = document.getElementById("inDate").value;
+    if(!plat||!time||!money||!date){alert("请填写完整记账信息");return;}
+    incomeList.push({plat,time,money,date});
+    localStorage.setItem("incomeList",JSON.stringify(incomeList));
+    renderIncomeTable();refreshTotalData();clearIncomeInput();
+}
+function clearIncomeInput(){
+    document.getElementById("inPlat").value="";
+    document.getElementById("inTime").value="";
+    document.getElementById("inMoney").value="";
+    document.getElementById("inDate").value="";
+}
+function renderIncomeTable(){
+    let tb = document.getElementById("incomeTable");
+    tb.innerHTML = `<tr><th>日期</th><th>平台</th><th>工时</th><th>收入</th><th>操作</th></tr>`;
+    incomeList.forEach((item,idx)=>{
+        tb.innerHTML += `
+        <tr>
+            <td>${item.date}</td>
+            <td>${item.plat}</td>
+            <td>${item.time} h</td>
+            <td>${item.money} 元</td>
+            <td>
+                <button class="edit" onclick="openIncomeEdit(${idx})">修改</button>
+                <button class="del" onclick="delIncome(${idx})">删除</button>
+            </td>
+        </tr>`
+    })
+}
+function delIncome(idx){
+    if(!confirm("确定删除这条收入记录？"))return;
+    incomeList.splice(idx,1);
+    localStorage.setItem("incomeList",JSON.stringify(incomeList));
+    renderIncomeTable();refreshTotalData();
+}
+function openIncomeEdit(idx){
+    nowEditType = "income";nowEditIndex = idx;
+    let item = incomeList[idx];
+    let html = `
+    <div class="form-item"><label>平台</label><input id="e_inPlat" value="${item.plat}"></div>
+    <div class="form-item"><label>工时</label><input id="e_inTime" value="${item.time}"></div>
+    <div class="form-item"><label>收入</label><input id="e_inMoney" value="${item.money}"></div>
+    <div class="form-item"><label>日期</label><input type="date" id="e_inDate" value="${item.date}"></div>`;
+    document.getElementById("editFormBox").innerHTML = html;
+    showEditPop();
+}
+
+// ========== 3.排班规划 增删改 ==========
+function addSchedule(){
+    let date = document.getElementById("scheDate").value;
+    let plat = document.getElementById("schePlat").value.trim();
+    let hour = document.getElementById("scheHour").value;
+    let time = document.getElementById("scheTime").value.trim();
+    if(!date||!plat){alert("请填写排班日期与平台");return;}
+    scheList.push({date,plat,hour,time,state:"未完成"});
+    localStorage.setItem("scheList",JSON.stringify(scheList));
+    renderScheTable();clearScheInput();
+}
+function clearScheInput(){
+    document.getElementById("scheDate").value="";
+    document.getElementById("schePlat").value="";
+    document.getElementById("scheTime").value="";
+}
+function renderScheTable(){
+    let tb = document.getElementById("scheTable");
+    tb.innerHTML = `<tr><th>日期</th><th>平台</th><th>计划工时</th><th>时段</th><th>状态</th><th>操作</th></tr>`;
+    scheList.forEach((item,idx)=>{
+        tb.innerHTML += `
+        <tr>
+            <td>${item.date}</td>
+            <td>${item.plat}</td>
+            <td>${item.hour} h</td>
+            <td>${item.time}</td>
+            <td>${item.state}</td>
+            <td>
+                <button class="edit" onclick="openScheEdit(${idx})">修改</button>
+                <button onclick="changeScheState(${idx})">完成/切换</button>
+                <button class="del" onclick="delSche(${idx})">删除</button>
+            </td>
+        </tr>`
+    })
+}
+function changeScheState(idx){
+    scheList[idx].state = scheList[idx].state=="未完成"?"已完成":"未完成";
+    localStorage.setItem("scheList",JSON.stringify(scheList));
+    renderScheTable();
+}
+function delSche(idx){
+    if(!confirm("确定删除排班计划？"))return;
+    scheList.splice(idx,1);
+    localStorage.setItem("scheList",JSON.stringify(scheList));
+    renderScheTable();
+}
+function openScheEdit(idx){
+    nowEditType = "sche";nowEditIndex = idx;
+    let item = scheList[idx];
+    let html = `
+    <div class="form-item"><label>日期</label><input type="date" id="e_scheDate" value="${item.date}"></div>
+    <div class="form-item"><label>平台</label><input id="e_schePlat" value="${item.plat}"></div>
+    <div class="form-item"><label>计划工时</label><input id="e_scheHour" value="${item.hour}"></div>
+    <div class="form-item"><label>工作时段</label><input id="e_scheTime" value="${item.time}"></div>`;
+    document.getElementById("editFormBox").innerHTML = html;
+    showEditPop();
+}
+
+// ========== 通用弹窗编辑 ==========
+function showEditPop(){
+    document.getElementById("editMask").style.display="block";
+    document.getElementById("editPop").style.display="block";
+}
+function closeEditPop(){
+    document.getElementById("editMask").style.display="none";
+    document.getElementById("editPop").style.display="none";
+    nowEditIndex = -1;nowEditType = "";
+}
+function submitEdit(){
+    if(nowEditType=="plat"){
+        platList[nowEditIndex].name = document.getElementById("e_platName").value.trim();
+        platList[nowEditIndex].type = document.getElementById("e_platType").value;
+        platList[nowEditIndex].sal = document.getElementById("e_platSal").value;
+        platList[nowEditIndex].status = document.getElementById("e_platStatus").value;
+        localStorage.setItem("platList",JSON.stringify(platList));
+        renderPlatTable();refreshTotalData();
+    }else if(nowEditType=="income"){
+        incomeList[nowEditIndex].plat = document.getElementById("e_inPlat").value.trim();
+        incomeList[nowEditIndex].time = document.getElementById("e_inTime").value;
+        incomeList[nowEditIndex].money = document.getElementById("e_inMoney").value;
+        incomeList[nowEditIndex].date = document.getElementById("e_inDate").value;
+        localStorage.setItem("incomeList",JSON.stringify(incomeList));
+        renderIncomeTable();refreshTotalData();
+    }else if(nowEditType=="sche"){
+        scheList[nowEditIndex].date = document.getElementById("e_scheDate").value;
+        scheList[nowEditIndex].plat = document.getElementById("e_schePlat").value.trim();
+        scheList[nowEditIndex].hour = document.getElementById("e_scheHour").value;
+        scheList[nowEditIndex].time = document.getElementById("e_scheTime").value;
+        localStorage.setItem("scheList",JSON.stringify(scheList));
+        renderScheTable();
+    }
+    closeEditPop();
+    alert("数据修改成功！");
+}
+
+// 笔记
+function saveNote(){
+    let val = document.getElementById("safeNote").value;
+    localStorage.setItem("safeNote",val);
+    alert("笔记已本地保存");
+}
+function clearNote(){
+    if(confirm("确定清空所有笔记？")){
+        document.getElementById("safeNote").value="";
+        localStorage.removeItem("safeNote");
+    }
+}
+
+// 页面初始化渲染
+window.onload = function(){
+    renderPlatTable();
+    renderIncomeTable();
+    renderScheTable();
+    refreshTotalData();
+}
+</script>
+</body>
+</html>
