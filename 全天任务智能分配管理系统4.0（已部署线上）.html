@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>任务智能匹配调度系统</title>
+<style>
+/* 全局兼容重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+html {
+    font-size: 14px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+body {
+    background-color: #f0f4f9;
+    padding: 24px 16px;
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.55;
+}
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 30, 80, 0.08);
+    overflow: hidden;
+}
+.page-header {
+    background: #009688;
+    background: -webkit-linear-gradient(135deg, #009688, #00bfa5);
+    background: linear-gradient(135deg, #009688, #00bfa5);
+    color: #fff;
+    padding: 20px 24px;
+}
+.page-header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.page-header p {
+    opacity: 0.92;
+    font-size: 13px;
+}
+.time-panel {
+    padding: 20px 24px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+/* 平板/桌面三栏适配 */
+@media screen and (min-width: 640px) {
+    .time-panel {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+.time-card {
+    background: #fff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.time-card .label {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+.time-card .val {
+    font-size: 16px;
+    font-weight: bold;
+    word-break: break-all;
+}
+.week-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 16px;
+    background: #009688;
+    color: #fff;
+    font-size: 14px;
+}
+.main-content {
+    padding: 24px;
+}
+.section-title {
+    font-size: 18px;
+    color: #1e293b;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 图标和文字间距 */
+    justify-content: flex-start;
+    align-content: center;
+    /* 新增 */
+    width: 100%; /* 占满父容器宽度 */
+    overflow: visible; /* 禁止文字裁剪 */
+    white-space: nowrap; /* 文字不换行，也可换成normal自动换行 */
+}
+.section-title span {
+    width: 4px;
+    height: 18px;
+    background: #009688;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+.task-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+@media screen and (min-width: 520px) {
+    .task-wrap {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (min-width: 860px) {
+    .task-wrap {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+.task-card {
+    padding: 16px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.24s ease;
+    -webkit-transition: all 0.24s ease;
+}
+.card-green {
+    background: #e6fffb;
+    border-color: #5cdbd3;
+}
+.card-purple {
+    background: #f9f0ff;
+    border-color: #b37feb;
+}
+.card-orange {
+    background: #fff7e6;
+    border-color: #ffcb45;
+}
+.card-gray {
+    background: #f5f7fa;
+    border-color: #c0c4cc;
+}
+/* 当前时段高亮 */
+.task-card.active {
+    transform: scale(1.015);
+    -webkit-transform: scale(1.015);
+    box-shadow: 0 5px 18px rgba(0,0,0,0.11);
+    border-width: 3px;
+}
+.task-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0f172a;
+    margin-bottom: 10px;
+    word-break: break-all;
+}
+.task-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+    font-size: 13px;
+}
+.label-text {
+    color: #475569;
+}
+.device-text {
+    color: #1890ff;
+    font-weight: 500;
+    text-align: right;
+    word-break: break-all;
+    max-width: 60%;
+}
+.time-text {
+    color: #d92121;
+    font-weight: 500;
+}
+.status-tag {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 14px;
+    font-size: 12px;
+}
+.tag-available {
+    background: #52c41a;
+    color: #ffffff;
+}
+.tag-wait {
+    background: #d9d9d9;
+    color: #333333;
+}
+.empty-tip {
+    width: 100%;
+    text-align: center;
+    padding: 50px 10px;
+    color: #94a3b8;
+    font-size: 15px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>任务智能匹配调度系统</h1>
+        <p>自动读取本机日期星期，按排班规则匹配任务，当前时段任务自动高亮</p>
+    </div>
+
+    <div class="time-panel">
+        <div class="time-card">
+            <div class="label">当前完整日期</div>
+            <div class="val" id="fullTime">--</div>
+        </div>
+        <div class="time-card">
+            <div class="label">今日星期</div>
+            <div class="val"><span id="weekTxt" class="week-tag">--</span></div>
+        </div>
+        <div class="time-card">
+            <div class="label">当前时分</div>
+            <div class="val" id="hmTime">--</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="section-title">
+            <span></span>
+            <span>今日匹配任务列表</span>
+        </div>
+        <div class="task-wrap" id="taskBox"></div>
+    </div>
+</div>
+
+<script>
+// 排班规则数据
+const ruleData = {
+    "周一三五": [
+        {name:"流量联盟",device:"手机设备",time:"20:00-23:20",cls:"card-green"},
+        {name:"自媒体矩阵",device:"台式电脑",time:"20:00-23:20",cls:"card-green"},
+        {name:"地推项目",device:"台式电脑",time:"20:00-23:20",cls:"card-green"},
+        {name:"直播项目",device:"台式电脑",time:"00:00-01:20",cls:"card-green"}
+    ],
+    "周二四": [
+        {name:"电商联盟",device:"笔记本电脑",time:"09:00-13:00",cls:"card-purple"},
+        {name:"问卷联盟",device:"笔记本电脑",time:"14:00-19:00",cls:"card-purple"},
+        {name:"抽奖活动及拍卖平台",device:"笔记本电脑",time:"00:00-01:20",cls:"card-purple"}
+    ],
+    "周日": [
+        {name:"数据标注",device:"笔记本电脑",time:"14:00-19:00",cls:"card-orange"}
+    ],
+    "通用任务": [
+        {name:"任务联盟",device:"手机设备",time:"09:00-13:00",cls:"card-gray"},
+        {name:"数链宝藏",device:"手机设备",time:"09:00-13:00",cls:"card-gray"},
+        {name:"广告联盟",device:"手机设备",time:"14:00-19:00",cls:"card-gray"},
+        {name:"游戏联盟",device:"台式电脑",time:"20:00-23:20",cls:"card-gray"},
+        {name:"新媒体平台",device:"手机设备/台式电脑",time:"00:00-01:20",cls:"card-gray"}
+    ]
+};
+
+// 时分转分钟
+function timeToMin(str) {
+    var arr = str.split(":");
+    var h = parseInt(arr[0], 10);
+    var m = parseInt(arr[1], 10);
+    return h * 60 + m;
+}
+// 判断当前时间是否在区间
+function isInTimeRange(nowMin, rangeStr) {
+    var arr = rangeStr.split("-");
+    var s = timeToMin(arr[0]);
+    var e = timeToMin(arr[1]);
+    if (s > e) {
+        return nowMin >= s || nowMin <= e;
+    } else {
+        return nowMin >= s && nowMin <= e;
+    }
+}
+// 获取当前时间信息
+function getNowInfo() {
+    var now = new Date();
+    var weekArr = ["周日","周一","周二","周三","周四","周五","周六"];
+    var weekNum = now.getDay();
+    var weekText = weekArr[weekNum];
+
+    var year = now.getFullYear();
+    var mon = String(now.getMonth() + 1).padStart(2, "0");
+    var day = String(now.getDate()).padStart(2, "0");
+    var h = String(now.getHours()).padStart(2, "0");
+    var m = String(now.getMinutes()).padStart(2, "0");
+    var fullStr = year + "-" + mon + "-" + day + " " + h + ":" + m;
+    var hmStr = h + ":" + m;
+    var nowMin = timeToMin(hmStr);
+
+    return {
+        weekNum: weekNum,
+        weekText: weekText,
+        fullStr: fullStr,
+        hmStr: hmStr,
+        nowMin: nowMin
+    };
+}
+// 渲染任务列表
+function renderTask() {
+    var info = getNowInfo();
+    document.getElementById("fullTime").innerText = info.fullStr;
+    document.getElementById("weekTxt").innerText = info.weekText;
+    document.getElementById("hmTime").innerText = info.hmStr;
+    var taskBox = document.getElementById("taskBox");
+    taskBox.innerHTML = "";
+
+    var taskList = [];
+    var w = info.weekText;
+    // 匹配专属任务
+    if (["周一","周三","周五"].indexOf(w) > -1) {
+        taskList = taskList.concat(ruleData["周一三五"]);
+    }
+    if (["周二","周四"].indexOf(w) > -1) {
+        taskList = taskList.concat(ruleData["周二四"]);
+    }
+    if (w === "周日") {
+        taskList = taskList.concat(ruleData["周日"]);
+    }
+    // 周六不加载通用任务
+    if (w !== "周六") {
+        taskList = taskList.concat(ruleData["通用任务"]);
+    }
+    // 无任务提示
+    if (w === "周六" || taskList.length === 0) {
+        taskBox.innerHTML = '<div class="empty-tip">今日无任何可执行排班任务</div>';
+        return;
+    }
+    // 循环渲染卡片
+    var html = "";
+    for (var i = 0; i < taskList.length; i++) {
+        var item = taskList[i];
+        var isNowRun = isInTimeRange(info.nowMin, item.time);
+        var activeClass = isNowRun ? "active" : "";
+        var statusHtml = isNowRun
+            ? '<span class="status-tag tag-available">✅ 当前可执行</span>'
+            : '<span class="status-tag tag-wait">⏳ 未到时段</span>';
+
+        html += '<div class="task-card ' + item.cls + ' ' + activeClass + '">'
+            + '<div class="task-name">' + item.name + '</div>'
+            + '<div class="task-row">'
+            + '<span class="label-text">执行设备</span>'
+            + '<span class="device-text">' + item.device + '</span>'
+            + '</div>'
+            + '<div class="task-row">'
+            + '<span class="label-text">允许时段</span>'
+            + '<span class="time-text">' + item.time + '</span>'
+            + '</div>'
+            + statusHtml
+            + '</div>';
+    }
+    taskBox.innerHTML = html;
+}
+// 首次加载执行
+renderTask();
+// 每分钟刷新，兼容低版本浏览器定时器
+setInterval(function() {
+    renderTask();
+}, 60000);
+</script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ShopNav Global - 国内外电商导航</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-color: #1a1a2e;
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #ec4899;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --font-size-base: 15px;
+        }
+
+        [data-theme="night"] {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --text-color: #e6e6e6;
+            --primary-color: #818cf8;
+            --secondary-color: #22d3ee;
+            --accent-color: #f472b6;
+            --border-color: #1e293b;
+            --shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="cold-blue"] {
+            --bg-color: #e0f7fa;
+            --card-bg: #ffffff;
+            --text-color: #006064;
+            --primary-color: #0288d1;
+            --secondary-color: #00bcd4;
+            --accent-color: #26c6da;
+            --border-color: #b2ebf2;
+        }
+
+        [data-theme="warm-yellow"] {
+            --bg-color: #fff8e1;
+            --card-bg: #fffde7;
+            --text-color: #5d4037;
+            --primary-color: #ff9800;
+            --secondary-color: #ffc107;
+            --accent-color: #ffca28;
+            --border-color: #ffe082;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body::before {
+            content: "ShopNav Global - 国内外电商导航";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 60px;
+            color: rgba(79, 70, 229, 0.04);
+            font-weight: bold;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 9999;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 32px;
+            color: var(--accent-color);
+        }
+
+        .clock {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            background: var(--bg-color);
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .control-btn {
+            padding: 10px 18px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 30px 0 20px;
+            padding-left: 15px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        .platform-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px 15px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
+        }
+
+        .platform-icon {
+            font-size: 42px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .platform-card:hover .platform-icon {
+            transform: scale(1.1);
+        }
+
+        .platform-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .platform-desc {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            opacity: 0.6;
+            font-size: 13px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .controls {
+                justify-content: center;
+            }
+
+            .platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .platform-card {
+                padding: 20px 10px;
+            }
+
+            .platform-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 36px;
+            }
+
+            body::before {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+<div class="container">
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-globe"></i>
+            <span>ShopNav Global</span>
+        </div>
+        <div class="clock" id="clock">00:00:00</div>
+        <div class="controls">
+            <button class="control-btn" onclick="toggleTheme()">
+                <i class="fas fa-palette"></i>
+                <span>主题</span>
+            </button>
+        </div>
+    </header>
+
+    <h2 class="category-title"><i class="fas fa-flag"></i> 国内平台（含个人店）</h2>
+    <div class="platform-grid">
+        <a href="https://www.taobao.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-shopping-bag"></i></div>
+            <div class="platform-name">淘宝网</div>
+            <div class="platform-desc">综合购物平台</div>
+        </a>
+        <a href="https://mobile.yangkeduo.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-comments-dollar"></i></div>
+            <div class="platform-name">拼多多</div>
+            <div class="platform-desc">拼团特价</div>
+        </a>
+        <a href="https://2.taobao.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-recycle"></i></div>
+            <div class="platform-name">闲鱼</div>
+            <div class="platform-desc">二手交易</div>
+        </a>
+        <a href="https://fxg.jinritemai.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fab fa-tiktok"></i></div>
+            <div class="platform-name">抖音小店</div>
+            <div class="platform-desc">个人店入驻</div>
+        </a>
+        <a href="https://seller.kwaixiaodian.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fab fa-kickstarter-k"></i></div>
+            <div class="platform-name">快手小店</div>
+            <div class="platform-desc">个人店入驻</div>
+        </a>
+        <a href="https://shop.weixin.qq.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fab fa-weixin"></i></div>
+            <div class="platform-name">微信小商店</div>
+            <div class="platform-desc">个人开店</div>
+        </a>
+        <a href="https://channels.weixin.qq.com/shop" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-video"></i></div>
+            <div class="platform-name">视频号小店</div>
+            <div class="platform-desc">个人入驻</div>
+        </a>
+        <a href="https://customer.xiaohongshu.com/login?service=https%3A%2F%2Fxhs.cn" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fab fa-reddit-alien"></i></div>
+            <div class="platform-name">小红书</div>
+            <div class="platform-desc">个人店入驻</div>
+        </a>
+        <a href="https://www.zhuanzhuan.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-sync-alt"></i></div>
+            <div class="platform-name">转转</div>
+            <div class="platform-desc">个人店入驻</div>
+        </a>
+        <a href="https://www.aihuishou.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-hand-holding-usd"></i></div>
+            <div class="platform-name">爱回收</div>
+            <div class="platform-desc">个人寄卖</div>
+        </a>
+        <a href="https://shop.kongfz.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-book-open"></i></div>
+            <div class="platform-name">孔夫子旧书网</div>
+            <div class="platform-desc">个人店入驻</div>
+        </a>
+        <a href="https://www.doushouba.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-store"></i></div>
+            <div class="platform-name">兜售吧</div>
+            <div class="platform-desc">个人店入驻</div>
+        </a>
+    </div>
+
+    <h2 class="category-title"><i class="fas fa-earth-americas"></i> 国外平台</h2>
+    <div class="platform-grid">
+        <a href="https://www.amazon.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fab fa-amazon"></i></div>
+            <div class="platform-name">Amazon</div>
+            <div class="platform-desc">全球综合电商</div>
+        </a>
+        <a href="https://www.ebay.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fab fa-ebay"></i></div>
+            <div class="platform-name">eBay</div>
+            <div class="platform-desc">拍卖与零售</div>
+        </a>
+        <a href="https://www.aliexpress.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-shipping-fast"></i></div>
+            <div class="platform-name">AliExpress</div>
+            <div class="platform-desc">速卖通</div>
+        </a>
+        <a href="https://shopee.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-shopping-basket"></i></div>
+            <div class="platform-name">Shopee</div>
+            <div class="platform-desc">东南亚电商</div>
+        </a>
+        <a href="https://www.temu.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-tags"></i></div>
+            <div class="platform-name">Temu</div>
+            <div class="platform-desc">拼多多海外</div>
+        </a>
+        <a href="https://www.walmart.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-warehouse"></i></div>
+            <div class="platform-name">Walmart</div>
+            <div class="platform-desc">美国零售巨头</div>
+        </a>
+        <a href="https://www.etsy.com" target="_blank" class="platform-card">
+            <div class="platform-icon"><i class="fas fa-palette"></i></div>
+            <div class="platform-name">Etsy</div>
+            <div class="platform-desc">手工艺品</div>
+        </a>
+    </div>
+
+    <footer class="footer">
+        <p>🔗 本页面仅供学习与导航使用 · 点击卡片跳转至官方站点</p>
+    </footer>
+</div>
+
+<script>
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false });
+        document.getElementById('clock').textContent = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const themes = ['light', 'night', 'cold-blue', 'warm-yellow'];
+    let themeIndex = 0;
+
+    function toggleTheme() {
+        themeIndex = (themeIndex + 1) % themes.length;
+        const theme = themes[themeIndex];
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('shopnav_theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('shopnav_theme') || 'light';
+    themeIndex = themes.indexOf(savedTheme);
+    document.body.setAttribute('data-theme', savedTheme);
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+
+</body>
+</html>

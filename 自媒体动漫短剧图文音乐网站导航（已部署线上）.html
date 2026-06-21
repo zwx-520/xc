@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动漫 · 短剧 · 图文 · 音乐 | 创作收益导航</title>
+<style>
+:root {
+  --primary: #ff6a8d;
+  --primary-light: #fff0f3;
+  --bg: #f4f6fb;
+  --card-bg: #ffffff;
+  --text-main: #2d2f3a;
+  --text-sub: #8a8fa3;
+  --radius: 14px;
+  --shadow: 0 6px 20px rgba(255, 106, 141, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+/* ===== Header ===== */
+header {
+  background: linear-gradient(135deg, #ff6a8d, #ff9a44);
+  color: #fff;
+  text-align: center;
+  padding: 42px 20px 34px;
+  border-radius: 0 0 24px 24px;
+}
+header h1 {
+  font-size: 1.7rem;
+  letter-spacing: 1px;
+}
+header p {
+  margin-top: 8px;
+  opacity: .92;
+  font-size: .92rem;
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: 1140px;
+  margin: auto;
+  padding: 28px 16px 80px;
+}
+
+/* ===== Section ===== */
+.section {
+  margin-bottom: 32px;
+}
+.section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  padding-left: 12px;
+  border-left: 4px solid var(--primary);
+  margin-bottom: 14px;
+}
+
+/* ===== Grid ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* ===== Card ===== */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  text-decoration: none;
+  color: var(--text-main);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(255, 106, 141, 0.22);
+}
+.card:active {
+  transform: scale(0.98);
+}
+
+/* Tag */
+.tag {
+  align-self: flex-start;
+  font-size: .65rem;
+  font-weight: 500;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* Name */
+.card .name {
+  font-size: .95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* Desc */
+.card .desc {
+  font-size: .78rem;
+  color: var(--text-sub);
+  line-height: 1.45;
+}
+
+/* ===== Footer ===== */
+footer {
+  text-align: center;
+  font-size: .75rem;
+  color: #aaa;
+  padding: 24px;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .card {
+    padding: 14px;
+  }
+  header h1 {
+    font-size: 1.4rem;
+  }
+}
+</style></head>
+<body>
+
+<header>
+  <h1>🎨 动漫 · 短剧 · 图文 · 音乐</h1>
+  <p>创作收益平台 & 资源导航（国内外靠谱）</p>
+</header>
+
+<div class="container">
+
+  <!-- 动漫剪辑 / 二次元 -->
+  <div class="section">
+    <h2>🎞 动漫剪辑 · 二次元解说收益平台</h2>
+    <div class="grid">
+      <a class="card" href="https://www.bilibili.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">B站（番剧剪辑 / AMV）</span>
+        <span class="desc">创作激励 + 充电 + 商单 + 联合投稿</span>
+      </a>
+      <a class="card" href="https://www.douyin.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">抖音动漫号 / 二创解说</span>
+        <span class="desc">播放分成 + 星图商单 + 橱窗带货</span>
+      </a>
+      <a class="card" href="https://www.youtube.com/" target="_blank">
+        <span class="tag">国际</span>
+        <span class="name">YouTube Anime Clip / AMV</span>
+        <span class="desc">YPP广告分成 + 频道会员</span>
+      </a>
+      <a class="card" href="https://www.acfun.cn/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">AcFun（A站）</span>
+        <span class="desc">UP主激励 + 弹幕文化 + 二创</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 短剧 / 解说 / 混剪 -->
+  <div class="section">
+    <h2>🎭 短剧 · 解说 · 剧情混剪变现</h2>
+    <div class="grid">
+      <a class="card" href="https://www.kuaishou.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">快手短剧 / 星芒计划</span>
+        <span class="desc">短剧播放激励 + 招商 + 分账</span>
+      </a>
+      <a class="card" href="https://www.douyin.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">抖音短剧 / 剧星计划</span>
+        <span class="desc">短剧挂载链接 CPS 分佣</span>
+      </a>
+      <a class="card" href="https://www.changdunovel.com/" target="_blank">
+        <span class="tag">推广</span>
+        <span class="name">番茄 / 畅读短剧推广</span>
+        <span class="desc">短剧拉新 CPA + 充值 CPS</span>
+      </a>
+      <a class="card" href="https://www.webnovel.com/" target="_blank">
+        <span class="tag">国际</span>
+        <span class="name">WebNovel / 短剧出海</span>
+        <span class="desc">海外短剧 IP 改编 + 分成</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 图文 / 条漫 / 四格漫 -->
+  <div class="section">
+    <h2>🖼 图文号 · 条漫 · 四格漫画收益</h2>
+    <div class="grid">
+      <a class="card" href="https://www.xiaohongshu.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">小红书图文 / 条漫号</span>
+        <span class="desc">品牌商单 + 店铺带货 + 私域</span>
+      </a>
+      <a class="card" href="https://www.zhihu.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">知乎图文 / 盐选故事</span>
+        <span class="desc">图文付费阅读 + 赞赏</span>
+      </a>
+      <a class="card" href="https://www.weibo.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">微博动漫 / 四格漫</span>
+        <span class="desc">流量分成 + 商单 + 超话</span>
+      </a>
+      <a class="card" href="https://www.webtoons.com/" target="_blank">
+        <span class="tag">国际</span>
+        <span class="name">Webtoon / LINE Manga</span>
+        <span class="desc">条漫连载 + 广告 + IP授权</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 音乐 / BGM / AI音乐 -->
+  <div class="section">
+    <h2>🎵 音乐 · BGM · AI作曲 · 配乐变现</h2>
+    <div class="grid">
+      <a class="card" href="https://music.163.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">网易云音乐人</span>
+        <span class="desc">播放收益 + 赞赏 + 商单</span>
+      </a>
+      <a class="card" href="https://y.qq.com/" target="_blank">
+        <span class="tag">国内</span>
+        <span class="name">QQ音乐开放平台</span>
+        <span class="desc">原创音乐人计划 + 版权分成</span>
+      </a>
+      <a class="card" href="https://artists.spotify.com/" target="_blank">
+        <span class="tag">国际</span>
+        <span class="name">Spotify for Artists</span>
+        <span class="desc">流媒体播放版税（全球）</span>
+      </a>
+      <a class="card" href="https://www.suno.ai/" target="_blank">
+        <span class="tag">AI</span>
+        <span class="name">Suno / Udio AI 音乐</span>
+        <span class="desc">AI生成歌曲 + 商用授权</span>
+      </a>
+      <a class="card" href="https://www.epidemicsound.com/" target="_blank">
+        <span class="tag">商用</span>
+        <span class="name">Epidemic Sound / Artlist</span>
+        <span class="desc">BGM授权给创作者 / YouTuber</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 素材 & 工具 -->
+  <div class="section">
+    <h2>🧰 动漫 / 短剧 / 音乐创作工具</h2>
+    <div class="grid">
+      <a class="card" href="https://www.capcut.cn/" target="_blank">
+        <span class="tag">剪辑</span>
+        <span class="name">剪映 / CapCut</span>
+        <span class="desc">动漫剪辑 / 短剧一键成片</span>
+      </a>
+      <a class="card" href="https://www.canva.cn/" target="_blank">
+        <span class="tag">设计</span>
+        <span class="name">Canva 可画</span>
+        <span class="desc">图文 / 条漫 / 封面模板</span>
+      </a>
+      <a class="card" href="https://pixabay.com/music/" target="_blank">
+        <span class="tag">音乐</span>
+        <span class="name">Pixabay Music</span>
+        <span class="desc">无版权 BGM / 音效</span>
+      </a>
+      <a class="card" href="https://www.midjourney.com/" target="_blank">
+        <span class="tag">AI</span>
+        <span class="name">Midjourney / 即梦</span>
+        <span class="desc">动漫风 / 插画 / 分镜生成</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  🎨 动漫 · 短剧 · 图文 · 音乐 创作收益导航  
+  <br>纯前端 HTML · 自用 / 团队 / 自媒体工作室
+</footer>
+
+</body>
+</html>

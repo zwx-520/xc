@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>直播资源整合导航</title>
+
+<style>
+:root {
+  --primary: #ff5c5c;
+  --bg: #f4f6fb;
+  --card-bg: #ffffff;
+  --text-main: #2d2f3a;
+  --text-sub: #8a8fa3;
+  --radius: 14px;
+  --shadow: 0 6px 20px rgba(255, 92, 92, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+}
+
+/* ===== Header ===== */
+header {
+  background: linear-gradient(135deg, #ff5c5c, #ff925c);
+  color: #fff;
+  padding: 36px 20px;
+  border-radius: 0 0 24px 24px;
+  text-align: center;
+}
+header h1 {
+  font-size: 1.6rem;
+}
+header p {
+  margin-top: 8px;
+  opacity: .9;
+  font-size: .9rem;
+}
+
+/* Search */
+.search {
+  margin-top: 16px;
+}
+.search input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: .88rem;
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: 1140px;
+  margin: auto;
+  padding: 24px 16px 80px;
+}
+
+/* ===== Category ===== */
+.category {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 28px 0 14px;
+  padding-left: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+/* ===== Grid ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* ===== Card ===== */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-decoration: none;
+  color: var(--text-main);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: all .25s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(255, 92, 92, 0.2);
+}
+
+/* Icon */
+.icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ffd6d6, #ffe8d6);
+  margin-bottom: 10px;
+}
+
+/* Title */
+.name {
+  font-size: .95rem;
+  font-weight: 600;
+}
+.desc {
+  margin-top: 6px;
+  font-size: .78rem;
+  color: var(--text-sub);
+  line-height: 1.45;
+}
+
+/* ===== Footer ===== */
+footer {
+  text-align: center;
+  font-size: .75rem;
+  color: #aaa;
+  padding: 24px;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🎥 直播资源整合导航</h1>
+  <p>一站式直达主流直播平台与工具</p>
+  <div class="search">
+    <input type="text" placeholder="搜索直播平台 / 工具…" />
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="category">🎮 游戏直播</div>
+  <div class="grid">
+    <a class="card" href="#">
+      <div class="icon"></div>
+      <div class="name">斗鱼直播</div>
+      <div class="desc">国内头部游戏直播平台</div>
+    </a>
+    <a class="card" href="#">
+      <div class="icon"></div>
+      <div class="name">虎牙直播</div>
+      <div class="desc">电竞赛事与游戏直播</div>
+    </a>
+    <a class="card" href="#">
+      <div class="icon"></div>
+      <div class="name">Twitch</div>
+      <div class="desc">全球最大游戏直播平台</div>
+    </a>
+  </div>
+
+  <div class="category">🛒 电商直播</div>
+  <div class="grid">
+    <a class="card" href="#">
+      <div class="icon"></div>
+      <div class="name">抖音直播</div>
+      <div class="desc">短视频 + 直播带货</div>
+    </a>
+    <a class="card" href="#">
+      <div class="icon"></div>
+      <div class="name">淘宝直播</div>
+      <div class="desc">电商直播标杆平台</div>
+    </a>
+  </div>
+
+  <div class="category">🎓 教育直播</div>
+  <div class="grid">
+    <a class="card" href="#">
+      <div class="icon"></div>
+      <div class="name">小鹅通</div>
+      <div class="desc">知识付费与课程直播</div>
+    </a>
+    <a class="card" href="#">
+      <div class="icon"></div>
+      <div class="name">腾讯课堂</div>
+      <div class="desc">在线职业教育直播</div>
+    </a>
+  </div>
+
+</div>
+
+<footer>© 2026 直播资源整合导航 · 仅作演示</footer>
+
+</body>
+</html>

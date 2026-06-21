@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自媒体创作 · 变现资源导航</title>
+<style>
+  :root {
+    --primary: #5b6cff;
+    --primary-light: #eef1ff;
+    --bg: #f4f6fa;
+    --card-bg: #ffffff;
+    --text-main: #2d2f3a;
+    --text-sub: #8a8fa3;
+    --radius: 12px;
+    --shadow: 0 4px 18px rgba(90, 108, 255, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    line-height: 1.6;
+  }
+
+  /* ===== 头部 ===== */
+  header {
+    background: linear-gradient(135deg, #5b6cff 0%, #8a6cff 100%);
+    color: #fff;
+    text-align: center;
+    padding: 44px 20px 36px;
+    border-radius: 0 0 24px 24px;
+  }
+  header h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  header p {
+    margin-top: 8px;
+    opacity: 0.88;
+    font-size: 0.9rem;
+  }
+
+  /* ===== 容器 ===== */
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px 16px 80px;
+  }
+
+  /* ===== 分区标题 ===== */
+  .section {
+    margin-bottom: 32px;
+  }
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 14px;
+    padding-left: 12px;
+    border-left: 4px solid var(--primary);
+  }
+
+  /* ===== 卡片网格 ===== */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  /* ===== 卡片样式 ===== */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    text-decoration: none;
+    color: var(--text-main);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(90, 108, 255, 0.16);
+  }
+  .card:active {
+    transform: scale(0.98);
+  }
+
+  /* 标签 */
+  .tag {
+    align-self: flex-start;
+    font-size: 0.65rem;
+    font-weight: 500;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  /* 名称 */
+  .card .name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  /* 描述 */
+  .card .desc {
+    font-size: 0.78rem;
+    color: var(--text-sub);
+    line-height: 1.45;
+  }
+
+  /* ===== 底部 ===== */
+  footer {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.75rem;
+    padding: 24px;
+  }
+
+  /* ===== 移动端适配 ===== */
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .card {
+      padding: 14px;
+    }
+    header h1 {
+      font-size: 1.35rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎬 自媒体创作 & 变现资源导航</h1>
+  <p>视频 · 小说 · 素材 · 接单 · 国内外靠谱平台</p>
+</header>
+
+<div class="container">
+
+  <!-- 视频自媒体收益平台 -->
+  <div class="section">
+    <h2>🎥 视频自媒体 · 创作收益平台（国内）</h2>
+    <div class="grid">
+      <a class="card" href="https://www.douyin.com/" target="_blank"><span class="tag">国内</span><span class="name">抖音 / 中视频伙伴计划</span><span class="desc">横屏≥1min原创视频播放分成+商单</span></a>
+      <a class="card" href="https://www.bilibili.com/" target="_blank"><span class="tag">国内</span><span class="name">B站（哔哩哔哩）</span><span class="desc">创作激励计划+充电/商单变现</span></a>
+      <a class="card" href="https://www.ixigua.com/" target="_blank"><span class="tag">国内</span><span class="name">西瓜视频（中视频计划）</span><span class="desc">与抖音/头条打通，播放量分成</span></a>
+      <a class="card" href="https://www.kuaishou.com/" target="_blank"><span class="tag">国内</span><span class="name">快手（光合计划）</span><span class="desc">短视频/长视频现金激励+直播</span></a>
+      <a class="card" href="https://mp.weixin.qq.com/" target="_blank"><span class="tag">国内</span><span class="name">微信视频号</span><span class="desc">广告分成+直播打赏+带货佣金</span></a>
+      <a class="card" href="https://www.youtube.com/intl/zh-Hans_cn/" target="_blank"><span class="tag">国际</span><span class="name">YouTube 合作伙伴计划</span><span class="desc">广告分成+YPP，需达1000订/4000h</span></a>
+    </div>
+  </div>
+
+  <!-- 小说写作收益平台 -->
+  <div class="section">
+    <h2>📖 小说写作 · 发布收益平台</h2>
+    <div class="grid">
+      <a class="card" href="https://write.qq.com/" target="_blank"><span class="tag">国内</span><span class="name">起点中文网 / 阅文</span><span class="desc">签约全勤+订阅分成+IP改编</span></a>
+      <a class="card" href="https://writer.fanxiao.com/" target="_blank"><span class="tag">国内</span><span class="name">番茄小说作家</span><span class="desc">0门槛入驻，免费读广告分成</span></a>
+      <a class="card" href="https://www.jjwxc.net/" target="_blank"><span class="tag">国内</span><span class="name">晋江文学城</span><span class="desc">VIP订阅分成，女频强站</span></a>
+      <a class="card" href="https://www.qimao.com/writer/" target="_blank"><span class="tag">国内</span><span class="name">七猫免费小说·作家</span><span class="desc">全勤+广告分成</span></a>
+      <a class="card" href="https://www.zhihu.com/creator" target="_blank"><span class="tag">国内</span><span class="name">知乎盐选专栏</span><span class="desc">短篇故事/小说付费阅读分成</span></a>
+      <a class="card" href="https://www.wattpad.com/" target="_blank"><span class="tag">国际</span><span class="name">Wattpad / Radish</span><span class="desc">Paid Stories 付费章节分成</span></a>
+      <a class="card" href="https://kdp.amazon.com/" target="_blank"><span class="tag">国际</span><span class="name">Amazon KDP / Kindle Vella</span><span class="desc">电子书销售版税+KU按页阅读付费</span></a>
+    </div>
+  </div>
+
+  <!-- 小说推文/短剧推广 -->
+  <div class="section">
+    <h2>📣 小说推文 · 短剧推广（CPA/CPS 变现）</h2>
+    <div class="grid">
+      <a class="card" href="https://www.youbao666.com/" target="_blank"><span class="tag">推广</span><span class="name">右豹（小说/短剧推文）</span><span class="desc">0粉接任务，CPA拉新+CPS分成</span></a>
+      <a class="card" href="https://talent.yuewen.com/" target="_blank"><span class="tag">推广</span><span class="name">起点达人 / 番茄达人</span><span class="desc">官方推文授权，按拉新结算</span></a>
+      <a class="card" href="https://kol.wtzw.com/" target="_blank"><span class="tag">推广</span><span class="name">猫推达人（七猫旗下）</span><span class="desc">推七猫/纵横小说 CPA 9-12元+</span></a>
+    </div>
+  </div>
+
+  <!-- 创作素材 -->
+  <div class="section">
+    <h2>🎨 免费可商用 · 创作素材资源</h2>
+    <div class="grid">
+      <a class="card" href="https://pixabay.com/" target="_blank"><span class="tag">素材</span><span class="name">Pixabay</span><span class="desc">无版权图片/视频/音乐 CC0</span></a>
+      <a class="card" href="https://unsplash.com/" target="_blank"><span class="tag">素材</span><span class="name">Unsplash</span><span class="desc">高清可商用图片</span></a>
+      <a class="card" href="https://mixkit.co/" target="_blank"><span class="tag">素材</span><span class="name">Mixkit</span><span class="desc">免费视频片段+BGM+音效</span></a>
+      <a class="card" href="https://www.ear0.com/" target="_blank"><span class="tag">素材</span><span class="name">耳聆网</span><span class="desc">CC协议无版权音效/BGM</span></a>
+      <a class="card" href="https://www.canva.cn/" target="_blank"><span class="tag">工具</span><span class="name">Canva 可画</span><span class="desc">封面/图文模板，自媒体常用</span></a>
+      <a class="card" href="https://www.capcut.cn/" target="_blank"><span class="tag">工具</span><span class="name">剪映 CapCut</span><span class="desc">国内/国际版手机PC剪辑</span></a>
+    </div>
+  </div>
+
+  <!-- 接单/自由职业 -->
+  <div class="section">
+    <h2>💼 接单 · 自由职业变现平台</h2>
+    <div class="grid">
+      <a class="card" href="https://www.upwork.com/" target="_blank"><span class="tag">国际</span><span class="name">Upwork</span><span class="desc">海外写作/翻译/剪辑时薪接单</span></a>
+      <a class="card" href="https://www.fiverr.com/" target="_blank"><span class="tag">国际</span><span class="name">Fiverr</span><span class="desc">Gig模式，设计/配音/文案起步$5</span></a>
+      <a class="card" href="https://www.zbj.com/" target="_blank"><span class="tag">国内</span><span class="name">猪八戒网</span><span class="desc">文案/设计/视频剪辑接单</span></a>
+      <a class="card" href="https://www.patreon.com/" target="_blank"><span class="tag">国际</span><span class="name">Patreon / Ko-fi</span><span class="desc">粉丝订阅赞助，适合连载作者</span></a>
+      <a class="card" href="https://www.substack.com/" target="_blank"><span class="tag">国际</span><span class="name">Substack</span><span class="desc">付费 Newsletter 订阅分成</span></a>
+    </div>
+  </div>
+
+</div>
+
+<footer>自媒体创作 · 变现资源导航 &nbsp;|&nbsp; 纯前端 HTML · 自用本地导航页</footer>
+</body>
+</html>
