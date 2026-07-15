@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="任务智能匹配调度系统 4.0：自动根据星期与时间匹配当日可执行任务，当前时段自动高亮，适用于排班管理与生产调度。">
+<meta property="og:title" content="任务智能匹配调度系统">
+<meta property="og:description" content="自动读取本机时间，按排班规则智能匹配任务，当前时段任务自动高亮">
+<meta property="og:type" content="website">
+
 <title>任务智能匹配调度系统</title>
 <style>
 /* 全局兼容重置 */
@@ -33,8 +38,6 @@ body {
     overflow: hidden;
 }
 .page-header {
-    background: #009688;
-    background: -webkit-linear-gradient(135deg, #009688, #00bfa5);
     background: linear-gradient(135deg, #009688, #00bfa5);
     color: #fff;
     padding: 20px 24px;
@@ -56,7 +59,6 @@ body {
     grid-template-columns: 1fr;
     gap: 12px;
 }
-/* 平板/桌面三栏适配 */
 @media screen and (min-width: 640px) {
     .time-panel {
         grid-template-columns: repeat(3, 1fr);
@@ -86,6 +88,9 @@ body {
     color: #fff;
     font-size: 14px;
 }
+.week-rest {
+    background: #94a3b8;
+}
 .main-content {
     padding: 24px;
 }
@@ -95,13 +100,9 @@ body {
     margin-bottom: 16px;
     display: flex;
     align-items: center;
-    gap: 8px; /* 图标和文字间距 */
-    justify-content: flex-start;
-    align-content: center;
-    /* 新增 */
-    width: 100%; /* 占满父容器宽度 */
-    overflow: visible; /* 禁止文字裁剪 */
-    white-space: nowrap; /* 文字不换行，也可换成normal自动换行 */
+    gap: 8px;
+    width: 100%;
+    white-space: nowrap;
 }
 .section-title span {
     width: 4px;
@@ -132,29 +133,30 @@ body {
     transition: all 0.24s ease;
     -webkit-transition: all 0.24s ease;
 }
-.card-green {
-    background: #e6fffb;
-    border-color: #5cdbd3;
-}
-.card-purple {
-    background: #f9f0ff;
-    border-color: #b37feb;
-}
-.card-orange {
-    background: #fff7e6;
-    border-color: #ffcb45;
-}
-.card-gray {
-    background: #f5f7fa;
-    border-color: #c0c4cc;
-}
-/* 当前时段高亮 */
+.card-green { background: #e6fffb; border-color: #5cdbd3; }
+.card-purple { background: #f9f0ff; border-color: #b37feb; }
+.card-orange { background: #fff7e6; border-color: #ffcb45; }
+.card-gray { background: #f5f7fa; border-color: #c0c4cc; }
+
 .task-card.active {
     transform: scale(1.015);
     -webkit-transform: scale(1.015);
     box-shadow: 0 5px 18px rgba(0,0,0,0.11);
     border-width: 3px;
+    animation: pulseBorder 2.4s ease-in-out infinite;
 }
+@keyframes pulseBorder {
+    0%,100% { border-color: inherit; }
+    50% { border-color: #009688; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .task-card.active {
+        animation: none;
+        transform: none;
+        -webkit-transform: none;
+    }
+}
+
 .task-name {
     font-weight: 700;
     font-size: 15px;
@@ -168,9 +170,7 @@ body {
     margin: 6px 0;
     font-size: 13px;
 }
-.label-text {
-    color: #475569;
-}
+.label-text { color: #475569; }
 .device-text {
     color: #1890ff;
     font-weight: 500;
@@ -178,10 +178,8 @@ body {
     word-break: break-all;
     max-width: 60%;
 }
-.time-text {
-    color: #d92121;
-    font-weight: 500;
-}
+.time-text { color: #d92121; font-weight: 500; }
+
 .status-tag {
     margin-top: 10px;
     display: inline-block;
@@ -191,12 +189,13 @@ body {
 }
 .tag-available {
     background: #52c41a;
-    color: #ffffff;
+    color: #fff;
 }
 .tag-wait {
     background: #d9d9d9;
-    color: #333333;
+    color: #333;
 }
+
 .empty-tip {
     width: 100%;
     text-align: center;
@@ -216,7 +215,7 @@ body {
     <div class="time-panel">
         <div class="time-card">
             <div class="label">当前完整日期</div>
-            <div class="val" id="fullTime">--</div>
+            <div class="val" id="fullTime" aria-live="polite">--</div>
         </div>
         <div class="time-card">
             <div class="label">今日星期</div>
@@ -224,21 +223,18 @@ body {
         </div>
         <div class="time-card">
             <div class="label">当前时分</div>
-            <div class="val" id="hmTime">--</div>
+            <div class="val" id="hmTime" aria-live="polite">--</div>
         </div>
     </div>
 
     <div class="main-content">
-        <div class="section-title">
-            <span></span>
-            <span>今日匹配任务列表</span>
-        </div>
-        <div class="task-wrap" id="taskBox"></div>
+        <div class="section-title"><span></span>今日匹配任务列表</div>
+        <div class="task-wrap" id="taskBox" role="list"></div>
     </div>
 </div>
 
 <script>
-// 排班规则数据
+/* ========= 排班规则（严格保持不变） ========= */
 const ruleData = {
     "周一三五": [
         {name:"流量联盟",device:"手机设备",time:"20:00-23:20",cls:"card-green"},
@@ -263,60 +259,69 @@ const ruleData = {
     ]
 };
 
-// 时分转分钟
+/* ========= 工具函数 ========= */
 function timeToMin(str) {
     var arr = str.split(":");
-    var h = parseInt(arr[0], 10);
-    var m = parseInt(arr[1], 10);
-    return h * 60 + m;
+    return parseInt(arr[0], 10) * 60 + parseInt(arr[1], 10);
 }
-// 判断当前时间是否在区间
+
+/**
+ * 判断当前分钟是否在时间段内
+ * 支持跨午夜（如 00:00–01:20）
+ */
 function isInTimeRange(nowMin, rangeStr) {
     var arr = rangeStr.split("-");
     var s = timeToMin(arr[0]);
     var e = timeToMin(arr[1]);
     if (s > e) {
+        // 跨午夜：当天晚上 → 次日凌晨
         return nowMin >= s || nowMin <= e;
-    } else {
-        return nowMin >= s && nowMin <= e;
     }
+    return nowMin >= s && nowMin <= e;
 }
-// 获取当前时间信息
+
 function getNowInfo() {
     var now = new Date();
     var weekArr = ["周日","周一","周二","周三","周四","周五","周六"];
-    var weekNum = now.getDay();
-    var weekText = weekArr[weekNum];
+    var weekText = weekArr[now.getDay()];
 
-    var year = now.getFullYear();
-    var mon = String(now.getMonth() + 1).padStart(2, "0");
-    var day = String(now.getDate()).padStart(2, "0");
-    var h = String(now.getHours()).padStart(2, "0");
-    var m = String(now.getMinutes()).padStart(2, "0");
-    var fullStr = year + "-" + mon + "-" + day + " " + h + ":" + m;
-    var hmStr = h + ":" + m;
-    var nowMin = timeToMin(hmStr);
+    var y = now.getFullYear();
+    var m = String(now.getMonth() + 1).padStart(2, "0");
+    var d = String(now.getDate()).padStart(2, "0");
+    var hh = String(now.getHours()).padStart(2, "0");
+    var mm = String(now.getMinutes()).padStart(2, "0");
 
     return {
-        weekNum: weekNum,
         weekText: weekText,
-        fullStr: fullStr,
-        hmStr: hmStr,
-        nowMin: nowMin
+        fullStr: y + "-" + m + "-" + d + " " + hh + ":" + mm,
+        hmStr: hh + ":" + mm,
+        nowMin: timeToMin(hh + ":" + mm)
     };
 }
-// 渲染任务列表
+
+/* ========= 渲染 ========= */
+var timer = null;
+
 function renderTask() {
     var info = getNowInfo();
-    document.getElementById("fullTime").innerText = info.fullStr;
-    document.getElementById("weekTxt").innerText = info.weekText;
-    document.getElementById("hmTime").innerText = info.hmStr;
+
+    document.getElementById("fullTime").textContent = info.fullStr;
+    document.getElementById("hmTime").textContent = info.hmStr;
+
+    var weekEl = document.getElementById("weekTxt");
+    weekEl.textContent = info.weekText;
+    weekEl.className = "week-tag" + (info.weekText === "周六" ? " week-rest" : "");
+
     var taskBox = document.getElementById("taskBox");
-    taskBox.innerHTML = "";
+    var w = info.weekText;
+
+    // 周六休息
+    if (w === "周六") {
+        taskBox.innerHTML = '<div class="empty-tip">🛌 今日为休息日，无任何可执行排班任务</div>';
+        return;
+    }
 
     var taskList = [];
-    var w = info.weekText;
-    // 匹配专属任务
     if (["周一","周三","周五"].indexOf(w) > -1) {
         taskList = taskList.concat(ruleData["周一三五"]);
     }
@@ -326,46 +331,45 @@ function renderTask() {
     if (w === "周日") {
         taskList = taskList.concat(ruleData["周日"]);
     }
-    // 周六不加载通用任务
-    if (w !== "周六") {
-        taskList = taskList.concat(ruleData["通用任务"]);
-    }
-    // 无任务提示
-    if (w === "周六" || taskList.length === 0) {
-        taskBox.innerHTML = '<div class="empty-tip">今日无任何可执行排班任务</div>';
-        return;
-    }
-    // 循环渲染卡片
+    taskList = taskList.concat(ruleData["通用任务"]);
+
     var html = "";
     for (var i = 0; i < taskList.length; i++) {
         var item = taskList[i];
-        var isNowRun = isInTimeRange(info.nowMin, item.time);
-        var activeClass = isNowRun ? "active" : "";
-        var statusHtml = isNowRun
-            ? '<span class="status-tag tag-available">✅ 当前可执行</span>'
-            : '<span class="status-tag tag-wait">⏳ 未到时段</span>';
-
-        html += '<div class="task-card ' + item.cls + ' ' + activeClass + '">'
+        var active = isInTimeRange(info.nowMin, item.time);
+        html += '<div class="task-card ' + item.cls + (active ? ' active' : '') + '" role="listitem">'
             + '<div class="task-name">' + item.name + '</div>'
-            + '<div class="task-row">'
-            + '<span class="label-text">执行设备</span>'
-            + '<span class="device-text">' + item.device + '</span>'
-            + '</div>'
-            + '<div class="task-row">'
-            + '<span class="label-text">允许时段</span>'
-            + '<span class="time-text">' + item.time + '</span>'
-            + '</div>'
-            + statusHtml
+            + '<div class="task-row"><span class="label-text">执行设备</span><span class="device-text">' + item.device + '</span></div>'
+            + '<div class="task-row"><span class="label-text">允许时段</span><span class="time-text">' + item.time + '</span></div>'
+            + (active
+                ? '<span class="status-tag tag-available" role="status">✅ 当前可执行</span>'
+                : '<span class="status-tag tag-wait" role="status">⏳ 未到时段</span>')
             + '</div>';
     }
     taskBox.innerHTML = html;
 }
-// 首次加载执行
-renderTask();
-// 每分钟刷新，兼容低版本浏览器定时器
-setInterval(function() {
+
+/* ========= 页面可见性优化 ========= */
+function startTimer() {
+    if (timer) return;
     renderTask();
-}, 60000);
+    timer = setInterval(renderTask, 60000);
+}
+
+function stopTimer() {
+    clearInterval(timer);
+    timer = null;
+}
+
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+        stopTimer();
+    } else {
+        startTimer();
+    }
+});
+
+startTimer();
 </script>
 </body>
 </html>
