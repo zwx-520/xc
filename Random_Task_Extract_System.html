@@ -3,574 +3,700 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>随机抽选系统</title>
+    <title>随机抽取系统</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: #333;
             min-height: 100vh;
-            padding: 20px;
+            background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d0d3a 100%);
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-        
-        .main-content {
-            padding: 20px;
-        }
-        
-        .section {
-            margin-bottom: 25px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-        
-        h2 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #2575fc;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 8px;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        input, select, textarea, button {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        button {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .file-upload {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-        
-        .file-upload-btn {
-            background: #f8f9fa;
-            color: #495057;
-            text-align: center;
-            padding: 12px;
-            border: 2px dashed #dee2e6;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .file-upload-btn:hover {
-            background: #e9ecef;
-            border-color: #4facfe;
-        }
-        
-        .file-upload input[type="file"] {
-            position: absolute;
-            left: 0;
+
+        /* 背景粒子 */
+        .particles {
+            position: fixed;
             top: 0;
-            opacity: 0;
-            cursor: pointer;
+            left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
-        
-        .result-area {
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
             text-align: center;
-            padding: 20px;
-            min-height: 150px;
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(100, 200, 255, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        /* 输入区域 */
+        .input-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .input-row {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
             align-items: center;
         }
-        
-        .result-display {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2575fc;
-            margin: 15px 0;
-            min-height: 60px;
+
+        .input-row label {
+            color: #fff;
+            font-size: 1em;
+            min-width: 140px;
+        }
+
+        input[type="text"], input[type="number"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: rgba(100, 200, 255, 0.6);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(100, 200, 255, 0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .btn {
+            padding: 14px 36px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(245, 87, 108, 0.5);
+        }
+
+        .btn-group {
             display: flex;
-            align-items: center;
+            gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
         }
-        
-        .selected-item {
-            background: #e3f2fd;
-            padding: 8px 15px;
-            margin: 5px;
-            border-radius: 20px;
-            display: inline-block;
-            animation: pop 0.5s;
+
+        /* 结果区域 */
+        .result-section {
+            min-height: 300px;
+            position: relative;
         }
-        
-        @keyframes pop {
-            0% { transform: scale(0.8); opacity: 0; }
-            70% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .history {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            padding: 10px;
-            background: #f9f9f9;
-        }
-        
-        .history-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .history-item:last-child {
-            border-bottom: none;
-        }
-        
-        .counter {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        footer {
+
+        .result-label {
+            color: rgba(255, 255, 255, 0.7);
             text-align: center;
-            padding: 15px;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
+            margin-bottom: 30px;
+            font-size: 1.1em;
         }
-        
-        /* 响应式设计 */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .main-content {
-                padding: 15px;
-            }
-            
-            .result-display {
-                font-size: 1.5rem;
-            }
+
+        .balls-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            min-height: 200px;
+            align-items: center;
         }
-        
-        /* 动画效果 */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        /* 球的基础样式 */
+        .ball-wrapper {
+            perspective: 800px;
+            animation: ballAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+            transform: scale(0) translateY(50px);
         }
-        
-        .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #2575fc;
+
+        @keyframes ballAppear {
+            0% { opacity: 0; transform: scale(0) translateY(50px); }
+            60% { transform: scale(1.15) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .ball {
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-        
-        .drawing {
-            animation: pulse 0.5s infinite alternate;
+
+        .ball:hover {
+            transform: scale(1.1);
         }
-        
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
+
+        /* 球的玻璃质感 */
+        .ball::before {
+            content: '';
+            position: absolute;
+            top: 12%;
+            left: 20%;
+            width: 35%;
+            height: 25%;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: rotate(-30deg);
+            pointer-events: none;
+        }
+
+        .ball::after {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            right: 15%;
+            width: 15%;
+            height: 12%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .ball-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .ball-text {
+            color: #fff;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            word-break: break-all;
+            line-height: 1.3;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .ball-index {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.7em;
+            font-weight: 700;
+            border: 1.5px solid rgba(255,255,255,0.35);
+            z-index: 3;
+        }
+
+        /* 球颜色主题 */
+        .ball-theme-0 {
+            background: radial-gradient(circle at 35% 35%, #ff6b6b, #c0392b);
+            box-shadow: 0 8px 32px rgba(192, 57, 43, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .ball-theme-1 {
+            background: radial-gradient(circle at 35% 35%, #48dbfb, #0984e3);
+            box-shadow: 0 8px 32px rgba(9, 132, 227, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .ball-theme-2 {
+            background: radial-gradient(circle at 35% 35%, #feca57, #f39c12);
+            box-shadow: 0 8px 32px rgba(243, 156, 18, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .ball-theme-3 {
+            background: radial-gradient(circle at 35% 35%, #ff9ff3, #8e44ad);
+            box-shadow: 0 8px 32px rgba(142, 68, 173, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .ball-theme-4 {
+            background: radial-gradient(circle at 35% 35%, #55efc4, #00b894);
+            box-shadow: 0 8px 32px rgba(0, 184, 148, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .ball-theme-5 {
+            background: radial-gradient(circle at 35% 35%, #fd79a8, #e84393);
+            box-shadow: 0 8px 32px rgba(232, 67, 147, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .ball-theme-6 {
+            background: radial-gradient(circle at 35% 35%, #81ecec, #00cec9);
+            box-shadow: 0 8px 32px rgba(0, 206, 201, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+        .ball-theme-7 {
+            background: radial-gradient(circle at 35% 35%, #dfe6e9, #636e72);
+            box-shadow: 0 8px 32px rgba(99, 110, 114, 0.5), inset 0 -4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* 抽取动画 */
+        .shuffling .ball {
+            animation: shuffle 0.15s ease-in-out infinite alternate;
+        }
+
+        @keyframes shuffle {
+            0% { transform: translateY(-5px) rotate(-3deg); }
+            100% { transform: translateY(5px) rotate(3deg); }
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            padding: 60px 20px;
+        }
+
+        .empty-state .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* 已抽取列表 */
+        .history-section {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .history-title {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .history-tag {
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85em;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 提示 */
+        .tip {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.85em;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .input-row { flex-direction: column; align-items: flex-start; }
+            .ball { width: 100px; height: 100px; }
+            .ball-text { font-size: 0.75em; max-width: 80px; }
+            .container { padding: 15px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- 背景粒子 -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
     <div class="container">
-        <header>
-            <h1>随机抽选系统</h1>
-            <div class="subtitle">支持PC端和移动端 · 无需后台 · 数据本地存储</div>
-        </header>
-        
-        <div class="main-content">
-            <div class="section">
-                <h2>数据输入</h2>
-                <div class="input-group">
-                    <label for="dataInput">输入抽选项目（每行一项）</label>
-                    <textarea id="dataInput" placeholder="请输入抽选项目，每行一个&#10;例如：&#10;张三&#10;李四&#10;王五"></textarea>
+        <h1>🎲 随机抽取系统</h1>
+        <p class="subtitle">输入候选名单，随机抽取任意数量的结果</p>
+
+        <!-- 结果区域 -->
+        <div class="result-section">
+            <p class="result-label">🏆 抽取结果</p>
+            <div class="balls-container" id="ballsContainer">
+                <div class="empty-state">
+                    <div class="icon">🎱</div>
+                    <p>点击「开始抽取」查看结果</p>
                 </div>
-                
-                <div class="input-group">
-                    <label>或上传数据文件（TXT/CSV）</label>
-                    <div class="file-upload">
-                        <div class="file-upload-btn">点击选择文件或拖拽文件到此处</div>
-                        <input type="file" id="fileUpload" accept=".txt,.csv">
-                    </div>
-                    <div id="fileName" style="margin-top: 5px; font-size: 0.9rem; color: #666;"></div>
-                </div>
-                
-                <button id="saveData">保存数据</button>
-            </div>
-            
-            <div class="section">
-                <h2>抽选设置</h2>
-                <div class="input-group">
-                    <label for="drawCount">抽选数量</label>
-                    <input type="number" id="drawCount" min="1" value="1">
-                </div>
-                
-                <div class="input-group">
-                    <label for="drawMode">抽选模式</label>
-                    <select id="drawMode">
-                        <option value="single">单次抽选（可重复）</option>
-                        <option value="multiple">多次抽选（不重复）</option>
-                    </select>
-                </div>
-                
-                <button id="startDraw">开始抽选</button>
-                <button id="resetDraw" style="background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);">重置抽选</button>
-            </div>
-            
-            <div class="section">
-                <h2>抽选结果</h2>
-                <div class="result-area">
-                    <div id="resultDisplay" class="result-display">准备抽选...</div>
-                    <div class="counter">
-                        <span>已抽选: <span id="drawnCount">0</span> 次</span>
-                        <span>剩余: <span id="remainingCount">0</span> 项</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>抽选历史</h2>
-                <div id="drawHistory" class="history">
-                    <div class="history-item" style="color: #999; text-align: center;">暂无抽选记录</div>
-                </div>
-                <button id="clearHistory" style="background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%); margin-top: 10px;">清空历史</button>
             </div>
         </div>
-        
-        <footer>
-            <p>随机抽选系统 &copy; 2023 - 无需后台，数据完全本地处理</p>
-        </footer>
+
+        <!-- 输入区域 -->
+        <div class="input-section">
+            <div class="input-row">
+                <label>📋 候选名单</label>
+                <input type="text" id="candidateInput" placeholder="用逗号分隔，如：张三,李四,王五,赵六">
+            </div>
+            <div class="input-row">
+                <label>🔢 抽取数量</label>
+                <input type="number" id="pickCount" value="1" min="1" max="50">
+            </div>
+            <div class="input-row">
+                <label>🔁 允许本次重复抽取</label>
+                <input type="checkbox" id="allowDuplicate" checked style="width:22px;height:22px;">
+            </div>
+            <div class="input-row">
+                <label>📝 当前候选池</label>
+                <div id="candidateList" style="flex:2; color:rgba(255,255,255,0.5); padding:12px 0; font-size:0.9em;">
+                    暂无候选，请在上方输入
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="addCandidates()">➕ 添加候选</button>
+                <button class="btn btn-primary" onclick="startPick()">🎯 开始抽取</button>
+                <button class="btn btn-danger" onclick="clearAll()">🗑️ 清空全部</button>
+            </div>
+            <p class="tip">
+                💡 支持多次添加候选 · 抽取不会移除候选 · Ctrl+Enter 抽取 · Esc 清空 · 点击结果球可复制
+            </p>
+        </div>
+
+        <!-- 历史记录 -->
+        <div class="history-section" id="historySection" style="display:none;">
+            <p class="history-title">📜 抽取历史</p>
+            <div class="history-list" id="historyList"></div>
+        </div>
     </div>
 
     <script>
-        // 全局变量
-        let items = [];
-        let drawnItems = [];
-        let drawHistory = [];
-        
-        // DOM元素
-        const dataInput = document.getElementById('dataInput');
-        const fileUpload = document.getElementById('fileUpload');
-        const fileName = document.getElementById('fileName');
-        const saveDataBtn = document.getElementById('saveData');
-        const drawCount = document.getElementById('drawCount');
-        const drawMode = document.getElementById('drawMode');
-        const startDrawBtn = document.getElementById('startDraw');
-        const resetDrawBtn = document.getElementById('resetDraw');
-        const resultDisplay = document.getElementById('resultDisplay');
-        const drawnCount = document.getElementById('drawnCount');
-        const remainingCount = document.getElementById('remainingCount');
-        const drawHistoryEl = document.getElementById('drawHistory');
-        const clearHistoryBtn = document.getElementById('clearHistory');
-        
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            updateCounters();
-            updateHistoryDisplay();
-            
-            // 事件监听
-            saveDataBtn.addEventListener('click', saveData);
-            fileUpload.addEventListener('change', handleFileUpload);
-            startDrawBtn.addEventListener('click', startDraw);
-            resetDrawBtn.addEventListener('click', resetDraw);
-            clearHistoryBtn.addEventListener('click', clearHistory);
-            
-            // 拖拽文件上传
-            const fileUploadBtn = document.querySelector('.file-upload-btn');
-            fileUploadBtn.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.style.background = '#e3f2fd';
-                this.style.borderColor = '#4facfe';
-            });
-            
-            fileUploadBtn.addEventListener('dragleave', function() {
-                this.style.background = '#f8f9fa';
-                this.style.borderColor = '#dee2e6';
-            });
-            
-            fileUploadBtn.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.style.background = '#f8f9fa';
-                this.style.borderColor = '#dee2e6';
-                
-                if (e.dataTransfer.files.length) {
-                    fileUpload.files = e.dataTransfer.files;
-                    handleFileUpload();
-                }
-            });
-        });
-        
-        // 加载数据
-        function loadData() {
-            const savedData = localStorage.getItem('drawItems');
-            if (savedData) {
-                items = JSON.parse(savedData);
-                dataInput.value = items.join('\n');
-            }
-            
-            const savedHistory = localStorage.getItem('drawHistory');
-            if (savedHistory) {
-                drawHistory = JSON.parse(savedHistory);
+        let candidates = [];
+        let history = [];
+        let isPicking = false;
+
+        /* ===== 背景粒子 ===== */
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+                container.appendChild(p);
             }
         }
-        
-        // 保存数据
-        function saveData() {
-            const inputText = dataInput.value.trim();
-            if (inputText) {
-                items = inputText.split('\n')
-                    .map(item => item.trim())
-                    .filter(item => item !== '');
-                
-                localStorage.setItem('drawItems', JSON.stringify(items));
-                drawnItems = [];
-                updateCounters();
-                alert(`数据保存成功！共 ${items.length} 个项目。`);
+        createParticles();
+
+        /* ===== Toast ===== */
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.opacity = '1';
+            clearTimeout(t._hide);
+            t._hide = setTimeout(() => t.style.opacity = '0', 1500);
+        }
+
+        /* ===== 候选操作 ===== */
+        function addCandidates() {
+            const input = document.getElementById('candidateInput');
+            const text = input.value.trim();
+            if (!text) {
+                shakeElement(input);
+                return;
+            }
+            const items = text.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+            candidates.push(...items);
+            updateCandidateList();
+            input.value = '';
+            input.focus();
+        }
+
+        function removeCandidate(index) {
+            candidates.splice(index, 1);
+            updateCandidateList();
+        }
+
+        function updateCandidateList() {
+            const el = document.getElementById('candidateList');
+            const pickBtn = document.querySelector('.btn-primary[onclick="startPick()"]');
+
+            if (candidates.length === 0) {
+                el.textContent = '暂无候选，请在上方输入';
+                el.style.color = 'rgba(255,255,255,0.5)';
+                pickBtn.disabled = true;
+                pickBtn.style.opacity = '0.5';
+                pickBtn.style.cursor = 'not-allowed';
             } else {
-                alert('请输入抽选数据！');
-            }
-        }
-        
-        // 处理文件上传
-        function handleFileUpload() {
-            const file = fileUpload.files[0];
-            if (!file) return;
-            
-            fileName.textContent = `已选择: ${file.name}`;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                dataInput.value = e.target.result;
-            };
-            reader.readAsText(file);
-        }
-        
-        // 开始抽选
-        function startDraw() {
-            if (items.length === 0) {
-                alert('请先输入或上传抽选数据！');
-                return;
-            }
-            
-            const count = parseInt(drawCount.value);
-            if (isNaN(count) || count < 1) {
-                alert('请输入有效的抽选数量！');
-                return;
-            }
-            
-            if (drawMode.value === 'multiple' && count > items.length) {
-                alert(`抽选数量不能超过总项目数（${items.length}）！`);
-                return;
-            }
-            
-            if (drawMode.value === 'multiple' && count > (items.length - drawnItems.length)) {
-                alert(`剩余项目不足，请重置抽选或减少抽选数量！`);
-                return;
-            }
-            
-            // 抽选动画
-            resultDisplay.innerHTML = '<div class="spinner"></div>抽选中...';
-            resultDisplay.classList.add('drawing');
-            
-            setTimeout(() => {
-                const results = performDraw(count);
-                displayResults(results);
-                updateCounters();
-                updateHistoryDisplay();
-                resultDisplay.classList.remove('drawing');
-            }, 1500);
-        }
-        
-        // 执行抽选
-        function performDraw(count) {
-            const results = [];
-            const availableItems = drawMode.value === 'multiple' 
-                ? items.filter(item => !drawnItems.includes(item))
-                : items;
-            
-            for (let i = 0; i < count; i++) {
-                if (availableItems.length === 0) break;
-                
-                const randomIndex = Math.floor(Math.random() * availableItems.length);
-                const selectedItem = availableItems[randomIndex];
-                
-                results.push(selectedItem);
-                
-                if (drawMode.value === 'multiple') {
-                    drawnItems.push(selectedItem);
-                    availableItems.splice(randomIndex, 1);
-                }
-            }
-            
-            // 记录历史
-            const historyEntry = {
-                timestamp: new Date().toLocaleString(),
-                results: [...results],
-                mode: drawMode.value
-            };
-            
-            drawHistory.unshift(historyEntry);
-            if (drawHistory.length > 50) {
-                drawHistory = drawHistory.slice(0, 50);
-            }
-            
-            localStorage.setItem('drawHistory', JSON.stringify(drawHistory));
-            
-            return results;
-        }
-        
-        // 显示结果
-        function displayResults(results) {
-            if (results.length === 0) {
-                resultDisplay.innerHTML = '<span style="color: #ff6b6b;">没有可抽选的项目！</span>';
-                return;
-            }
-            
-            if (results.length === 1) {
-                resultDisplay.innerHTML = `<span class="selected-item">${results[0]}</span>`;
-            } else {
-                resultDisplay.innerHTML = results.map(item => 
-                    `<span class="selected-item">${item}</span>`
+                pickBtn.disabled = false;
+                pickBtn.style.opacity = '1';
+                pickBtn.style.cursor = 'pointer';
+                el.innerHTML = candidates.map((c, i) =>
+                    `<span style="display:inline-block;margin:3px 6px;padding:3px 12px;
+                     background:rgba(255,255,255,0.08);border-radius:12px;
+                     color:rgba(255,255,255,0.8);font-size:0.85em;
+                     transition:transform 0.2s;"
+                     onmouseenter="this.style.transform='scale(1.05)'"
+                     onmouseleave="this.style.transform='scale(1)'">
+                        ${escapeHtml(c)}
+                        <span onclick="removeCandidate(${i})"
+                              style="margin-left:6px;cursor:pointer;color:rgba(255,100,100,0.7);">×</span>
+                    </span>`
                 ).join('');
             }
-            
-            // 添加结果提示
-            const resultInfo = document.createElement('div');
-            resultInfo.style.marginTop = '10px';
-            resultInfo.style.fontSize = '0.9rem';
-            resultInfo.style.color = '#666';
-            resultInfo.textContent = `抽选完成，共选出 ${results.length} 个项目`;
-            resultDisplay.appendChild(resultInfo);
         }
-        
-        // 更新计数器
-        function updateCounters() {
-            drawnCount.textContent = drawnItems.length;
-            remainingCount.textContent = items.length - drawnItems.length;
-        }
-        
-        // 重置抽选
-        function resetDraw() {
-            drawnItems = [];
-            updateCounters();
-            resultDisplay.textContent = '抽选已重置';
-            setTimeout(() => {
-                resultDisplay.textContent = '准备抽选...';
-            }, 2000);
-        }
-        
-        // 更新历史记录显示
-        function updateHistoryDisplay() {
-            if (drawHistory.length === 0) {
-                drawHistoryEl.innerHTML = '<div class="history-item" style="color: #999; text-align: center;">暂无抽选记录</div>';
+
+        /* ===== 抽取逻辑 ===== */
+        async function startPick() {
+            if (isPicking) return;
+            if (candidates.length === 0) {
+                shakeElement(document.getElementById('candidateInput'));
                 return;
             }
-            
-            drawHistoryEl.innerHTML = drawHistory.map(entry => `
-                <div class="history-item">
-                    <span>${entry.timestamp}</span>
-                    <span>${entry.results.join(', ')}</span>
-                </div>
-            `).join('');
-        }
-        
-        // 清空历史
-        function clearHistory() {
-            if (confirm('确定要清空所有抽选历史记录吗？')) {
-                drawHistory = [];
-                localStorage.removeItem('drawHistory');
-                updateHistoryDisplay();
+
+            const countInput = document.getElementById('pickCount');
+            let count = parseInt(countInput.value) || 1;
+            const maxCount = Math.min(50, candidates.length);
+
+            if (count > maxCount) {
+                count = maxCount;
+                countInput.value = maxCount;
+                showToast(`已自动调整为最多 ${maxCount} 个`);
             }
+
+            isPicking = true;
+            const container = document.getElementById('ballsContainer');
+            container.innerHTML = '';
+            container.classList.add('shuffling');
+
+            const tempBall = document.createElement('div');
+            tempBall.className = 'ball-wrapper';
+            tempBall.innerHTML = `<div class="ball"><div class="ball-content"><div class="ball-text">?</div></div></div>`;
+            container.appendChild(tempBall);
+
+            const shuffleDuration = 1500;
+            const start = Date.now();
+            while (Date.now() - start < shuffleDuration) {
+                const item = candidates[Math.floor(Math.random() * candidates.length)];
+                tempBall.querySelector('.ball-text').textContent = item;
+                tempBall.querySelector('.ball').className =
+                    `ball ball-theme-${Math.floor(Math.random() * 8)}`;
+                await sleep(80);
+            }
+
+            container.classList.remove('shuffling');
+
+            const picked = [];
+            const allowDup = document.getElementById('allowDuplicate').checked;
+            const used = new Set();
+
+            while (picked.length < count) {
+                const idx = Math.floor(Math.random() * candidates.length);
+                if (allowDup || !used.has(idx)) {
+                    used.add(idx);
+                    picked.push(candidates[idx]);
+                }
+            }
+
+            container.innerHTML = '';
+            picked.forEach((item, i) => {
+                setTimeout(() => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'ball-wrapper';
+                    wrapper.style.animationDelay = `${i * 0.12}s`;
+
+                    const ball = document.createElement('div');
+                    ball.className = `ball ball-theme-${i % 8}`;
+                    ball.setAttribute('title', item);
+                    ball.onclick = () => {
+                        navigator.clipboard.writeText(item);
+                        showToast(`已复制：${item}`);
+                    };
+
+                    ball.innerHTML = `
+                        <span class="ball-index">${i + 1}</span>
+                        <div class="ball-content">
+                            <div class="ball-text">${escapeHtml(item)}</div>
+                        </div>
+                    `;
+                    wrapper.appendChild(ball);
+                    container.appendChild(wrapper);
+                }, i * 80);
+            });
+
+            history.unshift(...picked);
+            updateHistory();
+            isPicking = false;
         }
+
+        /* ===== 历史记录 ===== */
+        function updateHistory() {
+            if (history.length === 0) return;
+            document.getElementById('historySection').style.display = 'block';
+            document.getElementById('historyList').innerHTML =
+                history.slice(0, 30).map(h =>
+                    `<span class="history-tag">${escapeHtml(h)}</span>`
+                ).join('');
+        }
+
+        /* ===== 清空 ===== */
+        function clearAll() {
+            candidates = [];
+            history = [];
+            document.getElementById('ballsContainer').innerHTML = `
+                <div class="empty-state">
+                    <div class="icon">🎱</div>
+                    <p>点击「开始抽取」查看结果</p>
+                </div>
+            `;
+            document.getElementById('historySection').style.display = 'none';
+            updateCandidateList();
+        }
+
+        /* ===== 工具函数 ===== */
+        function sleep(ms) {
+            return new Promise(r => setTimeout(r, ms));
+        }
+
+        function shakeElement(el) {
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = 'shake 0.4s ease';
+            el.style.borderColor = 'rgba(255,100,100,0.6)';
+            setTimeout(() => {
+                el.style.borderColor = '';
+                el.style.animation = '';
+            }, 600);
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /* ===== 键盘快捷键 ===== */
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') clearAll();
+            if (e.ctrlKey && e.key === 'Enter') startPick();
+            if (e.key === 'Enter' && e.target.id === 'candidateInput') {
+                e.preventDefault();
+                addCandidates();
+            }
+        });
+
+        /* ===== Shake 动画 ===== */
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%,100% { transform: translateX(0); }
+                20% { transform: translateX(-8px); }
+                40% { transform: translateX(8px); }
+                60% { transform: translateX(-5px); }
+                80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        updateCandidateList();
     </script>
 </body>
 </html>
