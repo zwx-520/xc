@@ -1,4 +1,4 @@
-# 星潮工作室 - 项目展示
+# 星潮工作室 - 自研静态项目资源展示平台
 
 # Multi-Subsystem Static HTML Platform
 综合业务静态子系统平台
