@@ -17,5 +17,5 @@ Unified file naming rules, convenient for Github management, static deployment, 
 | 直播网站导航系统 | Live_Site_Navigation_System.html | LSNS | https://zwx-520.github.io/xc/Live_Site_Navigation_System.html |
 | 自媒体动漫短剧图文音乐网站导航 | Multimedia_Anime_Content_Navigation_System.html | WAMNS | https://zwx-520.github.io/xc/Multimedia_Anime_Content_Navigation_System.html |
 | 自媒体视频小说网站导航 | Media_Video_And_Novel_Nav_System.html | WVNS | https://zwx-520.github.io/xc/Media_Video_And_Novel_Nav_System.html |
-| 问卷项目本地环境检测系统 | QN_Local_Environment_Detection_System.html | QLEDS | https://zwx-520.github.io/xc/QN_Local_Environment_Detection_System.html |
 | 随机抽取任务系统 | Random_Task_Extract_System.html | RTES | https://zwx-520.github.io/xc/Random_Task_Extract_System.html |
+| 二手拍卖平台导航 | Secondhand_Marketplace_System.html | SMS | https://zwx-520.github.io/xc/ Secondhand_Marketplace_System.html |
