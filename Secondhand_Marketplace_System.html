@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二手拍卖导航 - 全品类竞拍交易平台合集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+        }
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            --orange: #f97316;
+            --green: #10b981;
+            --pink: #ec4899;
+            --purple: #8b5cf6;
+            --gray: #64748b;
+            --red-tag: #ef4444;
+            --green-tag: #22c55e;
+            --bg-page: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 8px 20px rgba(37, 99, 235, 0.18);
+            --radius: 14px;
+        }
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            padding-bottom: 80px;
+            scroll-behavior: smooth;
+        }
+
+        /* 顶部导航栏 */
+        .header-wrap {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 36px 20px;
+            color: white;
+        }
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+        .header-inner {
+            text-align: center;
+        }
+        .logo-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        .sub-desc {
+            font-size: 15px;
+            opacity: 0.92;
+            margin-bottom: 28px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 搜索框优化 */
+        .search-box {
+            display: flex;
+            max-width: 580px;
+            margin: 0 auto;
+            gap: 10px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        .search-btn {
+            padding: 0 28px;
+            background: #1d4ed8;
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .search-btn:hover {
+            background: #1e40af;
+            transform: translateY(-1px);
+        }
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        .search-btn.loading::after {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 主体内容区域 */
+        .main-content {
+            padding: 36px 20px 0;
+        }
+        .category {
+            margin-bottom: 42px;
+        }
+        .cat-title {
+            font-size: 20px;
+            padding: 12px 18px;
+            border-left: 5px solid;
+            margin-bottom: 20px;
+            background: var(--bg-card);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cat-title::before {
+            font-size: 22px;
+        }
+        .cat-1 .cat-title { border-color: var(--primary); }
+        .cat-1 .cat-title::before { content: '🛒'; }
+        .cat-2 .cat-title { border-color: var(--orange); }
+        .cat-2 .cat-title::before { content: '📱'; }
+        .cat-3 .cat-title { border-color: var(--green); }
+        .cat-3 .cat-title::before { content: '🚗'; }
+        .cat-4 .cat-title { border-color: var(--pink); }
+        .cat-4 .cat-title::before { content: '💎'; }
+        .cat-5 .cat-title { border-color: var(--purple); }
+        .cat-5 .cat-title::before { content: '🏭'; }
+        .cat-6 .cat-title { border-color: var(--gray); }
+        .cat-6 .cat-title::before { content: '📍'; }
+
+        /* 链接卡片网格 */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 18px;
+        }
+        .link-card {
+            background: var(--bg-card);
+            padding: 22px 14px;
+            border-radius: var(--radius);
+            text-align: center;
+            transition: all 0.28s ease;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .link-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(37, 99, 235, 0.08);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+        .link-card:active::after {
+            width: 200px;
+            height: 200px;
+        }
+        .link-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+        }
+        .link-card a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 500;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--primary-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 auto 12px;
+            transition: all 0.28s;
+        }
+        .link-card:hover .card-icon {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: #fff;
+        }
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .tag {
+            font-size: 11px;
+            color: var(--text-sub);
+            line-height: 1.4;
+            padding: 2px 8px;
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+        /* 彩色标签标识 */
+        .tag-recommend {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: #fff;
+            font-weight: 500;
+        }
+        .tag-official {
+            background: linear-gradient(135deg, #22c55e, #10b981);
+            color: #fff;
+            font-weight: 500;
+        }
+        .tag-new {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* 返回顶部按钮 */
+        .back-top {
+            position: fixed;
+            bottom: 30px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+            transition: all 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+        }
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .back-top:hover {
+            background: #1e40af;
+            transform: scale(1.1);
+        }
+
+        /* 页脚 */
+        footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+        }
+        .risk-tip {
+            color: #dc2626;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .external-tip {
+            color: var(--text-sub);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-sub);
+            display: none;
+        }
+        .empty-state.show {
+            display: block;
+        }
+        .empty-state::before {
+            content: '🔍';
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* 移动端适配 */
+        @media (max-width:640px) {
+            .logo-title { font-size: 24px; }
+            .link-grid { 
+                grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); 
+                gap: 12px;
+            }
+            .header-wrap { padding: 28px 16px; }
+            .search-box { flex-direction: column; }
+            .search-btn { padding: 13px 0; }
+            .cat-title { font-size: 18px; padding: 10px 14px; }
+            .link-card { padding: 18px 12px; }
+            .card-icon { width: 40px; height: 40px; font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部头部 -->
+    <div class="header-wrap">
+        <div class="container header-inner">
+            <h1 class="logo-title">二手拍卖导航站</h1>
+            <p class="sub-desc">全网正规二手、司法、数码、奢侈品、车房竞拍平台一站式合集，站内搜索快速定位</p>
+            <div class="search-box">
+                <input class="search-input" id="searchVal" placeholder="输入商品/平台名称（如：闲鱼、司法拍卖）" aria-label="搜索平台或商品">
+                <button class="search-btn" id="searchBtn" onclick="doSearch()" aria-label="执行搜索">
+                    <span>全网搜索</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container main-content">
+        <!-- 1.综合二手&全民竞拍 -->
+        <div class="category cat-1">
+            <div class="cat-title">综合二手&全民竞拍平台</div>
+            <div class="link-grid">
+                <div class="link-card" data-keywords="闲鱼 淘宝二手 综合拍卖">
+                    <div class="card-icon">闲</div>
+                    <a href="https://2.taobao.com/" target="_blank" >闲鱼</a>
+                    <div class="tag-group">
+                        <span class="tag tag-recommend">推荐</span>
+                        <span class="tag">淘宝官方二手</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="转转 验机 综合竞拍">
+                    <div class="card-icon">转</div>
+                    <a href="https://www.zhuanzhuan.com/" target="_blank">转转</a>
+                    <div class="tag-group">
+                        <span class="tag tag-recommend">推荐</span>
+                        <span class="tag">验机+线上竞拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="多多拍卖 拼多多二手">
+                    <div class="card-icon">多</div>
+                    <a href="https://paimai.pinduoduo.com/" target="_blank" >多多拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">拼多多二手专区</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="eBay 海外拍卖 跨境">
+                    <div class="card-icon">e</div>
+                    <a href="https://www.ebay.com/" target="_blank">eBay</a>
+                    <div class="tag-group">
+                        <span class="tag">海外跨境拍卖</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="易拍全球 文玩 艺术品">
+                    <div class="card-icon">艺</div>
+                    <a href="https://www.epailive.com/" target="_blank">易拍全球网</a>
+                    <div class="tag-group">
+                        <span class="tag">文玩艺术品竞拍</span>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-state" id="empty1">未找到匹配的综合类平台</div>
+        </div>
+
+        <!-- 2.数码3C专属拍卖 -->
+        <div class="category cat-2">
+            <div class="cat-title">数码手机电脑拍卖平台</div>
+            <div class="link-grid">
+                <div class="link-card" data-keywords="转转优品 手机 平板 笔记本">
+                    <div class="card-icon">转</div>
+                    <a href="https://www.zhuanzhuan.com/" target="_blank">转转优品拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag tag-recommend">推荐</span>
+                        <span class="tag">3C数码竞拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="爱回收 数码 手机 竞价">
+                    <div class="card-icon">爱</div>
+                    <a href="https://www.aihuishou.com/" target="_blank">爱回收拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">线下门店线上竞价</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="回收宝 数码 批量回收">
+                    <div class="card-icon">回</div>
+                    <a href="https://www.huishoubao.com/" target="_blank">回收宝</a>
+                    <div class="tag-group">
+                        <span class="tag">数码批量回收竞拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="58数码 同城 本地 数码">
+                    <div class="card-icon">58</div>
+                    <a href="https://ershou.58.com/" target="_blank">58数码拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">同城本地数码闲置</span>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-state" id="empty2">未找到匹配的数码类平台</div>
+        </div>
+
+        <!-- 3.车辆房产·司法官方拍卖 -->
+        <div class="category cat-3">
+            <div class="cat-title">车辆房产·官方司法拍卖</div>
+            <div class="link-grid">
+                <div class="link-card" data-keywords="阿里司法拍卖 法院 车 房 资产">
+                    <div class="card-icon">阿</div>
+                    <a href="https://sf.taobao.com/" target="_blank">阿里司法拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag tag-official">官方</span>
+                        <span class="tag">法院车房资产拍卖</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="京东司法拍卖 法院 国企 资产">
+                    <div class="card-icon">京</div>
+                    <a href="https://paimai.jd.com/" target="_blank">京东司法拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag tag-official">官方</span>
+                        <span class="tag">法院/国企资产处置</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="诉讼资产网 全国法院 权威">
+                    <div class="card-icon">诉</div>
+                    <a href="https://www.rmfysszc.gov.cn/" target="_blank">诉讼资产网</a>
+                    <div class="tag-group">
+                        <span class="tag tag-official">权威</span>
+                        <span class="tag">全国法院统一平台</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="瓜子二手车 车商 批量竞价">
+                    <div class="card-icon">瓜</div>
+                    <a href="https://www.guazi.com/" target="_blank">瓜子二手车拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">车商批量竞价</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="人人车 个人 私家车 竞拍">
+                    <div class="card-icon">人</div>
+                    <a href="https://www.renrenche.com/" target="_blank">人人车拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">个人私家车源竞拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="汽车之家 二手车 购车 优惠">
+                    <div class="card-icon">汽</div>
+                    <a href="https://www.autohome.com.cn/?from=m" target="_blank">汽车之家</a>
+                    <div class="tag-group">
+                        <span class="tag">二手车购车优惠</span>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-state" id="empty3">未找到匹配的司法/车房类平台</div>
+        </div>
+
+        <!-- 4.奢侈品潮玩拍卖（修复错误链接） -->
+        <div class="category cat-4">
+            <div class="cat-title">奢侈品/潮玩/珠宝拍卖</div>
+            <div class="link-grid">
+                <div class="link-card" data-keywords="红布林 奢侈品 寄拍 包 表">
+                    <div class="card-icon">红</div>
+                    <a href="https://hongbulin.com/" target="_blank">红布林</a>
+                    <div class="tag-group">
+                        <span class="tag tag-recommend">推荐</span>
+                        <span class="tag">二手奢侈品寄拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="胖虎奢侈品 名包 名表 黄金">
+                    <div class="card-icon">胖</div>
+                    <a href="https://ponhu.cn/" target="_blank">胖虎奢侈品</a>
+                    <div class="tag-group">
+                        <span class="tag">名包名表黄金竞拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="保利拍卖 艺术品 高端 线上拍">
+                    <div class="card-icon">保</div>
+                    <a href="https://www.polypm.com.cn/aucenter/" target="_blank">保利拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">高端艺术品线上拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="B站 潮玩 手办 盲盒 周边">
+                    <div class="card-icon">B</div>
+                    <a href="https://mall.bilibili.com/" target="_blank">B站潮玩拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">手办盲盒周边竞价</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="牛奢网 钻石 黄金 回收 拍卖">
+                    <div class="card-icon">牛</div>
+                    <a href="http://nswdd.com/" target="_blank">牛奢网</a>
+                    <div class="tag-group">
+                        <span class="tag">钻石黄金回收拍卖</span>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-state" id="empty4">未找到匹配的奢侈品/潮玩类平台</div>
+        </div>
+
+        <!-- 5.企业物资/库存拍卖 -->
+        <div class="category cat-5">
+            <div class="cat-title">工厂库存·企业物资拍卖</div>
+            <div class="link-grid">
+                <div class="link-card" data-keywords="1688 库存 工厂 尾货 批量">
+                    <div class="card-icon">1688</div>
+                    <a href="https://page.1688.com/shtml/promotion/auction1.shtml" target="_blank" >1688库存拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">工厂尾货批量竞拍</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="京东企业拍卖 办公设备 闲置">
+                    <div class="card-icon">京</div>
+                    <a href="https://paimai.jd.com/notice/11699126" target="_blank">京东企业拍卖</a>
+                    <div class="tag-group">
+                        <span class="tag">办公设备闲置处置</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="好拍网 厂房 机械 设备">
+                    <div class="card-icon">好</div>
+                    <a href="http://www.haopaibang.cn/" target="_blank">好拍网</a>
+                    <div class="tag-group">
+                        <span class="tag">厂房机械设备拍卖</span>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-state" id="empty5">未找到匹配的企业物资类平台</div>
+        </div>
+
+        <!-- 6.同城本地闲置寄卖 -->
+        <div class="category cat-6">
+            <div class="cat-title">同城本地二手寄卖平台</div>
+            <div class="link-grid">
+                <div class="link-card" data-keywords="58同城 二手 同城 家具 家电">
+                    <div class="card-icon">58</div>
+                    <a href="https://ershou.58.com/" target="_blank">58同城二手</a>
+                    <div class="tag-group">
+                        <span class="tag">同城家具家电闲置</span>
+                    </div>
+                </div>
+                <div class="link-card" data-keywords="赶集二手 本地 上门回收 寄卖">
+                    <div class="card-icon">赶</div>
+                    <a href="https://www.58.com/bdcw196866/" target="_blank">赶集二手</a>
+                    <div class="tag-group">
+                        <span class="tag">本地上门回收寄卖</span>
+                    </div>
+                </div>
+            </div>
+            <div class="empty-state" id="empty6">未找到匹配的同城类平台</div>
+        </div>
+    </div>
+
+    <!-- 返回顶部 -->
+    <div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="返回顶部">↑</div>
+
+    <!-- 页脚 -->
+    <footer class="container">
+        <p>二手拍卖导航站 · 仅收录公开正规交易平台</p>
+        <p class="risk-tip">⚠️ 交易存在资金风险，请务必通过平台官方渠道交易，切勿私下转账</p>
+        <p class="external-tip">注：外部链接跳转后将离开本站，请注意账户安全</p>
+        <p style="margin-top:10px;">© <span id="currentYear"></span> 二手拍卖导航 保留所有权利</p>
+    </footer>
+
+    <!-- JS功能 -->
+    <script>
+        // 动态年份
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // 返回顶部显隐逻辑
+        const backTop = document.getElementById('backTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backTop.classList.add('show');
+            } else {
+                backTop.classList.remove('show');
+            }
+        });
+
+        // 搜索功能：先站内筛选，无结果再跳第三方
+        function doSearch() {
+            const keyword = document.getElementById('searchVal').value.trim().toLowerCase();
+            const searchBtn = document.getElementById('searchBtn');
+            
+            if (!keyword) {
+                alert("请输入搜索关键词");
+                return;
+            }
+
+            // 按钮loading态
+            searchBtn.classList.add('loading');
+            searchBtn.disabled = true;
+
+            setTimeout(() => {
+                const categories = document.querySelectorAll('.category');
+                let hasGlobalResult = false;
+
+                categories.forEach((category, index) => {
+                    const cards = category.querySelectorAll('.link-card');
+                    let hasCategoryResult = false;
+
+                    cards.forEach(card => {
+                        const keywords = card.dataset.keywords.toLowerCase();
+                        const title = card.querySelector('a').textContent.toLowerCase();
+                        if (keywords.includes(keyword) || title.includes(keyword)) {
+                            card.style.display = 'block';
+                            hasCategoryResult = true;
+                            hasGlobalResult = true;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // 控制空状态显示
+                    const emptyState = document.getElementById(`empty${index + 1}`);
+                    if (hasCategoryResult) {
+                        emptyState.classList.remove('show');
+                    } else {
+                        emptyState.classList.add('show');
+                    }
+                });
+
+                // 无站内结果，跳转到闲鱼搜索
+                if (!hasGlobalResult) {
+                    window.open(`https://s.2.taobao.com/list/list.htm?q=${encodeURIComponent(keyword)}`, "_blank");
+                    // 重置显示所有卡片
+                    resetCards();
+                }
+
+                // 恢复按钮状态
+                searchBtn.classList.remove('loading');
+                searchBtn.disabled = false;
+            }, 300);
+        }
+
+        // 重置卡片显示
+        function resetCards() {
+            document.querySelectorAll('.link-card').forEach(card => {
+                card.style.display = 'block';
+            });
+            document.querySelectorAll('.empty-state').forEach(state => {
+                state.classList.remove('show');
+            });
+        }
+
+        // 支持回车搜索
+        document.getElementById('searchVal').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                doSearch();
+            }
+        });
+
+        // 搜索框清空时重置
+        document.getElementById('searchVal').addEventListener('input', (e) => {
+            if (!e.target.value.trim()) {
+                resetCards();
+            }
+        });
+    </script>
+</body>
+</html>
